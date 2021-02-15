@@ -2,7 +2,7 @@
 /*                                                                      */
 /*  NAME : HD61700 CROSS ASSEMBLER SOURCE CODE                          */
 /*  FILE : hd61700.c                                                    */
-/*  Copyright (c) あお 'BLUE' 2003-2004                                 */
+/*  Copyright (c) あお 'BLUE' 2003-2011                                 */
 /*                                                                      */
 /*  REVISION HISTORY:                                                   */
 /*  Rev : 0.01  2003.01.06  最初のバージョン                            */
@@ -99,6 +99,36 @@
 /*                          ・正負表現を使えるようにした                */
 /*                          /qオプション追加                            */
 /*                          ・クイックローダ形式をサポート              */
+/*  Rev : 0.34  2006.06.12  #INCBIN擬似命令を追加。                     */
+/*                          バイナリ/BMP読み込みをサポート。            */
+/*  Rev : 0.34  2006.09.01  PSR/GSR命令群に対応。                       */
+/*                          特定インデックスレジスタ(SX,SY,SZ)による    */
+/*                          メインレジスタ表記( $(SX)/$(SY)/$(SZ) )追加 */
+/*                          $SX,$SY,$SZ表記も可能とした。               */
+/*  Rev : 0.35  2006.09.09  ニモニックを変更(SNL->LDL)                  */
+/*              2006.09.10  メッセージを修正                            */
+/*  Rev : 0.36  2006.09.25  LDM/STM命令がLDD/STD(KC形式)に振り替えられた*/
+/*                          場合、ワーニング表示するようにした。        */
+/*                          #KC,#AI疑似命令を追加。                     */
+/*  Rev : 0.37  2006.09.30  バージョン番号の修正Rev0.36→0.37           */
+/*                          /wオプションを追加。16ビットアドレスに対応。*/
+/*              2006.10.02  デバッグコードを削除（動作に影響なし）      */
+/*  Rev : 0.38  2006.11.06  シフト演算を追加。細かいバグを修正。        */
+/*                          コンパイルオプション(WITH_EOF)追加。        */
+/*  Rev : 0.39  2006.11.08  % 剰余(MOD)の優先順位を変更。(C言語準拠)    */
+/*  Rev : 0.40  2007.03.16  /rオプション指定にてリロケート情報ファイル  */
+/*                          (*.roc)を出力するようにした。               */
+/*                          /o [ファイル名] にて*.bas/*pbfに出力する    */
+/*                          ファイル名を指定できるようにした。          */
+/*  Rev : 0.41  2008.05.05  Europe形式ニモニック(casio original?)追加。 */
+/*                          /eu オプションおよび、擬似命令 #eu追加。    */
+/*  Rev : 0.42  2011.01.03  /rオプション処理改良                        */
+/*                          (1)EQUラベル登録時にラベル種別を引き継ぐ    */
+/*                          (2)ORG利用ラベルをアドレス種別に再登録する  */
+/*                          (3)DW命令も.rocファイルの出力対象とする     */
+/*                          アセンブル速度高速化(outtbl.kind追加による) */
+/*  Rev : 0.43  2011.01.07  /rオプション処理改良                        */
+/*                          RR形式Ver.2対応                             */
 /*                                                                      */
 /************************************************************************/
 #include<stdio.h>
@@ -109,14 +139,12 @@
 /*------------------------------------------------------------------*/
 /*  定数定義                                                        */
 /*------------------------------------------------------------------*/
-#define SJIS_SPACE	1				/* 1:全角スペースを無視する     */
-#define FORDOS  	0				/* 1:DOS用にコンパイルする      */
-#if FORDOS
+#if __FORDOS
 char	name[]	="HD61700 ASSEMBLER FOR DOS ";	/* アセンブラ名称   */
 #else
 char	name[]	="HD61700 ASSEMBLER ";	/* アセンブラ名称           */
 #endif
-char	rev[]	="Rev 0.33";			/* Revision                 */
+char	rev[]	="Rev 0.43";			/* Revision                 */
 /* 利用可能文字列 */
 char	LabelStr[]	= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@_";
 char	DecStr[]	= "0123456789";
@@ -126,20 +154,32 @@ char	HexStr[]	= "0123456789ABCDEFabcdef";
 /*------------------------------------------------------------------*/
 char	SrcFile[MAXLINE];			/* ソースファイル名             */
 char	IncFile[MAXLINE];			/* インクルードファイル名       */
+char	BinFile[MAXLINE];			/* バイナリファイル名           */
 char	LstFile[MAXLINE];			/* リストファイル名             */
 char	OutFile[MAXLINE];			/* 出力ファイル名               */
 char	ExeFile[MAXLINE];			/* 実行ファイル名               */
+char	RocFile[MAXLINE];			/* リアロケート情報ファイル名   */
 FILE	*IncFD[MAXINC];				/* INCLUDEファイルディスクリプタ*/
 FILE	*SrcFD;						/* ソースファイルディスクリプタ */
+FILE	*BinFD;						/* Binaryファイルディスクリプタ */
 FILE	*LstFD;						/* リストファイルディスクリプタ */
 FILE	*OutFD;						/* 出力ファイルディスクリプタ   */
+FILE	*RocFD;						/* rocファイルディスクリプタ    */
 unsigned short	pass;				/* アセンブルパス数(0、1)       */
 unsigned short	SetLabel;			/* /SET オプション登録数        */
 SETOPT			SetTbl[MAXOPT];		/* /SETオプション構造体         */
+unsigned short	DefInstMode;		/* 0:AI形式、1:KC形式、2:EU形式 */
+unsigned short	InstMode;			/* 0:AI形式、1:KC形式、2:EU形式 */
+unsigned short	DefUndefOpr;		/* 1:未公開オプション選択(元)   */
 unsigned short	UndefOpr;			/* 1:未公開オプション選択       */
 unsigned short	OutType;			/* 0:BASIC、1:PBF形式           */
 unsigned short	pr;					/* 画面出力フラグ               */
 unsigned short	Tab;				/* TAB出力フラグ                */
+unsigned short	OutRealloc;			/* 1:リロケート情報出力         */
+unsigned short	ExeName;			/* 0:なし、1:出力ファイル指定有 */
+#if __WORD_ADDRESS
+unsigned short	Wadr;				/* 1:16Bit Addressing対応       */
+#endif
 unsigned long 	StartAdr;			/* アセンブル開始アドレス       */
 unsigned long 	ExecAdr;			/* 実行開始アドレス             */
 unsigned long 	AsmAdr;				/* アセンブルアドレス           */
@@ -153,6 +193,7 @@ char			calcwk[MAXLINE+2];	/* ラベル演算バッファ           */
 int				CalcPtr;			/* 演算バッファポインタ         */
 unsigned short	Ckind;				/* 演算中の名称解決フラグ       */
 int				IfLevel;			/* #if～#endif レベル           */
+unsigned char	LblFlg;				/* ラベル種別情報(0:EQU,1:ADR)  */
 unsigned char	AsmFlag;			/* アセンブル禁止/許可          */
 unsigned char	IfStk[IFLEVEL];		/* アセンブル禁止/許可スタック  */
 unsigned short	ListFlag;			/* リスト出力フラグ(0:出力)     */
@@ -174,9 +215,9 @@ int AsmLine( void );
 int AsmCodeSet( void );
 int SearchOpr( unsigned short op1 ,unsigned short op2 ,unsigned short op3 ,unsigned short op4 );
 int GetJumpData( unsigned short jadr , unsigned short adr  , unsigned short byte ,unsigned short *op ,unsigned short *opdat );
-int GetIndexKind( char * buff , unsigned short * kind , unsigned short * data );
-int GetOprKind( int num , char * buff , unsigned short * kind , unsigned short * data );
-int SetLabelTbl( char * buff , unsigned short adr );
+int GetIndexKind( char * buff , unsigned short * kind , unsigned short * data ,unsigned short *si);
+int GetOprKind( int num , char * buff , unsigned short * kind , unsigned short * data ,unsigned short *si );
+int SetLabelTbl( char * buff , unsigned short adr , unsigned char flag );
 int GetLabelAdr( char * buff , unsigned short * adr );
 int GetIRegKind( char * buff , unsigned short * kind );
 int GetFlagKind( char * buff , unsigned short * kind );
@@ -185,19 +226,26 @@ unsigned short GetMnemonicKind( char * buff );
 int CheckLabel( char * buff );
 int ChgCode( char * dst , char * src );
 int ChgKcName( char * dst , char * src );
-int GetReg( char * buff , unsigned short * data );
+#if __EUR_MNEMONIC
+int ChgEuropeName( char * dst , char * src );
+#endif /* __EUR_MNEMONIC */
+int GetReg( char * buff , unsigned short * data ,unsigned short * sir);
 int GetLine( FILE *fd ,char *buff );
 int GetParam( char *buff );
 int GetData( char *buff , unsigned short * data );
 int GetCalcData( char * buff , unsigned short * kind ,unsigned short * adr );
 int CalcVal(unsigned short * value );
 int CalcVal0(unsigned short * value );
+int CalcValShift(unsigned short * value );
 int CalcVal1(unsigned short * value );
 int CalcVal2(unsigned short * value );
 int CalcVal3( unsigned short *value );
 int GetValue(unsigned short *value );
 int CheckSetOpt( char * name );
 int CheckSetLbl( char * name ,unsigned short sts );
+int IncludeBin( unsigned short *cnt ,char *File );
+int ReadBin( unsigned long * Size );
+int ReadBmp( unsigned long * Size );
 void PrintList( int cnt );
 void ErrPut( int cnt , int err );
 
@@ -239,19 +287,50 @@ char * ptr;
 	/* オプション初期化 */
 	pr = 0;
 	Tab = 0;
-	UndefOpr = 1;
+	DefUndefOpr = 1;
 	OutType = 0;
+	DefInstMode = 0; /* AI形式選択 */
+	OutRealloc = 0;
+	ExeName = 0;
+#if __WORD_ADDRESS
+	Wadr = 0;
+#endif
 	/* 起動オプション取得 */
 	i=2;
 	while( argv[i] ){
+#if __EUR_MNEMONIC
+		/* デフォルトニモニックモード設定 */
+		if (!strcmp("/ai",argv[i])||!strcmp("/AI",argv[i])){ DefInstMode = 0;i++; continue; }
+		if (!strcmp("/kc",argv[i])||!strcmp("/KC",argv[i])){ DefInstMode = 1;i++; continue; }
+		if (!strcmp("/eu",argv[i])||!strcmp("/EU",argv[i])){ DefInstMode = 2;i++; continue; }
+#endif /* __EUR_MNEMONIC */
+#if __WORD_ADDRESS
+		/* 16ビットアドレッシング選択 */
+		if (!strcmp("/w",argv[i])||!strcmp("/W",argv[i])){ Wadr = 1;i++; continue; }
+#endif
+		/* リロケート情報出力選択 */
+		if (!strcmp("/r",argv[i])||!strcmp("/R",argv[i])){ OutRealloc = 1;i++; continue; }
 		/* TABリスト出力選択 */
 		if (!strcmp("/tab",argv[i])||!strcmp("/TAB",argv[i])){ Tab = 1;i++; continue; }
-		/* 未公開命令アセンブル選択 */
-		if (!strcmp("/n",argv[i])||!strcmp("/N",argv[i])){ UndefOpr = 0;i++; continue; }
+		/* SIR最適化OFFアセンブル選択(LEVEL 0) */
+		if (!strcmp("/n",argv[i])||!strcmp("/N",argv[i])){ DefUndefOpr = 0;i++; continue; }
 		/* PBFファイル出力選択 */
 		if (!strcmp("/p",argv[i])||!strcmp("/P",argv[i])){ OutType = 1;i++; continue; }
 		/* QLファイル出力選択 */
 		if (!strcmp("/q",argv[i])||!strcmp("/Q",argv[i])){ OutType = 2;i++; continue; }
+		/* bas/pbfファイル名指定 */
+		if (!strcmp("/o",argv[i])||!strcmp("/O",argv[i])){
+			/* 次パラメータあり */
+			if( !argv[++i] || argv[i][0]=='/' ){
+				/* コマンドライン異常 */
+				printf("Invalid /O Parameters.\n");
+				exit(1);
+			}
+			/* bas/pbf用ファイル名を指定する */
+			sprintf(ExeFile,"%s",argv[i++]);
+			ExeName = 1;
+			continue;
+		}
 		/* SETオプション */
 		if (!strcmp("/set",argv[i])||!strcmp("/SET",argv[i])){
 			/* 次パラメータあり */
@@ -297,7 +376,10 @@ char * ptr;
 		printf("Invalid Parameters.\n");
 		exit(1);
 	}
-
+#if __WORD_ADDRESS
+	/* 最適化を禁止 */
+	if (Wadr) UndefOpr = 0;
+#endif
 	/* アセンブル処理 */
 	rc = AsmProcess( SrcFile );
 
@@ -316,7 +398,12 @@ int InitAsm( char * File )
 {
 char * fptr;
 char out[8];
-
+	/* ファイルディスクリプタ初期化 */
+	SrcFD = 0;
+	BinFD = 0;
+	LstFD = 0;
+	OutFD = 0;
+	RocFD = 0;
 	/* 出力バッファポインタ初期化 */
 	OutBuf = 0;
 	/* 各種フラグ/カウンタ初期化 */
@@ -327,10 +414,13 @@ char out[8];
 	/* ファイル名称作成 */
 	sprintf( LstFile , "%s" , File );
 	sprintf( OutFile , "%s" , File );
-	/* 実行ファイル名作成 */
-	if(fptr = strrchr(File,  0x5c ))
-		ChgCode( ExeFile , &fptr[1] );
-	else ChgCode( ExeFile , File );
+
+	if ( !ExeName ){
+		/* 実行ファイル名作成 */
+		if(fptr = strrchr(File,  0x5c ))
+			ChgCode( ExeFile , &fptr[1] );
+		else ChgCode( ExeFile , File );
+	}
 
 	/* Listファイル名作成 */
 	if ((fptr = strrchr(LstFile,  '.' )))
@@ -352,6 +442,15 @@ char out[8];
 	if ((fptr = strrchr(OutFile, '.' )))
 		sprintf( fptr,"%s", out );
 	else	strcat( OutFile, out );
+
+	/* リアロケート情報ファイル作成要求有り */
+	if ( OutRealloc ){
+		sprintf( RocFile , "%s" , File );
+		/* リアロケート情報ファイル名作成 */
+		if ((fptr = strrchr(RocFile,  '.' )))
+			sprintf( fptr,".roc" );
+		else	strcat( RocFile, ".roc" );
+	}
 
 	/* 入力ファイル名がlst/bas/pbf指定の場合、エラー終了する */
 	if( !strcmp(OutFile,SrcFile) || !strcmp(LstFile,SrcFile) ){
@@ -400,7 +499,6 @@ void ClearFlag( void )
 	/* #include情報初期化 */
 	memset( IncLine , 0 ,sizeof(IncLine));
 	memset( IncFD , 0 , sizeof(IncFD));
-
 }
 
 /**********************************************************************/
@@ -413,13 +511,15 @@ void ClearFlag( void )
 /**********************************************************************/
 int AsmProcess( char * File )
 {
+char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 char * fptr;
 char out[8];
 int rc,rc2,i,n;
-unsigned short sum,sts,line;
-unsigned short LineCnt;	/* 行番号カウンタ */
-unsigned long  OutCnt,cnt;	/* 出力バイト数 */
-unsigned long  BuffSize;	/* 出力バッファサイズ */
+unsigned short	op;
+unsigned short	sum,sts,line;
+unsigned short	LineCnt;	/* 行番号カウンタ */
+unsigned long	OutCnt,cnt;	/* 出力バイト数 */
+unsigned long	BuffSize;	/* 出力バッファサイズ */
 LBL *Label;
 LBL *Labelwk;
 	/* 初期設定 */
@@ -438,7 +538,7 @@ LBL *Labelwk;
 					goto asm_end;
 				}
 				/* ラベルテーブルに登録する */
-				if(rc = SetLabelTbl( SetTbl[i].ent , sts )){
+				if(rc = SetLabelTbl( SetTbl[i].ent , sts ,LBL_EQU )){
 					/* エラー表示 */
 					printf("Invalid /SET name.\n");
 					goto asm_end;
@@ -462,10 +562,21 @@ LBL *Labelwk;
 	}
 
 	/* １パス目ラベルテーブルを作成する */
+	UndefOpr = DefUndefOpr;
+	InstMode = DefInstMode;
 	LineCnt = 0;
 	pass = 0;
 	while( !rc ){
 		rc = AsmLine();
+#if __WORD_ADDRESS
+		/* 16bit addressingに変換する */
+		if (Wadr){
+			/* アドレス補正 */
+			AsmAdr -= OutTbl.byte;
+			OutTbl.byte = (OutTbl.byte+1)&0xfe;
+			AsmAdr += (OutTbl.byte/2);
+		}
+#endif
 		if ( rc && (rc != EOFERR) ) {
 			/* エラー表示 */
 			ErrPut( LineCnt , rc );
@@ -480,40 +591,71 @@ LBL *Labelwk;
 		ErrPut( LineCnt-1 , IFNEST );
 		goto asm_end;
 	}
+#if __WORD_ADDRESS
+	/* 出力サイズを求める */
+	OutCnt = Wadr ? (AsmAdr*2) : AsmAdr;
+#else
+	OutCnt = AsmAdr;
+#endif
 	/* コードは最大バッファ範囲内に収まる */
-	if ( (BuffSize = (AsmAdr - StartAdr) ) > MAXOBJ ){
+	if ( (BuffSize = (OutCnt - StartAdr) ) > MAXOBJ ){
 		/* 出力バッファオーバー */
 		ErrPut( LineCnt-1 , AOFLOW );
 		goto asm_end;
 	}
 	/* ソースファイル先頭にシークする */
 	if( fseek(SrcFD , 0 , SEEK_SET )){
-		printf("Sorce File Seek Error.\n");
+		printf("Source File Seek Error.\n");
 		goto asm_end;
 	}
 	/* １パス目終了 */
 	printf( " PASS 1 END \n" );
 
 	/* 出力バッファを確保する(1Byte余分に取る) */
-	if ( !( OutBuf = malloc( (unsigned short)(BuffSize+1) ) ) ){
+	if ( !( OutBuf = malloc( (size_t)(BuffSize+1) ) ) ){
 		printf("Output Buffer Not Allocated.\n");
 		goto asm_end;
 	}
 	/* 出力バッファ初期化 */
 	memset( OutBuf, 0 , (unsigned short)(BuffSize+1) );
-	/* 行番号、アセンブルアドレスを初期化する */
+	/* 行番号、アセンブルアドレス、モードを初期化する */
 	ClearFlag();
+	UndefOpr = DefUndefOpr;
+	InstMode = DefInstMode;
 	LineCnt = 0;
 	OutCnt = 0;
 
 	/* リスト出力開始 */
 	fprintf( LstFD , "%s%s - ",name,rev );
-	fprintf( LstFD ,"ASSEMBLE LIST OF [%s]\n", SrcFile );
+	fprintf( LstFD ,"ASSEMBLY LIST OF [%s]\n", SrcFile );
+
+	/* リロケート情報ファイル作成要求有り */
+	if ( OutRealloc ){
+		/* リストファイルOPEN */
+		if ( ( RocFD = fopen( RocFile ,"w" ) ) <= 0 ){
+			printf("Roc File Create Error.\n");
+			goto asm_end;
+		}
+		/* ヘッダ出力 */
+		fprintf(RocFD,"DW &H0000\n" );
+		fprintf(RocFD,"DW &HFFFF\n" );
+		/* バイト数初期化 */
+		n = 4;
+	}
 
 	/* ２パス目ラベルアドレスを反映し、命令コードを出力する */
 	rc = 0; rc2 = 0;pass++;
 	while( !rc && !rc2 ){
 		rc = AsmLine();
+#if __WORD_ADDRESS
+		/* 16bit addressingに変換する */
+		if (Wadr){
+			/* アドレス補正 */
+			AsmAdr -= OutTbl.byte;
+			OutTbl.byte = (OutTbl.byte+1)&0xfe;
+			AsmAdr += (OutTbl.byte/2);
+		}
+#endif
 		if ( rc && (rc != EOFERR) ) {
 			/* エラー表示 */
 			ErrPut( LineCnt , rc );
@@ -531,16 +673,112 @@ LBL *Labelwk;
 				ErrPut( LineCnt , AOFLOW );
 				goto asm_end;
 			}
-			/* リストファイル出力 */
-			PrintList( LineCnt );
-			/* コード出力 */
-			/* 通常命令／疑似命令種別取り出し */
-			ChgCode( oprwk , OutTbl.opr[0] );
-			sts = GetMnemonicKind( oprwk );
-			/* ORG/DS命令以外なら、データ出力 */
-			if (OutTbl.byte&&( sts != OP_ORG )&&( sts != OP_DS )){
-				/* 命令コード格納 */
-				memcpy( &OutBuf[OutCnt] , OutTbl.code , OutTbl.byte );
+			/* AI形式モードならLDM/STMワーニング表示*/
+			if( !InstMode && OutTbl.sts ){
+				pr = 1;
+				printf("LINE ");
+				/* リストファイル出力 */
+				PrintList( LineCnt );
+				/* ワークエリア初期化 */
+				memset( mnwk , 0 , sizeof(mnwk) );
+				/* 入力ニモニックあり */
+				ChgCode( mnwk , OutTbl.opr[0] );
+				mnwk[2] = 'D';
+				printf("WARNING: '%s' was interpreted to '%s' of the KC form.\n",OutTbl.opr[0],mnwk);
+				pr = 0;
+			}
+			else{
+				/* リストファイル出力 */
+				PrintList( LineCnt );
+			}
+			/* コード出力要求あり */
+			if ( OutTbl.byte ){
+				/* 通常命令／疑似命令種別による分岐 */
+				switch( OutTbl.kind ){
+				/* ORG/DS命令 */
+				case OP_ORG:
+				case OP_DS:
+					break;
+				/* #INCBIN命令 */
+				case OP_INCBIN:
+					/* バイナリコード出力 */
+					memcpy( &OutBuf[OutCnt] , OutTbl.bcode , OutTbl.byte );
+					/* バッファを開放する */
+					free( OutTbl.bcode );
+					break;
+				default:
+					/* ORG/DS/#INCBIN 命令以外なら、データ出力 */
+					memcpy( &OutBuf[OutCnt] , OutTbl.code , OutTbl.byte );
+					/* リロケート情報ファイル作成要求有り */
+					if ( OutRealloc ){
+						/* DW疑似命令である */
+						if( OutTbl.kind == OP_DW ){
+							cnt = 0;
+							i = 0;
+							/* オペランドエントリがある限り登録する */
+							while( OutTbl.opr[cnt+1] ){
+								/* 先頭OPR以外は、カンマのチェックをする */
+								if ( cnt ){
+									/* 先頭文字をスキップ */
+									i = 1;
+								}
+								/* ラベル種別初期化 */
+								LblFlg = 0;
+								/* 計算式として処理する */
+								if( !GetCalcData( OutTbl.opr[cnt+1]+i , &op , &sts ) ){
+									/* アドレスラベルでかつ、コード範囲内である */
+									if(( LblFlg == LBL_ADR )&&((unsigned short)StartAdr<=sts)&&((unsigned short)(StartAdr+BuffSize)>sts))
+									{
+										op = sts - (unsigned short)StartAdr;
+										sts= OutTbl.adr + (cnt<<1) - (unsigned short)StartAdr;
+										/* .rocファイル出力 */
+										fprintf(RocFD,"DW &H%04X,&H%04X\n",sts, op );
+										/* バイト数更新(+4) */
+										n += 4;
+									}
+								}
+								cnt++;
+							}
+							break;
+						}
+						/* 一般命令以外である */
+						if( OutTbl.kind != UNDEFOPR ){
+							break;
+						}
+						/* ラベル種別初期化 */
+						LblFlg = 0;
+						/* 命令語による分岐 */
+						switch( OutTbl.code[0] ){
+						/* JP IM16 */
+						case 0x30: case 0x31: case 0x32: case 0x33:
+						case 0x34: case 0x35: case 0x36: case 0x37:
+						/* CAL IM16 */
+						case 0x70: case 0x71: case 0x72: case 0x73:
+						case 0x74: case 0x75: case 0x76: case 0x77:
+						/* LDW $,IM16 /PRE Reg,IM16 */
+						case 0xD1: case 0xD6: case 0xD7:
+							i = ( OutTbl.code[0]==0x37 || OutTbl.code[0]==0x77 ) ? 1 : 2;
+							if( !GetCalcData( &OutTbl.opr[i][(i==2)?1:0], &op , &sts ) ){
+								/* アドレスラベルでかつ、コード範囲内である */
+								if(( LblFlg == LBL_ADR )&&((unsigned short)StartAdr<=sts)&&((unsigned short)(StartAdr+BuffSize)>sts))
+								{
+									/* 4バイト命令ならオペランド2、3バイト命令ならオペランド1より読み出し */
+									i = ( OutTbl.byte == 4 ) ? 2 : 1;
+									op =((unsigned short)OutTbl.code[i]|(unsigned short)OutTbl.code[i+1]<<8)-(unsigned short)StartAdr;
+									sts =  OutTbl.adr - (unsigned short)StartAdr +i;
+									/* .rocファイル出力 */
+									fprintf(RocFD,"DW &H%04X,&H%04X\n",sts, op );
+									/* バイト数更新(+4) */
+									n += 4;
+								}
+							}
+							break;
+						default:
+							break;
+						}
+					}
+					break;
+				}
 			}
 			/* 出力バイト数更新 */
 			OutCnt += OutTbl.byte;
@@ -563,13 +801,13 @@ LBL *Labelwk;
 		/* ヘッダ出力 */
 		fprintf( LstFD ,"\n%s%s - ",name,rev );
 		fprintf( LstFD ,"MAP LIST OF [%s]\n", SrcFile );
-		fprintf( LstFD ," LABEL           : ADDRESS(hex)    LABEL           : ADDRESS(hex)\n" );
-		fprintf( LstFD ,"------------------------------------------------------------------\n" );
+		fprintf( LstFD ," LABEL           : ADDRESS(hex)  | LABEL           : ADDRESS(hex)\n" );
+		fprintf( LstFD ,"-------------------------------------------------------------------\n" );
 		Label = LabelTbl;
 		i = 0;
 		while ( Label ){
-			if (!(i&1))	fprintf( LstFD ," %-16s:   %04Xh        " , Label->name , Label->adr );
-			else fprintf( LstFD ," %-16s:   %04Xh\n" , Label->name , Label->adr );
+			if (!(i&1))	fprintf( LstFD ," %-16s:   %04Xh     %s |" , Label->name , Label->adr ,(Label->flag==LBL_ADR?"A":" "));
+			else fprintf( LstFD ," %-16s:   %04Xh      %s\n" , Label->name , Label->adr,(Label->flag==LBL_ADR?"A":" ") );
 			Label = Label->np;
 			i++;
 		}
@@ -580,24 +818,39 @@ LBL *Labelwk;
 	fprintf( LstFD ," END ADDRESS     = %04Xh\n", AsmAdr-1 );
 	fprintf( LstFD ," EXECUTE ADDRESS = %04Xh\n", ExecAdr );
 
+	/* リロケート情報ファイル作成要求有り */
+	if ( OutRealloc ){
+		/* ファイル容量出力 */
+		fprintf(RocFD,"DW &H%04X\n",OutCnt+n+2 );
+		/* 実行アドレス相対位置（ヘッダ先頭）出力 */
+		fseek(RocFD,0,SEEK_SET);
+		fprintf(RocFD,"DW &H%04X\n", (ExecAdrFlag ? (unsigned short)(ExecAdr-StartAdr) : 0) );
+	}
+
 	/* 出力ファイル作成 */
 	if ( OutCnt ){
+#if __WORD_ADDRESS
+		/* データ出力時は、終了アドレスを元に戻す */
+		if (Wadr) AsmAdr *= 2;
+#endif
 		/* 出力用ファイルOPEN */
 		if ( ( OutFD = fopen( OutFile ,"w" ) ) <= 0 ){
 			printf("File Create Error.\n");
 			goto asm_end;
 		}
-		/* 実行ファイル名作成 */
-		if ( !ExecAdrFlag ) sprintf( out ,".BIN" );
-		else sprintf( out ,".EXE" );
-		if ((fptr = strrchr(ExeFile, '.' ))) sprintf( fptr ,"%s" ,out );
-		else strcat( ExeFile ,out );
+		if ( !ExeName ){
+			/* 実行ファイル名作成 */
+			if ( !ExecAdrFlag ) sprintf( out ,".BIN" );
+			else sprintf( out ,".EXE" );
+			if ((fptr = strrchr(ExeFile, '.' ))) sprintf( fptr ,"%s" ,out );
+			else strcat( ExeFile ,out );
+		}
 		/* ファイル作成 */
 		switch( OutType ){
 		/* basファイル作成 */
 		case 0:
 			line = 999;
-#if FORDOS
+#if __FORDOS
 			fprintf( OutFD ,"%d DATA %s,&H%X,&H%X,&H%X\n", line++,ExeFile,(unsigned short)StartAdr,(unsigned short)(AsmAdr-1),(unsigned short)ExecAdr );
 #else
 			fprintf( OutFD ,"%d DATA %s,&H%X,&H%X,&H%X\n", line++,ExeFile,StartAdr,AsmAdr-1,ExecAdr );
@@ -620,7 +873,7 @@ LBL *Labelwk;
 			break;
 		/* pbfファイル作成要求あり */
 		case 1:
-#if FORDOS
+#if __FORDOS
 			fprintf( OutFD ,"%s,%u,%u,%u\n", ExeFile,(unsigned short)StartAdr,(unsigned short)(AsmAdr-1),(unsigned short)ExecAdr );
 #else
 			fprintf( OutFD ,"%s,%u,%u,%u\n", ExeFile,StartAdr,AsmAdr-1,ExecAdr );
@@ -636,13 +889,13 @@ LBL *Labelwk;
 					sum = 0;
 				}
 			}
-			/* EOF出力 */
+			/* チェックサム出力 */
 			if (n) fprintf( OutFD ,",%u\n", sum );
 			break;
 		/* クイックローダファイル作成 */
 		case 2:
 			line = 1000;
-#if FORDOS
+#if __FORDOS
 			fprintf( OutFD ,"%d DATA %u,%u,%u\n", line++,(unsigned short)StartAdr,(unsigned short)(AsmAdr-1),(unsigned short)ExecAdr );
 #else
 			fprintf( OutFD ,"%d DATA %u,%u,%u\n", line++,StartAdr,AsmAdr-1,ExecAdr );
@@ -673,13 +926,19 @@ LBL *Labelwk;
 			}
 			break;
 		}
+#if __WITH_EOF
 		/* EOF出力 */
 		fprintf( OutFD ,"%c",0x1a);
+#endif
 		/* 出力ファイルクローズ */
 		fclose(OutFD);
 	}
 
 asm_end:
+	/* リロケート情報ファイル作成要求有り */
+	if ( OutRealloc ){
+		if (RocFD) fclose(RocFD);
+	}
 	/* ラベルテーブルを解放する */
 	Label = LabelTbl;
 	while ( Label ){
@@ -696,8 +955,8 @@ asm_end:
 		}
 	}
 	/* ファイルクローズ */
-	fclose(SrcFD);
-	fclose(LstFD);
+	if (SrcFD) fclose(SrcFD);
+	if (LstFD) fclose(LstFD);
 
 	return rc;
 }
@@ -715,12 +974,15 @@ FILE	*SourceFD;/* ソースファイルディスクリプタ */
 char Work[MAXLINE+2];/* 行データ取得用ワーク */
 int  rc,i,n,cnt,len,opr,kc;
 unsigned short	op,opdat,sts;
+unsigned short	si = 0;
 
 	/* エラーステータス初期化 */
 	rc = 0;
 
 	/* コード変換バッファ初期化 */
-	memset( &OutTbl.idx,0, sizeof(OUTTBL));
+	memset( &OutTbl.kind,0, sizeof(OUTTBL));
+	OutTbl.kind = UNDEFOPR;
+	
 	/* 行ワークバッファ初期化 */
 	memset( Work , 0 , sizeof(Work) );
 
@@ -816,6 +1078,8 @@ unsigned short	op,opdat,sts;
 			if (!strcmp( "EQU" , oprwk )){
 				/* オペランドエントリが正常である */
 				if ( !OutTbl.opr[1] || OutTbl.opr[2] ) return ILLOPR;
+				/* ラベル種別を数値(EQU)指定とする */
+				LblFlg = LBL_EQU;
 				/* 第1オペランドが数値である */
 				if( !(rc = GetCalcData( OutTbl.opr[1] , &op , &sts )) ){
 					/* 名称が未解決な場合、シンボル登録をしない */
@@ -828,7 +1092,7 @@ unsigned short	op,opdat,sts;
 						if ( rc ) return rc;
 					}
 					/* ラベルテーブルに登録する */
-					rc = SetLabelTbl( OutTbl.label, sts );
+					rc = SetLabelTbl( OutTbl.label, sts ,LblFlg );
 				}
 				/* 行処理終了 */
 				return rc;
@@ -837,7 +1101,7 @@ unsigned short	op,opdat,sts;
 			else{
 				if ( !StartAdrFlag ) { rc = NOORG; return rc; }/* ORGなし */
 				/* 現在のアセンブルアドレスをラベルテーブルに登録する */
-				if(rc = SetLabelTbl( OutTbl.label, (unsigned short)AsmAdr )) return rc;
+				if(rc = SetLabelTbl( OutTbl.label, (unsigned short)AsmAdr ,LBL_ADR )) return rc;
 			}
 		}
 		/* ２パス目である */
@@ -847,12 +1111,14 @@ unsigned short	op,opdat,sts;
 			if (!strcmp( "EQU" , oprwk )){
 				/* 既に登録済みなら抜ける */
 				if ( GetLabelAdr( OutTbl.label , &sts ) != LBLNOENT ) return NORM;
+				/* ラベル種別を数値(EQU)指定とする */
+				LblFlg = LBL_EQU;
 				/* 第1オペランドが数値である */
 				if( !(rc = GetCalcData( OutTbl.opr[1] , &op , &sts )) ){
 					/* 名称が未解決な場合、処理終了する */
 					if ( op == LBLNG ) return LBLNOENT;
 					/* ラベルテーブルに登録する */
-					if ( (rc = SetLabelTbl( OutTbl.label, sts )) ) return ILLLBL;
+					if ( (rc = SetLabelTbl( OutTbl.label, sts ,LblFlg )) ) return ILLLBL;
 				}
 				/* 行処理終了 */
 				return rc;
@@ -866,8 +1132,8 @@ unsigned short	op,opdat,sts;
 	if ( OutTbl.opr[0] ){
 		/* 通常命令／疑似命令種別チェック */
 		ChgCode( oprwk , OutTbl.opr[0] );
-		opr = GetMnemonicKind( oprwk );
-		switch( opr ){
+		OutTbl.kind = GetMnemonicKind( oprwk );
+		switch( OutTbl.kind ){
 		case OP_EQU:
 			/* ラベルなしEQU処理(エラー終了) */
 			if ( !pass ) rc = EQUNOLBL;
@@ -896,7 +1162,7 @@ unsigned short	op,opdat,sts;
 				}
 				else{
 					/* ２回目以降は、指定バイト数分を確保する */
-					OutTbl.byte = (unsigned char)( sts - (unsigned short)AsmAdr );
+					OutTbl.byte = (unsigned short)( sts - (unsigned short)AsmAdr );
 				}
 				OutTbl.adr = sts;
 				AsmAdr = sts;
@@ -1002,7 +1268,7 @@ unsigned short	op,opdat,sts;
 					}
 					else break;
 				}
-				OutTbl.byte = (unsigned char)n;
+				OutTbl.byte = (unsigned short)n;
 				cnt++;
 			}
 			/* アドレスを更新する */
@@ -1037,7 +1303,7 @@ unsigned short	op,opdat,sts;
 				/* ワード単位でコード登録する */
 				OutTbl.code[n++] = (unsigned char)(sts & 0xff);
 				OutTbl.code[n++] = (unsigned char)((sts>>8) & 0xff);
-				OutTbl.byte = (unsigned char)n;
+				OutTbl.byte = (unsigned short)n;
 				cnt++;
 			}
 			/* アドレスを更新する */
@@ -1077,6 +1343,7 @@ unsigned short	op,opdat,sts;
 				IncLevel++;
 				rc = NORM;
 			}
+			else rc = ILLOPR;
 			break;
 		case OP_LIST:
 			/* オペランドエントリあり */
@@ -1095,6 +1362,39 @@ unsigned short	op,opdat,sts;
 			/* リストLineFeed挿入要求セット */
 			LineFeed = 1;
 			break;
+		case OP_INCBIN:
+			/* オペランドエントリあり */
+			if ( !OutTbl.opr[1] ){ rc = ILLOPR; break; }
+			if ( (len = strlen(OutTbl.opr[1])) < 3 ){ rc = INCNOFILE; break; }
+			/* 先頭および最終は括弧である */
+			if ( ( OutTbl.opr[1][0] == '(' ) && ( OutTbl.opr[1][len-1] == ')' ) ){
+				/* バイナリファイル名取り出し */
+				memset( BinFile , 0 , sizeof(BinFile) );
+				memcpy( BinFile , &OutTbl.opr[1][1] , len-2 );
+				/* バイナリファイル読み出し */
+				rc = IncludeBin( &OutTbl.byte , BinFile );
+				/* アドレス更新 */
+				AsmAdr += OutTbl.byte;
+			}
+			else rc = ILLOPR;
+			break;
+		case OP_AI:
+			/* オペランドエントリあり */
+			if ( OutTbl.opr[1] ) rc = ILLOPR;
+			InstMode = 0;
+			break;
+		case OP_KC:
+			/* オペランドエントリあり */
+			if ( OutTbl.opr[1] ) rc = ILLOPR;
+			InstMode = 1;
+			break;
+#if __EUR_MNEMONIC
+		case OP_EU:
+			/* オペランドエントリあり */
+			if ( OutTbl.opr[1] ) rc = ILLOPR;
+			InstMode = 2;
+			break;
+#endif /* __EUR_MNEMONIC */
 		default:
 			/* 一般命令処理 */
 			/* ニモニック文字長は正常 */
@@ -1121,7 +1421,7 @@ unsigned short	op,opdat,sts;
 					kc = 1;
 				}
 				/* オペランド種別取得 */
-				if ( rc = GetOprKind( i, OutTbl.opr[i]+( (i==1)||kc ? 0 : 1 ) , &op , &opdat ) ){
+				if ( rc = GetOprKind( i, OutTbl.opr[i]+( (i==1)||kc ? 0 : 1 ) , &op , &opdat ,&si ) ){
 					if ( rc == NOENT ) rc = 0;
 					break;
 				}
@@ -1130,20 +1430,53 @@ unsigned short	op,opdat,sts;
 					rc = LBLNOENT;
 					break;
 				}
+				/* OPR2でかつ、特定インデックス指定あり */
+				if ( ( i == 2 ) && si ){
+					/* OPR1は、$31、$30、$0指定である */
+					switch ( OutTbl.opkind[0] ){
+					case RSX:
+					case RSY:
+					case RSZ:
+						/* 通常レジスタ指定に変更する */
+						OutTbl.opkind[0] = REG;
+						break;
+					case MRSX:
+					case MRSY:
+					case MRSZ:
+						/* 通常レジスタ指定に変更する */
+						OutTbl.opkind[0] = MREG;
+						break;
+					default:
+						break;
+					}
+				}
+				/* 特定インデックス指定フラグセット */
+				if ( !OutTbl.si && si ){
+					OutTbl.si = si;
+				}
 				/* オペランド種別／データを保存する */
 				OutTbl.opkind[i-1] = op;
 				OutTbl.opdata[i-1] = opdat;
+#if __DEBUG
+				printf("kind=%x data=%x\n",op,opdat);
+#endif
 			}
 			/* オペランド種別チェックにてエラー発生 */
 			if (rc) break;
+			/* 特定インデックス指定あり */
+			if( OutTbl.si ){
+				/* ニモニック＋第１～第４オペランドで検索(OP1/OP2ともR0,R30,R31有効) */
+				rc = SearchOpr( MASKOP2 , MASKOP2 , MASKOP , MASKOP );
+				break;
+			}
 			/* セカンドオペレーション拡張オプション（CASIO未公開）選択 */
 			if( UndefOpr ){
 				/* ニモニック＋第１～第４オペランドで検索(OP1/OP2ともR0,R30,R31有効) */
-				if (!SearchOpr( MASKOP2 , MASKOP2 , MASKOP , MASKOP )) break;
+				if (!(rc=SearchOpr( MASKOP2 , MASKOP2 , MASKOP , MASKOP ))) break;
 				/* ニモニック＋第１～第４オペランドで検索(OP2のみR0,R30,R31有効) */
-				if (!SearchOpr( MASKOP , MASKOP2 , MASKOP , MASKOP )) break;
+				if (!(rc=SearchOpr( MASKOP , MASKOP2 , MASKOP , MASKOP ))) break;
 				/* ニモニック＋第１～第４オペランドで検索(OP1のみR0,R30,R31有効) */
-				if (!SearchOpr( MASKOP2 , MASKOP , MASKOP , MASKOP )) break;
+				if (!(rc=SearchOpr( MASKOP2 , MASKOP , MASKOP , MASKOP ))) break;
 			}
 			/* ニモニック＋第１～第３オペランド種別 にて検索(R0,R30,R31指定なし) */
 			rc = SearchOpr( MASKOP , MASKOP , MASKOP , MASKOP );
@@ -1165,30 +1498,44 @@ unsigned short	op,opdat,sts;
 int SearchOpr( unsigned short op1 ,unsigned short op2 ,unsigned short op3 ,unsigned short op4 )
 {
 unsigned short i;
-
+int def_opr = 0;
+#if __DEBUG
+	printf("opr = %s\n",oprwk);
+#endif
 	/* 検索対象ニモニックをHD61形式に変換する */
 	if ( ChgKcName( oprwk , OutTbl.opr[0] ) ) return UNDEFOPR;
+#if __EUR_MNEMONIC
+	/* #EU /EU指定有り */
+	if ( InstMode == 2 ){
+		/* EU(Europe)形式ニモニックをHD61形式にする */
+		if ( ChgEuropeName( oprwk , OutTbl.opr[0] ) ) return UNDEFOPR;
+	}
+#endif /* __EUR_MNEMONIC */
 	/* ニモニック＋第１～第３オペランド種別 にて検索 */
 	for ( i = 0 ; i < MAXOP ; i++ ){
 		/* 該当命令あり */
-		if ( !strcmp( codetbl[i].name , oprwk ) 
-			&& ((codetbl[i].op1&MASKOP2) == (OutTbl.opkind[0]&op1) )
-			&& ((codetbl[i].op2&MASKOP2) == (OutTbl.opkind[1]&op2) )
-			&& ((codetbl[i].op3&MASKOP)  == (OutTbl.opkind[2]&op3) )
-			&& ((codetbl[i].op4&MASKOP)  == (OutTbl.opkind[3]&op4) )){
-			/* コードテーブルのインデックスを格納 */
-			OutTbl.idx = i;
-			OutTbl.byte = codetbl[i].byte;
-			/* アセンブルアドレス更新 */
-			if (( AsmAdr + codetbl[i].byte ) <= MAXOBJ ){
-				AsmAdr += codetbl[i].byte;
-				return NORM;
+		if ( !strcmp( codetbl[i].name , oprwk ) ){
+			/* ニモニックは一致 */
+			def_opr = 1;
+			/* オペランド種別が一致 */
+			if ( ((codetbl[i].op1&MASKOP2) == (OutTbl.opkind[0]&op1) )
+				&& ((codetbl[i].op2&MASKOP2) == (OutTbl.opkind[1]&op2) )
+				&& ((codetbl[i].op3&MASKOP)  == (OutTbl.opkind[2]&op3) )
+				&& ((codetbl[i].op4&MASKOP)  == (OutTbl.opkind[3]&op4) )){
+				/* コードテーブルのインデックスを格納 */
+				OutTbl.idx = i;
+				OutTbl.byte = codetbl[i].byte;
+				/* アセンブルアドレス更新 */
+				if (( AsmAdr + codetbl[i].byte ) <= MAXOBJ ){
+					AsmAdr += codetbl[i].byte;
+					return NORM;
+				}
+				else return ADOFLOW;
 			}
-			else return ADOFLOW;
 		}
 	}
-	/* 該当命令なし */
-	return UNDEFOPR;
+	/* オペランド種別不一致/該当命令なし */
+	return ( def_opr ? ILLOPR : UNDEFOPR );
 }
 /**********************************************************************/
 /*   AsmCodeSet : Assembler Process ( 2 pass )                        */
@@ -1232,9 +1579,7 @@ unsigned short op,opdat,sts,adr;
 	/* ニモニック登録あり */
 	if ( OutTbl.opr[0] ){
 		/* 通常命令／疑似命令種別チェック */
-		ChgCode( oprwk , OutTbl.opr[0] );
-		sts = GetMnemonicKind( oprwk );
-		switch(sts){
+		switch( OutTbl.kind ){
 		case OP_ORG:
 		case OP_EQU:
 		case OP_DS:
@@ -1244,6 +1589,7 @@ unsigned short op,opdat,sts,adr;
 		case OP_LIST:
 		case OP_NOLIST:
 		case OP_EJECT:
+		case OP_INCBIN:
 			break;
 		case OP_START:
 			/* START処理 */
@@ -1272,8 +1618,14 @@ unsigned short op,opdat,sts,adr;
 					if ( codetbl[OutTbl.idx].kind == REG_NUJ ){
 						/* 相対ジャンプアドレス計算 */
 						if(rc = GetJumpData( OutTbl.opdata[1] , adr ,OutTbl.byte ,&op , &opdat )) break;
-						/* オペランドコード出力 */
 						OutTbl.code[2] = (unsigned char)( op | opdat );
+#if __WORD_ADDRESS
+						/* オペランドコード出力 */
+						if (Wadr){
+							OutTbl.code[2] = 0;
+							OutTbl.code[3] = (unsigned char)( op | opdat );
+						}
+#endif
 					}
 					break;
 				case IR_REG:/* IREG：REG  (２バイト)        */
@@ -1284,16 +1636,35 @@ unsigned short op,opdat,sts,adr;
 					if ( codetbl[OutTbl.idx].kind == IR_REGJ ){
 						/* 相対ジャンプアドレス計算 */
 						if(rc = GetJumpData( OutTbl.opdata[2] , adr ,OutTbl.byte ,&op , &opdat )) break;
-						/* オペランドコード出力 */
 						OutTbl.code[2] = (unsigned char)( op | opdat );
+#if __WORD_ADDRESS
+						/* オペランドコード出力 */
+						if (Wadr){
+							OutTbl.code[2] = 0;
+							OutTbl.code[3] = (unsigned char)( op | opdat );
+						}
+#endif
 					}
 					break;
-				case IR_IM8:/* IREG：IM8  (２バイト)        */
+				case IR_IM5:/* IREG：IM5  (２バイト)        */
+					/* オペランドチェック */
+					if (OutTbl.opdata[1] >= IM5bit ){ rc = OFLOW ; break; }
+					/* オペランドコード出力 */
+					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[1];
+					break;
+				case IR_IM8:/* IREG：IM8  (３バイト)        */
 					/* オペランドチェック */
 					if (OutTbl.opdata[1] >= IM8bit ){ rc = OFLOW ; break; }
 					/* オペランドコード出力 */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop;
 					OutTbl.code[2] = (unsigned char)OutTbl.opdata[1];
+					break;
+				case IR_RIM3:/* IREG: REG: IM3  (３バイト)        */
+					/* オペランドチェック */
+					if ((OutTbl.opdata[2] <= 1 )||(OutTbl.opdata[2] > IM3bit )){ rc = OFLOW ; break; }
+					/* オペランドコード出力 */
+					OutTbl.code[1] = codetbl[OutTbl.idx].secop|(unsigned char)OutTbl.opdata[1];
+					OutTbl.code[2] = (unsigned char)((OutTbl.opdata[2]-1)<<5);
 					break;
 				case REG_IM3:/* REG : IM3  (３バイト)        */
 					/* オペランドチェック */
@@ -1336,6 +1707,12 @@ unsigned short op,opdat,sts,adr;
 					if(rc = GetJumpData( OutTbl.opdata[2] , adr ,OutTbl.byte ,&op , &opdat )) break;
 					/* オペランドコード出力 */
 					OutTbl.code[2] = (unsigned char)( op | opdat );
+#if __WORD_ADDRESS
+					if (Wadr){
+						OutTbl.code[2] = 0;
+						OutTbl.code[3] = (unsigned char)( op | opdat );
+					}
+#endif
 					break;
 				case REG2_IM7:	/* REG : REG ：IM7  (４バイト)        */
 								/* REG : IM8 ：IM7  (４バイト)        */
@@ -1409,12 +1786,24 @@ unsigned short op,opdat,sts,adr;
 					/* オペランドコード出力 */
 					OutTbl.code[1] = (unsigned char)( OutTbl.opdata[1] & 0xff );
 					OutTbl.code[2] = (unsigned char)( OutTbl.opdata[1] >> 8 );
+#if __WORD_ADDRESS
+					if (Wadr){
+						OutTbl.code[2] = 0;
+						OutTbl.code[3] = (unsigned char)( OutTbl.opdata[1] >> 8 );
+					}
+#endif
 					break;
 				/* 数値(16bit):なし JP/CAL命令  */
 				case IM16_NU:
 					/* オペランドコード出力 */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)( OutTbl.opdata[0] & 0xff );
 					OutTbl.code[2] = (unsigned char)( OutTbl.opdata[0] >> 8 );
+#if __WORD_ADDRESS
+					if (Wadr){
+						OutTbl.code[2] = 0;
+						OutTbl.code[3] = (unsigned char)( OutTbl.opdata[0] >> 8 );
+					}
+#endif
 					break;
 				default:
 					rc = UNDEFOPR;
@@ -1423,8 +1812,6 @@ unsigned short op,opdat,sts,adr;
 			}
 			break;
 		}
-		/* アセンブルアドレス更新 */
-		adr += OutTbl.byte;
 	}
 
 	return rc;
@@ -1439,6 +1826,9 @@ unsigned short op,opdat,sts,adr;
 /**********************************************************************/
 int GetJumpData( unsigned short jadr , unsigned short adr  , unsigned short byte ,unsigned short *op ,unsigned short *opdat )
 {
+#if __WORD_ADDRESS
+	if (Wadr) byte /= 2;
+#endif
 	/* 相対ジャンプアドレス計算 */
 	if ( jadr > adr ){
 		/* ＋ジャンプ */
@@ -1602,7 +1992,7 @@ char *Opr;
 			}
 			/* エラー終了 */
 			else return ILLDQUO;
-#if SJIS_SPACE
+#if __SJIS_SPACE
 		case 0x81:
 			/* 全角スペースではない */
 			if ( buff[1] != 0x40 ){
@@ -1633,7 +2023,7 @@ char *Opr;
 		case '\t':
 			/* 第２オペランド以降でかつ、JRタグである */
 			if ( (n >= 2)&&( j == 3 )&&
-				( !strcmp( &Opr[0],",jr" )||!strcmp( &Opr[0],",JR" ) ) ){
+				( !strcmp( &Opr[0],",jr" )||!strcmp( &Opr[0],",JR" ))){
 				/* スペースとして登録する */
 				Opr[j++] = 0x20;
 				break;
@@ -1751,15 +2141,18 @@ char *Opr;
 /*   出力    : エラー情報（0:正常、0以外:エラー）                     */
 /*                                                                    */
 /**********************************************************************/
-int GetOprKind( int num , char * buff , unsigned short * kind , unsigned short * data )
+int GetOprKind( int num , char * buff , unsigned short * kind , unsigned short * data , unsigned short *sir )
 {
+char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 int rc;
 unsigned short op,sts;
-char mnwk[MAXMN];	/* ニモニック変換用ワーク */
-
+#if __DEBUG
+printf("GetOprKind [%s]\n",buff);
+#endif
 	/* 種別情報初期化 */
 	*kind = 0;
 	*data = 0;
+	*sir = 0;
 	/* 要求文字列エントリがない場合、エラー終了 */
 	if ( !buff[0] ) return NOENT;
 
@@ -1772,6 +2165,13 @@ char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 		rc = GetCalcData( &buff[3] , kind , data );
 		return rc;
 	}
+#if __EUR_MNEMONIC
+	else if( !memcmp(oprwk,"J.", 2 ) ){
+		/* 計算式として処理する */
+		rc = GetCalcData( &buff[2] , kind , data );
+		return rc;
+	}
+#endif /* __EUR_MNEMONIC */
 	/* オペランド1の時のみチェックする */
 	if ( num==1 ){
 		/* 内部レジスタ指定である */
@@ -1786,20 +2186,25 @@ char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 		}
 	}
 	/* メインレジスタ指定である */
-	if ( !( rc = GetReg( buff , &sts ) ) ){
+	if ( !( rc = GetReg( buff , &sts , sir ) ) ){
 		*data = sts;
-		switch( sts ){
-		case 0:  *kind = R00; break;
-		case 30: *kind = R30; break;
-		case 31: *kind = R31; break;
-		default: *kind = REG; break;
+		/* SIR指定なし */
+		if ( !OutTbl.si ){
+			switch( sts ){
+			case 0:  *kind = RSZ; break;
+			case 30: *kind = RSY; break;
+			case 31: *kind = RSX; break;
+			default: *kind = REG; break;
+			}
 		}
+		/* 既にSIR指定がある場合、通常レジスタ指定とする */
+		else *kind = REG;
 		return NORM;
 	}
 	/* オペランド記述がメインレジスタ指定以外 */
 	if ( rc != ILLOPR ) return rc;
 	/* メモリインデックス指定である */
-	if ( !( rc = GetIndexKind( buff , &op , &sts ) ) ){
+	if ( !( rc = GetIndexKind( buff , &op , &sts , sir ) ) ){
 		*data = sts;
 		*kind = op;
 		return NORM;
@@ -1818,6 +2223,20 @@ char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 			buff++;
 		}
 	}
+#if __EUR_MNEMONIC
+	/* EU(Europe)形式ニモニック使用中である */
+	if ( InstMode==2 ){
+		/* オペランド２か３でかつ、先頭文字が"L"かつ、長さが2である */
+		if ( ( num==2 || num==3 )&&( buff[0]=='L'||buff[0]=='l' )&&( strlen(buff)==2 ) ){
+			/* 2～8の範囲内である */
+			if ( 2<= (int)(buff[1]-'0') <=8 ){
+				*data = (unsigned short)(buff[1]-'0');
+				*kind =LBLOK;
+				return NORM;
+			}
+		}
+	}
+#endif /* __EUR_MNEMONIC */
 	/* 計算式として処理する */
 	if ( !( rc = GetCalcData( buff , kind , data ) ) ) return NORM;
 	return rc;
@@ -1832,11 +2251,11 @@ char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 /*           : エラー情報（0:正常、0以外:異常）                       */
 /*                                                                    */
 /**********************************************************************/
-int GetIndexKind( char * buff , unsigned short * kind , unsigned short * data )
+int GetIndexKind( char * buff , unsigned short * kind , unsigned short * data ,unsigned short *sir )
 {
+char Indexwk[6];
 int	i,len,rc;
 unsigned short opr,sts,knd;
-char Indexwk[6];
 
 	/* メモリインデックス指定である */
 	len = strlen( buff );
@@ -1844,14 +2263,19 @@ char Indexwk[6];
 	if ( ( oprwk[0] == '(' )&&( oprwk[len-1] == ')' ) ){
 		oprwk[len-1] = 0;
 		/* メインレジスタによるインデックスである */
-		if ( !( rc = GetReg( &oprwk[1] , &sts ) ) ){
+		if ( !( rc = GetReg( &oprwk[1] , &sts ,sir ) ) ){
 			*data = sts;
-			switch(sts){
-			case 0:  *kind = MR00; break;
-			case 30: *kind = MR30; break;
-			case 31: *kind = MR31; break;
-			default: *kind = MREG; break;
+			/* SIR指定なし */
+			if ( !OutTbl.si ){
+				switch(sts){
+				case 0:  *kind = MRSZ; break;
+				case 30: *kind = MRSY; break;
+				case 31: *kind = MRSX; break;
+				default: *kind = MREG; break;
+				}
 			}
+			/* 既にSIR指定がある場合、通常レジスタ指定とする */
+			else *kind = MREG;
 			return NORM;
 		}
 		/* オペランド記述がメインレジスタ指定以外 */
@@ -1865,14 +2289,19 @@ char Indexwk[6];
 			if (!strcmp( Indexwk , moprtbl[i].name )){
 				sts = moprtbl[i].code;
 				/* メインレジスタによるインデックスである */
-				if ( !( rc = GetReg( &oprwk[4] , &opr ) ) ){
+				if ( !( rc = GetReg( &oprwk[4] , &opr ,sir ) ) ){
 					*data = opr;
-					switch(opr){
-					case 0:  *kind = sts|(unsigned short)R00; break;
-					case 30: *kind = sts|(unsigned short)R30; break;
-					case 31: *kind = sts|(unsigned short)R31; break;
-					default: *kind = sts|(unsigned short)REG; break;
+					/* SIR指定なし */
+					if ( !OutTbl.si ){
+						switch(opr){
+						case 0:  *kind = sts|(unsigned short)RSZ; break;
+						case 30: *kind = sts|(unsigned short)RSY; break;
+						case 31: *kind = sts|(unsigned short)RSX; break;
+						default: *kind = sts|(unsigned short)REG; break;
+						}
 					}
+					/* 既にSIR指定がある場合、通常レジスタ指定とする */
+					else{ *kind = sts|(unsigned short)REG; }
 					return NORM;
 				}
 				/* オペランド記述がメインレジスタ指定以外 */
@@ -1908,21 +2337,50 @@ char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 	i = 0;
 	/* ニモニック種別チェック */
 	ChgCode( mnwk , OutTbl.opr[0] );
-	/* 内部レジスタ利用命令テーブルサーチ */
-	while( strcmp( mnwk , irtbl[i].name ) ){
-		/* 該当命令では無い場合、処理終了 */
-		if ( ++i >= MAXIR ) return ILLOPR;
+#if __EUR_MNEMONIC
+	/* EU(Europe)形式ニモニック使用中である */
+	if ( InstMode==2 ){
+		/* 内部レジスタ利用命令テーブルサーチ */
+		while( strcmp( mnwk , irtblC[i].name ) ){
+			/* 該当命令では無い場合、処理終了 */
+			if ( ++i >= MAXIR ) return ILLOPR;
+		}
+	}
+	else
+#endif /* __EUR_MNEMONIC */
+	{
+		/* 内部レジスタ利用命令テーブルサーチ */
+		while( strcmp( mnwk , irtbl[i].name ) ){
+			/* 該当命令では無い場合、処理終了 */
+			if ( ++i >= MAXIR ) return ILLOPR;
+		}
 	}
 	/* オペランド長は正常である */
 	if ( !strlen(buff) || strlen(buff)>MAXMN ) return ILLOPR;
 	/* 大文字に変換する */
 	ChgCode( mnwk , buff );
-	/* 内部レジスタテーブルサーチ */
-	for ( i = 0 ; i < MAXIREG ; i++ ){
-		if (!strcmp( mnwk , regtbl[i].name )){
-			/* 内部レジスタコードを返す */
-			*kind = regtbl[i].code;
-			return NORM;
+#if __EUR_MNEMONIC
+	/* EU(Europe)形式ニモニック使用中である */
+	if ( InstMode==2 ){
+		/* 内部レジスタテーブル(EU(Europe)用追加分)サーチ */
+		for ( i=0 ; i < MAXIREG+IREGADD ; i++ ){
+			if (!strcmp( mnwk , regtbl[i].name )){
+				/* 内部レジスタコードを返す */
+				*kind = regtbl[i].code;
+				return NORM;
+			}
+		}
+	}
+	else
+#endif /* __EUR_MNEMONIC */
+	{
+		/* 内部レジスタテーブルサーチ */
+		for ( i = 0 ; i < MAXIREG ; i++ ){
+			if (!strcmp( mnwk , regtbl[i].name )){
+				/* 内部レジスタコードを返す */
+				*kind = regtbl[i].code;
+				return NORM;
+			}
 		}
 	}
 	/* 該当なしを返す */
@@ -1973,12 +2431,73 @@ char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 /*           : エラー情報（0:正常、0以外:異常）                       */
 /*                                                                    */
 /**********************************************************************/
-int GetReg( char * buff , unsigned short * data )
+int GetReg( char * buff , unsigned short * data ,unsigned short * sir )
 {
+char mnwk[MAXMN];	/* ニモニック変換用ワーク */
 unsigned short sts,kind;
 int rc;
-	/* レジスタ指定である */
+	/* SIR指定フラグをクリアする */
+	*sir = 0;
+#if __EUR_MNEMONIC
+	/* EU(Europe)形式ニモニック使用中である */
+	if ( InstMode==2 ){
+		/* レジスタ指定である */
+		if ( buff[0] == '#' ){
+			/* 特定インデックス指定チェック */
+			if ( strlen(buff) < MAXMN ){
+				ChgCode( mnwk , &buff[0] );
+				/* #0指定である */
+				if ( !strcmp( mnwk ,"#0" ) ){
+					*data = 31;
+					*sir = 1;
+					return ( OutTbl.si ? REGERR : NORM );
+				}
+				/* #1指定である */
+				if ( !strcmp( mnwk ,"#1" ) ){
+					*data = 30;
+					*sir = 1;
+					return ( OutTbl.si ? REGERR : NORM );
+				}
+				/* #2指定である */
+				if ( !strcmp( mnwk ,"#2" ) ){
+					*data =  0;
+					*sir = 1;
+					return ( OutTbl.si ? REGERR : NORM );
+				}
+			}
+			/* #0,#1,#2以外なら、エラー扱いとする */
+			*data = 0;
+			return REGERR;
+		}
+	}
+#endif /* __EUR_MNEMONIC */
+	/* レジスタ指定($0～$31)である */
 	if ( buff[0] == '$' ){
+		/* 特定インデックス指定チェック */
+		if ( strlen(buff) < MAXMN ){
+			ChgCode( mnwk , &buff[1] );
+			/* $SX指定である */
+			if ( !strcmp( mnwk ,"(SX)" ) || !strcmp( mnwk ,"SX" )
+				){
+				*data = 31;
+				*sir = 1;
+				return ( OutTbl.si ? REGERR : NORM );
+			}
+			/* $SY指定である */
+			if ( !strcmp( mnwk ,"(SY)" ) || !strcmp( mnwk ,"SY" )
+				){
+				*data = 30;
+				*sir = 1;
+				return ( OutTbl.si ? REGERR : NORM );
+			}
+			/* $SZ指定である */
+			if ( !strcmp( mnwk ,"(SZ)" ) || !strcmp( mnwk ,"SZ" )
+				){
+				*data =  0;
+				*sir = 1;
+				return ( OutTbl.si ? REGERR : NORM );
+			}
+		}
 		/* レジスタ番号取得 */
 		if(!(rc = GetCalcData( &buff[1] , &kind , &sts ) )){
 			/* 名称未解決の場合、エラー終了する */
@@ -1994,6 +2513,7 @@ int rc;
 		}
 		else return rc;
 	}
+
 	/* エラー終了 */
 	*data = 0;
 	/* レジスタ指定ではない */
@@ -2007,7 +2527,7 @@ int rc;
 /*   出力    : エラー情報（0:正常、0以外:異常）                       */
 /*                                                                    */
 /**********************************************************************/
-int SetLabelTbl( char * buff , unsigned short adr )
+int SetLabelTbl( char * buff , unsigned short adr ,unsigned char flag )
 {
 LBL * Label;
 LBL * Labelwk;
@@ -2042,6 +2562,8 @@ LBL * Labelwk;
 	memcpy( Label->name , buff , strlen(buff) );
 	/* 現在のアセンブルアドレスをラベルテーブルに登録する */
 	Label->adr = adr;
+	/* ラベル種別を登録する */
+	Label->flag = flag;
 	/* ラベル登録数更新 */
 	LabelCnt++;
 
@@ -2064,8 +2586,14 @@ LBL * Label;
 	while( Label ){
 		/* 該当ラベル名検索 */
 		if (!strcmp( Label->name , buff )){
-			/* ラベルアドレスを返す */
+			/* ORG命令で利用（引用）している？ */
+			if( OutTbl.kind == OP_ORG ){
+				/* アドレスラベル種別に振り替える */
+				Label->flag = LBL_ADR;
+			}
+			/* ラベルアドレス/種別を返す */
 			*adr = Label->adr;
+			LblFlg |= Label->flag;
 			return NORM;
 		}
 		/* ラベルポインタ更新 */
@@ -2196,6 +2724,9 @@ char mnwk[MAXMN+1];	/* ニモニック変換用ワーク */
 		/* 8ビット、16ビット命令である(第3オペランドがない) */
 		if(!OutTbl.opr[3]){
 			mnwk[2]='D';
+			if ( mnwk[3]!='W' ){
+				OutTbl.sts = 1;
+			}
 		}
 		/* マルチワード要求である */
 		else{
@@ -2223,7 +2754,102 @@ char mnwk[MAXMN+1];	/* ニモニック変換用ワーク */
 	memcpy( dst , mnwk ,MAXMN );
 	return NORM;
 }
-
+#if __EUR_MNEMONIC
+/**********************************************************************/
+/*   ChgEuropeName : Change Europe Style Mnemonic Name  (EUR->HD61)   */
+/*                                                                    */
+/*   処理    : Europe形式のニモニックをHD61形式に変換する             */
+/*   入力    : オペランドポインタ、出力バッファポインタ               */
+/*   出力    : エラー情報（0:正常、0以外:異常）                       */
+/*                                                                    */
+/**********************************************************************/
+int ChgEuropeName( char * dst , char * src )
+{
+int len;
+char mnwk[MAXMN+1];	/* ニモニック変換用ワーク */
+	/* ワークエリア初期化 */
+	memset( mnwk , 0 , sizeof(mnwk) );
+	/* 入力ニモニックあり */
+	if (!( len = ChgCode( mnwk , src ) )) return UNDEFOPR;
+	/* AI形式のマルチワード指定ならエラーとする */
+	if (mnwk[len-1] == 'M') return UNDEFOPR;
+	/* OCB系列命令である */
+	if ( !memcmp( mnwk , "OCB" , 3 ) ){
+		/* STL系列に変更する */
+		memcpy( mnwk, "STL" , 3 );
+		/* マルチワード指定ではない */
+		if (mnwk[3] != 'L'){
+			goto ChgEnd;
+		}
+	}
+	/* ICB系列命令である */
+	else if ( !memcmp( mnwk , "ICB" , 3 ) ){
+		/* LDL系列に変更する */
+		memcpy( mnwk, "LDL" , 3 );
+		/* マルチワード指定ではない */
+		if (mnwk[3] != 'L'){
+			goto ChgEnd;
+		}
+	}
+	/* PCB系列命令である */
+	else if ( !memcmp( mnwk , "PCB" , 3 ) ){
+		/* LDL系列に変更する */
+		memcpy( mnwk, "PPO" , 3 );
+		/* マルチワード指定ではない */
+		if (mnwk[3] != 'L'){
+			goto ChgEnd;
+		}
+	}
+	/* PRA系列命令である */
+	else if ( !memcmp( mnwk , "PRA" , 3 ) ){
+		/* PSR系列に変更する */
+		memcpy( mnwk, "PSR" , 3 );
+		/* マルチワード指定ではない */
+		if (mnwk[len-1] != 'L'){
+			goto ChgEnd;
+		}
+	}
+	/* GRA系列命令である */
+	else if ( !memcmp( mnwk , "GRA" , 3 ) ){
+		/* GSR系列に変更する */
+		memcpy( mnwk, "GSR" , 3 );
+		/* マルチワード指定ではない */
+		if (mnwk[len-1] != 'L'){
+			goto ChgEnd;
+		}
+	}
+	/* BDN/BUP系列命令である */
+	else if ( !memcmp( mnwk , "BDN" , 3 ) || !memcmp( mnwk , "BUP" , 3 ) ){
+		/* 第一オペランドがIM8である */
+		if ( (OutTbl.opkind[0] &MASKOP2)==(IM8 &MASKOP2) ){
+			/* BDNS/BUPS系列に変更する */
+			mnwk[3]='S';
+			goto ChgEnd;
+		}
+	}
+	/* JPW系列命令である */
+	else if ( !memcmp( mnwk , "JPW" , 3 ) ){
+		/* オペランド1なし */
+		if( !OutTbl.opr[1] ){
+			return ILLOPR;
+		}
+		/* オペランド1がレジスタ指定である */
+		if ( OutTbl.opr[1][0]=='$' || (OutTbl.opr[1][0]=='('&& OutTbl.opr[1][1]=='$') ){
+			/* JP系列に変更する */
+			mnwk[2]=0;
+			goto ChgEnd;
+		}
+	}
+	/* CAL/PFL/GFL以外でかつ、マルチワード指定 xxxxL である */
+	if ( memcmp( mnwk , "CAL" , 3 ) && memcmp( mnwk , "PFL" , 3 ) && memcmp( mnwk , "GFL" , 3 ) && mnwk[len-1] == 'L' ){
+		/* マルチワード指定とする */
+		mnwk[len-1] = 'M';
+	}
+ChgEnd:
+	memcpy( dst , mnwk ,MAXMN );
+	return NORM;
+}
+#endif /* __EUR_MNEMONIC */
 /**********************************************************************/
 /*   GetCalcData : Get Calculate Data                                 */
 /*                                                                    */
@@ -2365,35 +2991,27 @@ int rc;
 unsigned short val,wval;
 
 	/* 先頭数式の値を取得 */
-	if( rc = CalcVal1( &val ) ) return rc;
+	if( rc = CalcValShift( &val ) ) return rc;
 	while( 1 ){
 		switch( calcwk[CalcPtr] ){
 		/* AND処理 */
 		case '#':
 		case '&':
 			CalcPtr ++;
-			if ( rc = CalcVal1( &wval ) ) return rc;
+			if ( rc = CalcValShift( &wval ) ) return rc;
 			val &= wval;
 			break;
 		/* OR処理 */
 		case '|':
 			CalcPtr ++;
-			if ( rc = CalcVal1( &wval ) ) return rc;
+			if ( rc = CalcValShift( &wval ) ) return rc;
 			val |= wval;
 			break;
 		/* XOR処理 */
 		case '^':
 			CalcPtr ++;
-			if ( rc = CalcVal1( &wval ) ) return rc;
+			if ( rc = CalcValShift( &wval ) ) return rc;
 			val ^= wval;
-			break;
-		/* MOD処理 */
-		case '%':
-			CalcPtr ++;
-			if ( rc = CalcVal1( &wval ) ) return rc;
-			/* 0で除算 */
-			if ( !wval ) return CALERR;
-			val %= wval;
 			break;
 		case '(':
 			return CALERR;
@@ -2406,9 +3024,44 @@ unsigned short val,wval;
 }
 
 /**********************************************************************/
+/*   CalcValShift : Calculate Shift.                                  */
+/*                                                                    */
+/*   処理    : 与えられた文字式をシフト演算する(優先順位+2)           */
+/*   入力    : 数値ポインタ                                           */
+/*   出力    : エラー情報（0:正常、0以外:エラー）                     */
+/*           : 計算値(value)                                          */
+/*                                                                    */
+/**********************************************************************/
+int CalcValShift(unsigned short * value )
+{
+int rc;
+unsigned short val,wval;
+
+	/* 先頭数値取得 */
+	if( rc = CalcVal1( &val ) ) return rc;
+	while( 1 ) {
+		/* 右シフト演算処理 */
+		if ( (calcwk[CalcPtr]=='>')&&(calcwk[CalcPtr+1]=='>') ){
+			CalcPtr += 2;
+			if ( rc = CalcVal1( &wval ) ) return rc;
+			val = val>>wval;
+		}
+		else if ( (calcwk[CalcPtr]=='<')&&(calcwk[CalcPtr+1]=='<') ){
+			CalcPtr += 2;
+			if ( rc = CalcVal1( &wval ) ) return rc;
+			val = val<<wval;
+		}
+		else {
+			*value = val;
+			return NORM;
+		}
+	}
+}
+
+/**********************************************************************/
 /*   CalcVal1 : Calculate Add/Sub.                                    */
 /*                                                                    */
-/*   処理    : 与えられた文字式を加減算する(優先順位+2)               */
+/*   処理    : 与えられた文字式を加減算する(優先順位+3)               */
 /*   入力    : 数値ポインタ                                           */
 /*   出力    : エラー情報（0:正常、0以外:エラー）                     */
 /*           : 計算値(value)                                          */
@@ -2434,6 +3087,7 @@ unsigned short val,wval;
 			CalcPtr ++;
 			if ( rc = CalcVal2( &wval ) ) return rc;
 			val -= wval;
+			break;
 		/* 処理終了 */
 		default:
 			*value = val;
@@ -2445,7 +3099,7 @@ unsigned short val,wval;
 /**********************************************************************/
 /*   CalcVal2 : Calculate Multiple/Divide.                            */
 /*                                                                    */
-/*   処理    : 与えられた文字式を乗除算する(優先順位+3)               */
+/*   処理    : 与えられた文字式を乗除算する(優先順位+4)               */
 /*   入力    : 数値ポインタ                                           */
 /*   出力    : エラー情報（0:正常、0以外:エラー）                     */
 /*           : 計算値(value)                                          */
@@ -2473,6 +3127,15 @@ unsigned short val,wval;
 			/* 0で除算 */
 			if ( !wval ) return CALERR;
 			val /= wval;
+			break;
+		/* MOD処理 */
+		case '%':
+			CalcPtr ++;
+			if ( rc = CalcVal3( &wval ) ) return rc;
+			/* 0で除算 */
+			if ( !wval ) return CALERR;
+			val %= wval;
+			break;
 		/* 処理終了 */
 		default:
 			*value = val;
@@ -2661,7 +3324,7 @@ unsigned long sts;
 			}
 		}
 		/* 範囲オーバーである */
-		if ( sts >= 65536 ) return OFLOW;
+		if ( sts >= IM16bit ) return OFLOW;
 		/* 正常終了 */
 		*data = (unsigned short )sts;
 		return NORM;
@@ -2675,13 +3338,13 @@ unsigned long sts;
 			 }
 		}
 		/* １６進数に変換 */
-#if FORDOS
+#if __FORDOS
 		if ( sscanf( &buff[2] , "%Lx" , &sts ) == EOF ) return ILLOPR;
 #else
 		if ( sscanf( &buff[2] , "%x" , &sts ) == EOF ) return ILLOPR;
 #endif
 		/* 範囲オーバーである */
-		if ( sts >= 65536 ) return OFLOW;
+		if ( sts >= IM16bit ) return OFLOW;
 		/* 正常終了 */
 		*data = (unsigned short)sts;
 		return NORM;
@@ -2692,13 +3355,13 @@ unsigned long sts;
 		if( !strchr( DecStr , (int)buff[i] ) ) return ILLOPR;
 	}
 	/* １０進数に変換 */
-#if FORDOS
+#if __FORDOS
 	if ( sscanf( buff , "%Ld" , &sts ) == EOF ) return ILLOPR;
 #else
 	if ( sscanf( buff , "%d" , &sts ) == EOF ) return ILLOPR;
 #endif
 	/* 範囲オーバーである */
-	if ( sts >= 65536 ) return OFLOW;
+	if ( sts >= IM16bit ) return OFLOW;
 
 	/* 正常終了 */
 	*data = (unsigned short )sts;
@@ -2745,7 +3408,7 @@ int	i,ent,rc;
 		/* 代入ラベルと一致 */
 		if( !strcmp( SetTbl[i].let , name ) ){
 			/* ラベルテーブルに登録する */
-			if( rc = SetLabelTbl( SetTbl[i].ent , sts ) ) return rc;
+			if( rc = SetLabelTbl( SetTbl[i].ent , sts ,LBL_EQU ) ) return rc;
 		}
 	}
 	/* 登録ラベルと一致した場合、ラベル登録無しを返す */
@@ -2753,6 +3416,237 @@ int	i,ent,rc;
 
 	/* 該当なし */
 	return NORM;
+}
+/**********************************************************************/
+/*   IncludeBin : Include BIN/BMP file                                */
+/*                                                                    */
+/*   処理    : BinaryフォーマットのファイルをOutBufに読み出す         */
+/*   入力    : バッファ長通知ポインタ                                 */
+/*   出力    : エラー情報（0:正常、0以外:異常）                       */
+/*                                                                    */
+/**********************************************************************/
+int IncludeBin( unsigned short *cnt ,char *File )
+{
+int rc,type;
+char * fptr;
+unsigned long Size = 0;
+
+	/* バッファポインタ初期化 */
+	type =0;
+
+	/* 拡張子によるファイル種別の判別 */
+	if ((int)(fptr = strrchr( File,  '.' ))){
+		ChgCode( oprwk , fptr );
+		/* BMPファイルである */
+		if ( !strcmp(".BMP",oprwk ) ){
+			type = 1;
+		}
+	}
+	/* バイナリファイルOPEN */
+	if ( ( BinFD = fopen( File ,"rb" ) ) <= 0 ){
+		printf("Invalid Binary File Name.\n");
+		return ILLBIN;
+	}
+
+	if (!type){
+		/* バイナリ読み出し */
+		rc = ReadBin( &Size );
+	}
+	else{
+		/* ビットマップ読み出し */
+		rc = ReadBmp( &Size );
+	}
+
+	/* バイナリファイルクローズ */
+	fclose(BinFD);
+
+	/* コードサイズ引渡し */
+	*cnt = (unsigned short)Size;
+	return rc;
+}
+/**********************************************************************/
+/*   ReadBin : Read BIN file                                          */
+/*                                                                    */
+/*   処理    : BinaryフォーマットのファイルをOutTbl.bcodeに読み出す   */
+/*   入力    : バッファ長通知ポインタ                                 */
+/*   出力    : エラー情報（0:正常、0以外:異常）                       */
+/*                                                                    */
+/**********************************************************************/
+int ReadBin( unsigned long * Size )
+{
+unsigned long BuffSize=0;	/* 出力バッファサイズ */
+
+	*Size = 0;
+	/* ファイルサイズ取得 */
+	if (fseek( BinFD , 0 , SEEK_END )){
+		return ILLBIN;
+	}
+	BuffSize = (unsigned long)ftell( BinFD );
+	if (fseek( BinFD , 0 , SEEK_SET )){
+		return ILLBIN;
+	}
+	/* バッファサイズチェック */
+	if ( BuffSize > ( MAXOBJ - AsmAdr )){
+		/* 読み出しサイズオーバー */
+		return ADOFLOW;
+	}
+	/* 1 pass目なら終了 */
+	if ( !pass ){
+		*Size = BuffSize;
+		return NORM;
+	}
+	/* 出力バッファを確保する */
+	if ( !(OutTbl.bcode = malloc( (size_t)BuffSize ))){
+		printf("Output Buffer Not Allocated.\n");
+		return ILLBIN;
+	}
+	/* BINファイル読みだし */
+	if ( fread( OutTbl.bcode , (size_t)BuffSize , (size_t)1 , BinFD ) != 1 ){
+		printf("File read error.\n");
+		return ILLBIN;
+	}
+
+	/* バッファ長セット */
+	*Size = BuffSize;
+	return NORM;
+}
+/**********************************************************************/
+/*   ReadBmp : Read Bitmap file                                       */
+/*                                                                    */
+/*   処理    : BMPフォーマットのファイルをOutTbl.bcodeに読み出す      */
+/*   入力    : バッファ長通知ポインタ                                 */
+/*   出力    : エラー情報（0:正常、0以外:異常）                       */
+/*                                                                    */
+/**********************************************************************/
+int ReadBmp( unsigned long * Size )
+{
+unsigned char ImgTbl[62];
+unsigned long bfsize;	/* ファイルサイズ */
+unsigned long boffset;	/* 画像データまでのオフセット */
+unsigned long bisize;	/* ヘッダの大きさ */
+unsigned long width;	/* 画像の幅 */
+unsigned long width2;	/* 画像の幅(実際のデータ位置) */
+unsigned long height;	/* 画像の高さ */
+unsigned long imgsize;	/* 画像のサイズ */
+unsigned short bitcount;/* 色数 */
+unsigned short parret1,parret2;/* パレットデータ */
+unsigned long x,y;
+unsigned char * ImageTbl=0;/* 読み出し用バッファポインタ */
+unsigned long BuffSize=0;	/* 出力バッファサイズ */
+unsigned long ImgSize=0;	/* 画像バッファサイズ */
+
+	*Size = 0;
+	/* イメージテーブル初期化 */
+	memset( ImgTbl , 0 , sizeof(ImgTbl) );
+	/* BMPファイルヘッダ読み出し(62バイト固定) */
+	if ( fread( ImgTbl , 1 , 62 , BinFD ) != 62 )
+		goto bmp_read_error;
+	/* BMPヘッダ正常 */
+	if ( (ImgTbl[0] != 'B')||(ImgTbl[1] != 'M'))
+		goto bmp_read_error;
+	/* BMPファイルサイズ取得 */
+	bfsize = Getlong(2);
+	/* 画像データまでのオフセット取得 */
+	boffset = Getlong(10);
+	/* ヘッダの大きさ */
+	bisize = Getlong(14);
+	/* ヘッダサイズチェック */
+	if ( (( bisize != 40 )&&( bisize != 12 ))||( bisize > boffset )||( bfsize <= boffset ) )
+		goto bmp_read_error;
+	/* BMPパラメータ取得 */
+	switch( bisize ){
+	/* Windows形式フォーマットである */
+	case 40:
+		width = Getlong(18);/* 高さ */
+		height = Getlong(22);/* 幅 */
+		bitcount = Getword(28);/* 色数 */
+		imgsize = Getlong(34);
+		parret1 = Getparret(54);
+		parret2 = ( (boffset-bisize-14) == 6 ) ? Getparret(57) : Getparret(58);
+		break;
+	/* OS2形式フォーマットである */
+	case 12:
+		width = (unsigned long)Getword(18);/* 高さ */
+		height = (unsigned long)Getword(20);/* 幅 */
+		bitcount = Getword(24);/* 色数 */
+		imgsize = 0;
+		parret1 = Getparret(26);
+		parret2 = ( (boffset-bisize-14) == 6 ) ? Getparret(29) : Getparret(30);
+		break;
+	/* 未知のフォーマットの場合、エラー終了 */
+	default:
+		goto bmp_read_error;
+	}
+	/* モノクロ画像である */
+	if ( bitcount != 1 )
+		goto bmp_read_error;
+	/* バッファサイズ作成 */
+	ImgSize = bfsize - boffset;
+
+	/* 解像度のデータを信用する */
+	BuffSize = width * height / 8;
+
+	/* バッファサイズチェック */
+	if ( BuffSize > ( MAXOBJ - AsmAdr )){
+		/* 読み出しサイズオーバー */
+		return ADOFLOW;
+	}
+	/* 1 pass目なら終了 */
+	if ( !pass ){
+		*Size = BuffSize;
+		return NORM;
+	}
+	/* 読み出しテーブルを確保する */
+	if ( !(ImageTbl = malloc( (size_t)ImgSize ))){
+		printf("Read Buffer Not Allocated.\n");
+		return ILLBMP;
+	}
+	/* 読み出しテーブル初期化 */
+	memset( ImageTbl , 0xff , (size_t)ImgSize );
+	/* Bitmapデータ読み出し */
+	if ( fseek( BinFD , boffset , SEEK_SET ) )
+		goto bmp_read_error;
+	if ( fread( ImageTbl , (size_t)1 , (size_t)ImgSize , BinFD ) != ImgSize )
+		goto bmp_read_error;
+
+	/* 出力バッファを確保する */
+	if ( !( OutTbl.bcode = malloc( (size_t)BuffSize ))){
+		printf("Output Buffer Not Allocated.\n");
+		/* 読み出しバッファ開放 */
+		free( ImageTbl );
+		return ILLBMP;
+	}
+	/* バッファ初期化 */
+	memset( OutTbl.bcode, 0 , (size_t)BuffSize );
+	/* width補正 */
+	width2 = ( width & 0x1f ) ? (width+32)/32*32 : width;
+	/* BMP --> バイナリ変換 */
+	for ( x = 0 ; x < width ; x++ ){
+		for ( y = 0 ; y < height ; y++ ){
+			/* 白黒を判定する */
+			if (parret1 < parret2){
+				/* if point(x,y) = 0 */
+				if ( !(ImageTbl[(height-y-1)*(width2/8)+(x/8)]&((unsigned char)(0x80>>(x&7)))) )
+					/* then pset(x,y) */
+					OutTbl.bcode[x+((y/8)*width)] |= (unsigned char)(0x80>>(y&7));
+			}
+			else{
+				/* if point(x,y) = 1 */
+				if ( (ImageTbl[(height-y-1)*(width2/8)+(x/8)]&((unsigned char)(0x80>>(x&7)))) )
+					/* then pset(x,y) */
+					OutTbl.bcode[x+((y/8)*width)] |= (unsigned char)(0x80>>(y&7));
+			}
+		}
+	}
+	/* 読み出しバッファ開放 */
+	free( ImageTbl );
+	*Size = BuffSize;
+	return NORM;
+
+bmp_read_error:
+	/* 読み出しバッファ開放 */
+	if (ImageTbl) free( ImageTbl );
+	return ILLBMP;
 }
 
 /**********************************************************************/
@@ -2770,15 +3664,15 @@ unsigned short sts;
 	/* リスト出力要求がない場合、処理終了 */
 	if ( ListFlag ) return;
 	len = 0;
+	cnt = 0;
 	/* 行番号出力 */
 	if (pr) printf( "%05d:%04X  " , count+1 , OutTbl.adr );
 	fprintf( LstFD ,"%05d:%04X  " , count+1 , OutTbl.adr );
 
 	/* 通常命令／疑似命令種別取り出し */
-	ChgCode( oprwk , OutTbl.opr[0] );
-	sts = GetMnemonicKind( oprwk );
-	/* ORG命令以外は命令語コード出力 */
-	if (OutTbl.byte && ( sts != OP_ORG ) ){
+	sts = OutTbl.kind;
+	/* ORG/#INCBIN命令以外は命令語コード出力 */
+	if (OutTbl.byte && ( sts != OP_ORG )&&( sts != OP_INCBIN ) ){
 		/* データあり */
 		for ( cnt = 0 ; cnt < 4 ; cnt++ ){
 			if ( cnt < OutTbl.byte){
@@ -2803,7 +3697,7 @@ unsigned short sts;
 	}
 	else{
 		/* データなし */
-		cnt = OutTbl.byte;
+		if ( sts != OP_INCBIN ) cnt = OutTbl.byte;
 		if (pr) printf( "          " );
 		if ( !Tab ) fprintf( LstFD ,"          " );
 		else fprintf( LstFD ,"\t\t" );
@@ -2865,7 +3759,6 @@ unsigned short sts;
 	/* 改行 */
 	if (pr) printf( "\n" );
 	fprintf( LstFD ,"\n" );
-
 	/* 命令語コード出力 */
 	while( OutTbl.byte && ( cnt < OutTbl.byte ) ){
 		if (pr) printf("            ");
@@ -2879,8 +3772,14 @@ unsigned short sts;
 					fprintf( LstFD ,"00" );
 				}
 				 else{
-					if (pr) printf( "%02X" , OutTbl.code[cnt] );
-					fprintf( LstFD ,"%02X" , OutTbl.code[cnt] );
+				 	if ( sts != OP_INCBIN ){
+						if (pr) printf( "%02X" , OutTbl.code[cnt] );
+						fprintf( LstFD ,"%02X" , OutTbl.code[cnt] );
+					}
+					else{
+						if (pr) printf( "%02X" , OutTbl.bcode[cnt] );
+						fprintf( LstFD ,"%02X" , OutTbl.bcode[cnt] );
+					}
 				}
 			}
 			else{
@@ -2893,6 +3792,24 @@ unsigned short sts;
 			fprintf( LstFD ,"\t");
 			if ( ( OutTbl.byte & 0x3 ) == 1 ) fprintf( LstFD ,"\t");
 		}
+		/* #incbinニモニック出力 */
+		if ( sts == OP_INCBIN ){
+			/* DB命令出力 */
+			if (pr) printf( "               DB      " );
+			if ( !Tab ) fprintf( LstFD ,"               DB      " );
+			else fprintf( LstFD ,"\tDB\t" );
+			for ( n = cnt-i ; n < cnt ; n++){
+				if ( n < OutTbl.byte){
+					if (pr) printf( "&H%02X" , OutTbl.bcode[n] );
+					fprintf( LstFD ,"&H%02X" , OutTbl.bcode[n] );
+					/* カンマ出力 */
+					if ( ( n < cnt-1 )&&( n < OutTbl.byte-1) ){
+						if (pr) printf( "," );
+						fprintf( LstFD ,"," );
+					}
+				}
+			}
+		}
 		/* 改行 */
 		if (pr) printf( "\n" );
 		fprintf( LstFD ,"\n" );
@@ -2903,7 +3820,7 @@ unsigned short sts;
 		fprintf( LstFD ,"%c", 0xc );
 		/* ヘッダ出力 */
 		fprintf( LstFD , "%s%s - ",name,rev );
-		fprintf( LstFD ,"ASSEMBLE LIST OF [%s]\n", SrcFile );
+		fprintf( LstFD ,"ASSEMBLY LIST OF [%s]\n", SrcFile );
 		LineFeed = 0;
 	}
 }
