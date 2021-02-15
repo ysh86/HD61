@@ -4,173 +4,173 @@
 /*  FILE : hd61700.h                                                */
 /*                                                                  */
 /*  REVISION HISTORY:                                               */
-/*  Rev : 0.01 2003.01.06  Å‰‚Ìƒo[ƒWƒ‡ƒ“                         */
-/*  Rev : 0.03 2003.01.09  –¢’è‹`–½—ß‚ğ’Ç‰Á                         */
-/*  Rev : 0.04 2003.01.16  –¢’è‹`–½—ß‚ğ’Ç‰Á                         */
-/*  Rev : 0.05 2003.01.18  –¢’è‹`–½—ß‚ğ’Ç‰Á                         */
-/*  Rev : 0.07 2003.02.02  ƒIƒyƒR[ƒh0x0`0xf¤0x80`0x8f‚É‘Î‚µ‚Ä    */
-/*                         JumpŠg’£‚ğƒCƒl[ƒuƒ‹‚Æ‚µ‚½B             */
-/*  Rev : 0.08 2003.02.06  ‰‰Z‚ÌƒGƒ‰[ƒƒbƒZ[ƒW’Ç‰Á             */
-/*             2003.02.07  OutTbl\‘¢‘Ì‚ğC³                       */
-/*             2003.02.09  –½—ßŒêƒTƒ|[ƒg’Ç‰Á                       */
-/*  Rev : 0.10 2003.02.21  ƒGƒ‰[ƒƒbƒZ[ƒW’Ç‰Á/C³                */
-/*                         –½—ßƒR[ƒh(0xDA,0xDB)‚É‘Î‚µ‚ÄJumpŠg’£‚ğ  */
-/*                         ‹–‰Â                                     */
-/*  Rev : 0.12 2003.02.28  ƒ‰ƒxƒ‹’·‚ğÅ‘å16ƒoƒCƒg‚Æ‚·‚é             */
-/*  Rev : 0.13 2003.03.04  –½—ßŒê’Ç‰ÁB                             */
-/*  Rev : 0.14 2003.03.05  “à‘ ƒŒƒWƒXƒ^/ƒtƒ‰ƒOƒe[ƒuƒ‹’Ç‰Á          */
-/*  Rev : 0.15 2003.03.07  –½—ßŒê’Ç‰Á                               */
-/*  Rev : 0.16 2003.03.14  –½—ßŒê’Ç‰Á                               */
-/*  Rev : 0.19 2003.04.09  JR }IM7Œ`®‚ÌƒTƒ|[ƒg                   */
-/*  Rev : 0.20 2003.04.22  ƒGƒ‰[ƒR[ƒh/ƒƒbƒZ[ƒW’Ç‰Á              */
-/*  Rev : 0.21 2003.04.25  PST TS,xx,GST TS,$ ‚ğ’Ç‰ÁB              */
-/*  Rev : 0.22 2003.04.26  –½—ßƒR[ƒh(0xD2`0xDB)‚ÌJumpŠg’£‚ğ‹Ö~   */
+/*  Rev : 0.01 2003.01.06  æœ€åˆã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³                         */
+/*  Rev : 0.03 2003.01.09  æœªå®šç¾©å‘½ä»¤ã‚’è¿½åŠ                          */
+/*  Rev : 0.04 2003.01.16  æœªå®šç¾©å‘½ä»¤ã‚’è¿½åŠ                          */
+/*  Rev : 0.05 2003.01.18  æœªå®šç¾©å‘½ä»¤ã‚’è¿½åŠ                          */
+/*  Rev : 0.07 2003.02.02  ã‚ªãƒšã‚³ãƒ¼ãƒ‰0x0ï½0xfï½¤0x80ï½0x8fã«å¯¾ã—ã¦    */
+/*                         Jumpæ‹¡å¼µã‚’ã‚¤ãƒãƒ¼ãƒ–ãƒ«ã¨ã—ãŸã€‚             */
+/*  Rev : 0.08 2003.02.06  æ¼”ç®—æ™‚ã®ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¿½åŠ              */
+/*             2003.02.07  OutTblæ§‹é€ ä½“ã‚’ä¿®æ­£                       */
+/*             2003.02.09  å‘½ä»¤èªã‚µãƒãƒ¼ãƒˆè¿½åŠ                        */
+/*  Rev : 0.10 2003.02.21  ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¿½åŠ /ä¿®æ­£                */
+/*                         å‘½ä»¤ã‚³ãƒ¼ãƒ‰(0xDA,0xDB)ã«å¯¾ã—ã¦Jumpæ‹¡å¼µã‚’  */
+/*                         è¨±å¯                                     */
+/*  Rev : 0.12 2003.02.28  ãƒ©ãƒ™ãƒ«é•·ã‚’æœ€å¤§16ãƒã‚¤ãƒˆã¨ã™ã‚‹             */
+/*  Rev : 0.13 2003.03.04  å‘½ä»¤èªè¿½åŠ ã€‚                             */
+/*  Rev : 0.14 2003.03.05  å†…è”µãƒ¬ã‚¸ã‚¹ã‚¿/ãƒ•ãƒ©ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«è¿½åŠ           */
+/*  Rev : 0.15 2003.03.07  å‘½ä»¤èªè¿½åŠ                                */
+/*  Rev : 0.16 2003.03.14  å‘½ä»¤èªè¿½åŠ                                */
+/*  Rev : 0.19 2003.04.09  JR Â±IM7å½¢å¼ã®ã‚µãƒãƒ¼ãƒˆ                   */
+/*  Rev : 0.20 2003.04.22  ã‚¨ãƒ©ãƒ¼ã‚³ãƒ¼ãƒ‰/ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸è¿½åŠ               */
+/*  Rev : 0.21 2003.04.25  PST TS,xx,GST TS,$ ã‚’è¿½åŠ ã€‚              */
+/*  Rev : 0.22 2003.04.26  å‘½ä»¤ã‚³ãƒ¼ãƒ‰(0xD2ï½0xDB)ã®Jumpæ‹¡å¼µã‚’ç¦æ­¢   */
 /*                          (DIDM,DIUM,BYDM,BYUM,INVM,CMPM)         */
-/*  Rev : 0.23 2003.05.15  /SETƒIƒvƒVƒ‡ƒ“—p\‘¢‘Ì‚ğ’Ç‰Á             */
+/*  Rev : 0.23 2003.05.15  /SETã‚ªãƒ—ã‚·ãƒ§ãƒ³ç”¨æ§‹é€ ä½“ã‚’è¿½åŠ              */
 /*                                                                  */
 /********************************************************************/
 
 /*------------------------------------------------------------------*/
-/*  ’è”’è‹`                                                        */
+/*  å®šæ•°å®šç¾©                                                        */
 /*------------------------------------------------------------------*/
-#define		MAXNAME		16			/* ƒ‰ƒxƒ‹Å‘å’·                 */
-#define		MAXLEN		256			/* ƒIƒyƒ‰ƒ“ƒhÅ‘å’·             */
-#define		MAXOPR		128			/* ƒIƒyƒ‰ƒ“ƒh‘”               */
-#define		MAXOBJ		65536		/* Å‘åƒtƒ@ƒCƒ‹ƒTƒCƒY           */
-#define		FILEEND		2			/* ƒtƒ@ƒCƒ‹I—¹                 */
-#define		MAXLINE		256			/* ‚PsÅ‘åƒoƒCƒg”             */
-#define		MAXINC		256			/* Å‘åƒCƒ“ƒNƒ‹[ƒhƒlƒXƒg”     */
-#define		MAXOPT		8			/* ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ƒIƒvƒVƒ‡ƒ“”   */
+#define		MAXNAME		16			/* ãƒ©ãƒ™ãƒ«æœ€å¤§é•·                 */
+#define		MAXLEN		256			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰æœ€å¤§é•·             */
+#define		MAXOPR		128			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç·æ•°               */
+#define		MAXOBJ		65536		/* æœ€å¤§ãƒ•ã‚¡ã‚¤ãƒ«ã‚µã‚¤ã‚º           */
+#define		FILEEND		2			/* ãƒ•ã‚¡ã‚¤ãƒ«çµ‚äº†                 */
+#define		MAXLINE		256			/* ï¼‘è¡Œæœ€å¤§ãƒã‚¤ãƒˆæ•°             */
+#define		MAXINC		256			/* æœ€å¤§ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒã‚¹ãƒˆæ•°     */
+#define		MAXOPT		8			/* ã‚³ãƒãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã‚ªãƒ—ã‚·ãƒ§ãƒ³æ•°   */
 /*------------------------------------------------------------------*/
-/*  ƒ‰ƒxƒ‹î•ñ’è‹`                                                  */
+/*  ãƒ©ãƒ™ãƒ«æƒ…å ±å®šç¾©                                                  */
 /*------------------------------------------------------------------*/
-#define		LBLMASK		0x000f		/* ƒ‰ƒxƒ‹í•Êƒ}ƒXƒN’l           */
+#define		LBLMASK		0x000f		/* ãƒ©ãƒ™ãƒ«ç¨®åˆ¥ãƒã‚¹ã‚¯å€¤           */
 
 /*------------------------------------------------------------------*/
-/*  ƒŒƒWƒXƒ^^ƒIƒyƒ‰ƒ“ƒhí•Ê’è‹`i‘æ‚PA‘æ‚QƒIƒyƒ‰ƒ“ƒh‹¤—pj        */
+/*  ãƒ¬ã‚¸ã‚¹ã‚¿ï¼ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥å®šç¾©ï¼ˆç¬¬ï¼‘ã€ç¬¬ï¼’ã‚ªãƒšãƒ©ãƒ³ãƒ‰å…±ç”¨ï¼‰        */
 /*------------------------------------------------------------------*/
-#define		MASKOP		0xff88		/* ƒIƒyƒ‰ƒ“ƒhŒŸõ—pƒ}ƒXƒN’l     */
-#define		MASKOP2		0xfff8		/* ƒIƒyƒ‰ƒ“ƒhŒŸõ—pƒ}ƒXƒN’l     */
+#define		MASKOP		0xff88		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ¤œç´¢ç”¨ãƒã‚¹ã‚¯å€¤     */
+#define		MASKOP2		0xfff8		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ¤œç´¢ç”¨ãƒã‚¹ã‚¯å€¤     */
 
-#define		IM3			0x0008		/* ƒCƒ~ƒfƒBƒGƒCƒgw’è(3bit)     */
-#define		IM5			0x0009		/* ƒCƒ~ƒfƒBƒGƒCƒgw’è(5bit)     */
-#define		IM7			0x000a		/* ƒCƒ~ƒfƒBƒGƒCƒgw’è(7bit)     */
-#define		IM8			0x000b		/* ƒCƒ~ƒfƒBƒGƒCƒgw’è(8bit)     */
-#define		IM16		0x000c		/* ƒCƒ~ƒfƒBƒGƒCƒgw’è(16bit)    */
-#define		LBLOK		0x000d		/* í•Êƒ‰ƒxƒ‹ ƒAƒhƒŒƒX‰ğŒˆÏ‚İ  */
-#define		LBLNG		0x000e		/* í•Êƒ‰ƒxƒ‹ ƒAƒhƒŒƒX–¢‰ğŒˆ    */
-#define		REG			0x0080		/* ƒŒƒWƒXƒ^w’è $0`$31         */
-#define		R00			0x0090		/* ƒŒƒWƒXƒ^w’è $0              */
-#define		R30			0x00a0		/* ƒŒƒWƒXƒ^w’è $30             */
-#define		R31			0x00b0		/* ƒŒƒWƒXƒ^w’è $31             */
-#define		MREG		0x0100		/* ƒCƒ“ƒfƒbƒNƒXw’è($1)`($31)  */
-#define		MR00		0x0110		/* ƒCƒ“ƒfƒbƒNƒXw’è($0)         */
-#define		MR30		0x0120		/* ƒCƒ“ƒfƒbƒNƒXw’è($30)        */
-#define		MR31		0x0130		/* ƒCƒ“ƒfƒbƒNƒXw’è($31)        */
-#define		MIX_p		0x0200		/* ƒCƒ“ƒfƒbƒNƒXw’è(IX+  )      */
-#define		MIX_m		0x0300		/* ƒCƒ“ƒfƒbƒNƒXw’è(IX-  )      */
-#define		MIZ_p		0x0400		/* ƒCƒ“ƒfƒbƒNƒXw’è(IZ+  )      */
-#define		MIZ_m		0x0500		/* ƒCƒ“ƒfƒbƒNƒXw’è(IZ-  )      */
-
-/*------------------------------------------------------------------*/
-/*  ƒŒƒWƒXƒ^^ƒIƒyƒ‰ƒ“ƒhí•Ê’è‹`(‘æ‚PƒIƒyƒ‰ƒ“ƒh‚Ì‚İ)                */
-/*------------------------------------------------------------------*/
-#define		PE			0x0600		/* PE ƒŒƒWƒXƒ^                  */
-#define		PD			0x0700		/* PD ƒŒƒWƒXƒ^                  */
-#define		TS			0x0800		/* TS ƒŒƒWƒXƒ^                  */
-#define		UA			0x0900		/* UA ƒŒƒWƒXƒ^                  */
-#define		IA			0x0a00		/* IA ƒŒƒWƒXƒ^                  */
-#define		IE			0x0b00		/* IE ƒŒƒWƒXƒ^                  */
-#define		TM			0x0c00		/* TM ƒŒƒWƒXƒ^                  */
-#define		KY			0x0d00		/* KY ƒŒƒWƒXƒ^                  */
-#define		US			0x0e00		/* US ƒŒƒWƒXƒ^                  */
-#define		SS			0x0f00		/* SS ƒŒƒWƒXƒ^                  */
-#define		IX			0x1000		/* IX ƒŒƒWƒXƒ^                  */
-#define		IY			0x1100		/* IY ƒŒƒWƒXƒ^                  */
-#define		IZ			0x1200		/* IZ ƒŒƒWƒXƒ^                  */
-#define		S0			0x1300		/* S0 ƒŒƒWƒXƒ^                  */
-#define		S1			0x1400		/* S1 ƒŒƒWƒXƒ^                  */
-#define		S2			0x1500		/* S2 ƒŒƒWƒXƒ^                  */
-
-#define		ZF			0x1500		/* Z  ƒtƒ‰ƒO                    */
-#define		LZF			0x1600		/* LZ ƒtƒ‰ƒO                    */
-#define		UZF			0x1700		/* UZ ƒtƒ‰ƒO                    */
-#define		NZF			0x1800		/* NZ ƒtƒ‰ƒO                    */
-#define		CF			0x1900		/* C  ƒtƒ‰ƒO                    */
-#define		NCF			0x1a00		/* NC ƒtƒ‰ƒO                    */
-#define		NLZF		0x1b00		/* NLZ ƒtƒ‰ƒO                   */
+#define		IM3			0x0008		/* ã‚¤ãƒŸãƒ‡ã‚£ã‚¨ã‚¤ãƒˆæŒ‡å®š(3bit)     */
+#define		IM5			0x0009		/* ã‚¤ãƒŸãƒ‡ã‚£ã‚¨ã‚¤ãƒˆæŒ‡å®š(5bit)     */
+#define		IM7			0x000a		/* ã‚¤ãƒŸãƒ‡ã‚£ã‚¨ã‚¤ãƒˆæŒ‡å®š(7bit)     */
+#define		IM8			0x000b		/* ã‚¤ãƒŸãƒ‡ã‚£ã‚¨ã‚¤ãƒˆæŒ‡å®š(8bit)     */
+#define		IM16		0x000c		/* ã‚¤ãƒŸãƒ‡ã‚£ã‚¨ã‚¤ãƒˆæŒ‡å®š(16bit)    */
+#define		LBLOK		0x000d		/* ç¨®åˆ¥ãƒ©ãƒ™ãƒ« ã‚¢ãƒ‰ãƒ¬ã‚¹è§£æ±ºæ¸ˆã¿  */
+#define		LBLNG		0x000e		/* ç¨®åˆ¥ãƒ©ãƒ™ãƒ« ã‚¢ãƒ‰ãƒ¬ã‚¹æœªè§£æ±º    */
+#define		REG			0x0080		/* ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®š $0ï½$31         */
+#define		R00			0x0090		/* ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®š $0              */
+#define		R30			0x00a0		/* ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®š $30             */
+#define		R31			0x00b0		/* ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®š $31             */
+#define		MREG		0x0100		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š($1)ï½($31)  */
+#define		MR00		0x0110		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š($0)         */
+#define		MR30		0x0120		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š($30)        */
+#define		MR31		0x0130		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š($31)        */
+#define		MIX_p		0x0200		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š(IX+  )      */
+#define		MIX_m		0x0300		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š(IX-  )      */
+#define		MIZ_p		0x0400		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š(IZ+  )      */
+#define		MIZ_m		0x0500		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®š(IZ-  )      */
 
 /*------------------------------------------------------------------*/
-/*  –½—ßí•Ê’è‹`iƒIƒyƒŒ[ƒVƒ‡ƒ“í•Ê”»•Ê—pj                        */
+/*  ãƒ¬ã‚¸ã‚¹ã‚¿ï¼ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥å®šç¾©(ç¬¬ï¼‘ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã®ã¿)                */
 /*------------------------------------------------------------------*/
-#define		NU			0x0			/* ƒIƒyƒ‰ƒ“ƒh‚È‚µ^1 byte –½—ß  */
-#define		REG_NU		0x1			/* REG        (‚QƒoƒCƒg–½—ßj   */
-#define		REG_NUJ		0x2			/* REG        (‚RƒoƒCƒg–½—ßj   */
-#define		IR_REG		0x3			/* IREGFREG  (‚QƒoƒCƒg)        */
-#define		IR_REGJ		0x4			/* IREGFREG : IM7 (3ƒoƒCƒg)    */
-#define		IR_IM8		0x5			/* IREGFIM8  (‚QƒoƒCƒg)        */
-#define		REG_REG		0x6			/* REG FREG  (‚RƒoƒCƒg)        */
-#define		MREG_REG	0x7			/* REG FREG  (‚RƒoƒCƒg)        */
-#define		REG_IM3		0x8			/* REG FIM3  (‚QƒoƒCƒg)        */
-#define		REG2_IM3	0x9			/* REG FREG :IM3  (‚RƒoƒCƒg)   */
-#define		REG2_IM3J	0xA			/* REG FREG :IM3 :IM7(4ƒoƒCƒg) */
-#define		REG_IM7		0xB			/* REG FIM7  (‚RƒoƒCƒg)        */
-#define		REG_IM8		0xC			/* REG FIM8  (‚RƒoƒCƒg)        */
-#define		REG2_IM7	0xD			/* REG : REG FIM8  (‚SƒoƒCƒg)  */
-#define		IM8_REG		0xE			/* IM8 FREG  (‚RƒoƒCƒg)        */
-#define		IR_IM16		0xF			/* IREGFIM16 (‚SƒoƒCƒg)        */
-#define		IM7_NU		0x10		/* ”’l(7bit):‚È‚µ JR–½—ß       */
-#define		F_IM7		0x11		/* ƒtƒ‰ƒO:”’l(7bit) JR–½—ß     */
-#define		F_IM16		0x12		/* ƒtƒ‰ƒO:”’l(16bit)JP/CAL–½—ß */
-#define		IM8_NU		0x13		/* ”’l(16bit):‚È‚µ JR/CAL–½—ß  */
-#define		IM16_NU		0x14		/* ”’l(16bit):‚È‚µ JR/CAL–½—ß  */
-#define		IM16_REG	0x15		/* IM16 : REG (‚SƒoƒCƒg)        */
-#define		REG_IM16	0x16		/* REG FIM16 (‚SƒoƒCƒg)        */
-#define		NU_IM8		0x17		/* NU : IM8i‚RƒoƒCƒg) PFL‚Ì‚İ? */
-#define		REG_I5I3	0x18		/* REG FIM5 :IM3  (‚RƒoƒCƒg)   */
-#define		REG_I5I3J	0x19		/* REG FIM5 :IM3 :IM7(4ƒoƒCƒg) */
+#define		PE			0x0600		/* PE ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		PD			0x0700		/* PD ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		TS			0x0800		/* TS ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		UA			0x0900		/* UA ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		IA			0x0a00		/* IA ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		IE			0x0b00		/* IE ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		TM			0x0c00		/* TM ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		KY			0x0d00		/* KY ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		US			0x0e00		/* US ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		SS			0x0f00		/* SS ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		IX			0x1000		/* IX ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		IY			0x1100		/* IY ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		IZ			0x1200		/* IZ ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		S0			0x1300		/* S0 ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		S1			0x1400		/* S1 ãƒ¬ã‚¸ã‚¹ã‚¿                  */
+#define		S2			0x1500		/* S2 ãƒ¬ã‚¸ã‚¹ã‚¿                  */
 
-#define		IM3bit		8			/* ‚Rƒrƒbƒg’·Å‘å’l             */
-#define		IM7bit		128			/* ‚Vƒrƒbƒg’·Å‘å’l             */
-#define		IM8bit		256			/* ‚Wƒrƒbƒg’·Å‘å’l             */
+#define		ZF			0x1500		/* Z  ãƒ•ãƒ©ã‚°                    */
+#define		LZF			0x1600		/* LZ ãƒ•ãƒ©ã‚°                    */
+#define		UZF			0x1700		/* UZ ãƒ•ãƒ©ã‚°                    */
+#define		NZF			0x1800		/* NZ ãƒ•ãƒ©ã‚°                    */
+#define		CF			0x1900		/* C  ãƒ•ãƒ©ã‚°                    */
+#define		NCF			0x1a00		/* NC ãƒ•ãƒ©ã‚°                    */
+#define		NLZF		0x1b00		/* NLZ ãƒ•ãƒ©ã‚°                   */
 
 /*------------------------------------------------------------------*/
-/*  \•¶‰ğÍŒ‹‰Êo—Íƒe[ƒuƒ‹\‘¢‘Ì’è‹`iOutTblj                    */
+/*  å‘½ä»¤ç¨®åˆ¥å®šç¾©ï¼ˆã‚ªãƒšãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³ç¨®åˆ¥åˆ¤åˆ¥ç”¨ï¼‰                        */
+/*------------------------------------------------------------------*/
+#define		NU			0x0			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãªã—ï¼1 byte å‘½ä»¤  */
+#define		REG_NU		0x1			/* REG        (ï¼’ãƒã‚¤ãƒˆå‘½ä»¤ï¼‰   */
+#define		REG_NUJ		0x2			/* REG        (ï¼“ãƒã‚¤ãƒˆå‘½ä»¤ï¼‰   */
+#define		IR_REG		0x3			/* IREGï¼šREG  (ï¼’ãƒã‚¤ãƒˆ)        */
+#define		IR_REGJ		0x4			/* IREGï¼šREG : IM7 (3ãƒã‚¤ãƒˆ)    */
+#define		IR_IM8		0x5			/* IREGï¼šIM8  (ï¼’ãƒã‚¤ãƒˆ)        */
+#define		REG_REG		0x6			/* REG ï¼šREG  (ï¼“ãƒã‚¤ãƒˆ)        */
+#define		MREG_REG	0x7			/* REG ï¼šREG  (ï¼“ãƒã‚¤ãƒˆ)        */
+#define		REG_IM3		0x8			/* REG ï¼šIM3  (ï¼’ãƒã‚¤ãƒˆ)        */
+#define		REG2_IM3	0x9			/* REG ï¼šREG :IM3  (ï¼“ãƒã‚¤ãƒˆ)   */
+#define		REG2_IM3J	0xA			/* REG ï¼šREG :IM3 :IM7(4ãƒã‚¤ãƒˆ) */
+#define		REG_IM7		0xB			/* REG ï¼šIM7  (ï¼“ãƒã‚¤ãƒˆ)        */
+#define		REG_IM8		0xC			/* REG ï¼šIM8  (ï¼“ãƒã‚¤ãƒˆ)        */
+#define		REG2_IM7	0xD			/* REG : REG ï¼šIM8  (ï¼”ãƒã‚¤ãƒˆ)  */
+#define		IM8_REG		0xE			/* IM8 ï¼šREG  (ï¼“ãƒã‚¤ãƒˆ)        */
+#define		IR_IM16		0xF			/* IREGï¼šIM16 (ï¼”ãƒã‚¤ãƒˆ)        */
+#define		IM7_NU		0x10		/* æ•°å€¤(7bit):ãªã— JRå‘½ä»¤       */
+#define		F_IM7		0x11		/* ãƒ•ãƒ©ã‚°:æ•°å€¤(7bit) JRå‘½ä»¤     */
+#define		F_IM16		0x12		/* ãƒ•ãƒ©ã‚°:æ•°å€¤(16bit)JP/CALå‘½ä»¤ */
+#define		IM8_NU		0x13		/* æ•°å€¤(16bit):ãªã— JR/CALå‘½ä»¤  */
+#define		IM16_NU		0x14		/* æ•°å€¤(16bit):ãªã— JR/CALå‘½ä»¤  */
+#define		IM16_REG	0x15		/* IM16 : REG (ï¼”ãƒã‚¤ãƒˆ)        */
+#define		REG_IM16	0x16		/* REG ï¼šIM16 (ï¼”ãƒã‚¤ãƒˆ)        */
+#define		NU_IM8		0x17		/* NU : IM8ï¼ˆï¼“ãƒã‚¤ãƒˆ) PFLã®ã¿? */
+#define		REG_I5I3	0x18		/* REG ï¼šIM5 :IM3  (ï¼“ãƒã‚¤ãƒˆ)   */
+#define		REG_I5I3J	0x19		/* REG ï¼šIM5 :IM3 :IM7(4ãƒã‚¤ãƒˆ) */
+
+#define		IM3bit		8			/* ï¼“ãƒ“ãƒƒãƒˆé•·æœ€å¤§å€¤             */
+#define		IM7bit		128			/* ï¼—ãƒ“ãƒƒãƒˆé•·æœ€å¤§å€¤             */
+#define		IM8bit		256			/* ï¼˜ãƒ“ãƒƒãƒˆé•·æœ€å¤§å€¤             */
+
+/*------------------------------------------------------------------*/
+/*  æ§‹æ–‡è§£æçµæœå‡ºåŠ›ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€ ä½“å®šç¾©ï¼ˆOutTblï¼‰                    */
 /*------------------------------------------------------------------*/
 typedef struct outtbl {
-	unsigned short idx;				/* codetblƒCƒ“ƒfƒbƒNƒX          */
-	unsigned short adr;				/* –½—ßŠi”[ƒAƒhƒŒƒX             */
-	unsigned short byte;			/* –½—ßƒoƒCƒg”(0:ƒRƒƒ“ƒg‚Ì‚İ) */
-	unsigned char  code[256]; 		/* –½—ßƒR[ƒh                   */
-	unsigned short kc;				/* KC•û®‘Î‰ƒtƒ‰ƒO(1:KC•û®)   */
-	unsigned short pm7;				/* }IM7Œ`®‘Î‰ƒtƒ‰ƒO(1:+,2:-) */
-	unsigned short opkind[4];		/* ƒIƒyƒ‰ƒ“ƒhí•Ê               */
-	unsigned short opdata[4];		/* ƒIƒyƒ‰ƒ“ƒh”Ô†(Ú¼Ş½À/”’l)   */
-	char	*label; 				/* æ“ªƒ‰ƒxƒ‹(NULL:“o˜^‚È‚µ)    */
-	char	*opr[MAXOPR];			/* ƒIƒyƒ‰ƒ“ƒh(NULL:“o˜^‚È‚µ)    */
-	char	*comment;				/* ƒRƒƒ“ƒg(NULL:“o˜^‚È‚µ)      */
-	char	line[MAXLINE*2];		/* “ü—Íƒoƒbƒtƒ@(512ƒoƒCƒg)      */
+	unsigned short idx;				/* codetblã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹          */
+	unsigned short adr;				/* å‘½ä»¤æ ¼ç´ã‚¢ãƒ‰ãƒ¬ã‚¹             */
+	unsigned short byte;			/* å‘½ä»¤ãƒã‚¤ãƒˆæ•°(0:ã‚³ãƒ¡ãƒ³ãƒˆã®ã¿) */
+	unsigned char  code[256]; 		/* å‘½ä»¤ã‚³ãƒ¼ãƒ‰                   */
+	unsigned short kc;				/* KCæ–¹å¼å¯¾å¿œãƒ•ãƒ©ã‚°(1:KCæ–¹å¼)   */
+	unsigned short pm7;				/* Â±IM7å½¢å¼å¯¾å¿œãƒ•ãƒ©ã‚°(1:+,2:-) */
+	unsigned short opkind[4];		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥               */
+	unsigned short opdata[4];		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç•ªå·(ï¾šï½¼ï¾ï½½ï¾€/æ•°å€¤)   */
+	char	*label; 				/* å…ˆé ­ãƒ©ãƒ™ãƒ«(NULL:ç™»éŒ²ãªã—)    */
+	char	*opr[MAXOPR];			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰(NULL:ç™»éŒ²ãªã—)    */
+	char	*comment;				/* ã‚³ãƒ¡ãƒ³ãƒˆ(NULL:ç™»éŒ²ãªã—)      */
+	char	line[MAXLINE*2];		/* å…¥åŠ›ãƒãƒƒãƒ•ã‚¡(512ãƒã‚¤ãƒˆ)      */
 } OUTTBL;
 
 /*------------------------------------------------------------------*/
-/*  ƒ‰ƒxƒ‹ƒe[ƒuƒ‹\‘¢‘Ì’è‹`ilbltblj                              */
+/*  ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€ ä½“å®šç¾©ï¼ˆlbltblï¼‰                              */
 /*------------------------------------------------------------------*/
 typedef struct lbl {
-	void * np;						/* Ÿƒ‰ƒxƒ‹\‘¢‘Ìƒ|ƒCƒ“ƒ^       */
-	unsigned short adr;				/* ‘Î‰ƒAƒhƒŒƒX                 */
-	char	name[1];				/* ƒ‰ƒxƒ‹–¼Ì(1ByteˆÈã)        */
+	void * np;						/* æ¬¡ãƒ©ãƒ™ãƒ«æ§‹é€ ä½“ãƒã‚¤ãƒ³ã‚¿       */
+	unsigned short adr;				/* å¯¾å¿œã‚¢ãƒ‰ãƒ¬ã‚¹                 */
+	char	name[1];				/* ãƒ©ãƒ™ãƒ«åç§°(1Byteä»¥ä¸Š)        */
 } LBL;
 
 /*------------------------------------------------------------------*/
-/*  Šeíƒf[ƒ^•ÏŠ·ƒe[ƒuƒ‹\‘¢‘Ì’è‹`                                */
+/*  å„ç¨®ãƒ‡ãƒ¼ã‚¿å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€ ä½“å®šç¾©                                */
 /*------------------------------------------------------------------*/
-/* ƒIƒyƒ‰ƒ“ƒh•ÏŠ·ƒe[ƒuƒ‹\‘¢ */
+/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€  */
 typedef struct opr {
-	unsigned short code;			/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒh”Ô†         */
-	char	name[9];				/* ƒIƒyƒ‰ƒ“ƒh–¼Ì               */
+	unsigned short code;			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰ç•ªå·         */
+	char	name[9];				/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰åç§°               */
 } OPR;
 
-/* ƒƒ‚ƒŠƒIƒyƒ‰ƒ“ƒhí•Êƒe[ƒuƒ‹ */
+/* ãƒ¡ãƒ¢ãƒªã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥ãƒ†ãƒ¼ãƒ–ãƒ« */
 #define		MAXIDX		12
 struct opr moprtbl[MAXIDX] = {
 {	MIX_p	,	"(IX+"		},
@@ -187,7 +187,7 @@ struct opr moprtbl[MAXIDX] = {
 {	MIZ_m	,	"(iz-"		}
 };
 
-/* ƒŒƒWƒXƒ^ƒIƒyƒ‰ƒ“ƒhí•Êƒe[ƒuƒ‹ */
+/* ãƒ¬ã‚¸ã‚¹ã‚¿ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥ãƒ†ãƒ¼ãƒ–ãƒ« */
 #define		MAXIREG		16
 struct opr regtbl[MAXIREG] = {
 {	PE		,	"PE"		},
@@ -208,7 +208,7 @@ struct opr regtbl[MAXIREG] = {
 {	S2		,	"S2"		}
 };
 
-/* ƒtƒ‰ƒOí•Êƒe[ƒuƒ‹ */
+/* ãƒ•ãƒ©ã‚°ç¨®åˆ¥ãƒ†ãƒ¼ãƒ–ãƒ« */
 #define		MAXFLAG		8
 struct opr flagtbl[MAXFLAG] = {
 {	ZF		,	"Z"			},
@@ -221,7 +221,7 @@ struct opr flagtbl[MAXFLAG] = {
 {	NLZF	,	"NLZ"		}
 };
 
-/* ‹^—–½—ßí•Ê */
+/* ç–‘ä¼¼å‘½ä»¤ç¨®åˆ¥ */
 #define		OP_EQU		0			/* EQU      */
 #define		OP_ORG		1			/* ORG      */
 #define		OP_START	2			/* START    */
@@ -234,7 +234,7 @@ struct opr flagtbl[MAXFLAG] = {
 #define		OP_NOLIST	9			/* #NOLIST  */
 #define		OP_EJECT	10			/* #EJECT   */
 
-/* ‹^—–½—ß•ÏŠ·ƒe[ƒuƒ‹ */
+/* ç–‘ä¼¼å‘½ä»¤å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ« */
 #define		MAXDIR		11
 struct opr Directivetbl[MAXDIR] = {
 {	OP_EQU		,	"EQU"		},
@@ -250,8 +250,8 @@ struct opr Directivetbl[MAXDIR] = {
 {	OP_EJECT	,	"#EJECT"	}
 };
 
-/* #if`#else`#endifƒ}ƒNƒ•ÏŠ·ƒe[ƒuƒ‹ */
-#define		IFLEVEL     255         /* #ifƒlƒXƒgƒŒƒxƒ‹ */
+/* #ifï½#elseï½#endifãƒã‚¯ãƒ­å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ« */
+#define		IFLEVEL     255         /* #ifãƒã‚¹ãƒˆãƒ¬ãƒ™ãƒ« */
 #define		OP_IF		0			/* #if   */
 #define		OP_ELSE		1			/* #else */
 #define		OP_ENDIF	2			/* #endif*/
@@ -263,39 +263,39 @@ struct opr MacTbl[MACDIR] = {
 {	OP_ENDIF	,	"#ENDIF"	}
 };
 
-#define	MAXMN		6				/* ƒjƒ‚ƒjƒbƒNÅ‘å’·(6•¶š) */
-/* “à•”ƒŒƒWƒXƒ^/ƒtƒ‰ƒOg—p–½—ß“o˜^ƒe[ƒuƒ‹\‘¢ */
+#define	MAXMN		6				/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯æœ€å¤§é•·(6æ–‡å­—) */
+/* å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿/ãƒ•ãƒ©ã‚°ä½¿ç”¨å‘½ä»¤ç™»éŒ²ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€  */
 typedef struct irfnc {
 	char	name[MAXMN];
 } IRFNC;
 
-/* “à•”ƒŒƒWƒXƒ^g—p–½—ß“o˜^ƒe[ƒuƒ‹ */
-#define	MAXIR		5				/* “à•”ƒŒƒWƒXƒ^—˜—p–½—ß” */
+/* å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿ä½¿ç”¨å‘½ä»¤ç™»éŒ²ãƒ†ãƒ¼ãƒ–ãƒ« */
+#define	MAXIR		5				/* å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿åˆ©ç”¨å‘½ä»¤æ•° */
 struct irfnc irtbl[MAXIR] = {
 {"PST"},{"GST"},{"PRE"},{"GRE"},{"POR"}
 };
 
-/* ƒtƒ‰ƒOg—p–½—ß“o˜^ƒe[ƒuƒ‹ */
-#define	MAXFL		4				/* ƒtƒ‰ƒOƒŒƒWƒXƒ^—˜—p–½—ß” */
+/* ãƒ•ãƒ©ã‚°ä½¿ç”¨å‘½ä»¤ç™»éŒ²ãƒ†ãƒ¼ãƒ–ãƒ« */
+#define	MAXFL		4				/* ãƒ•ãƒ©ã‚°ãƒ¬ã‚¸ã‚¹ã‚¿åˆ©ç”¨å‘½ä»¤æ•° */
 struct irfnc fltbl[MAXFL] = {
 {"JR"},{"JP"},{"CAL"},{"RTN"}
 };
 
-/* –½—ß•ÏŠ·ƒe[ƒuƒ‹\‘¢ */
+/* å‘½ä»¤å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€  */
 typedef struct fnc {
-	unsigned char	code;			/* –½—ßƒR[ƒh”Ô†               */
-	unsigned char	secop;			/* ƒZƒJƒ“ƒh–½—ßƒR[ƒh”Ô†       */
-	unsigned char	byte;			/* –½—ßƒoƒCƒg”                 */
-	unsigned char	kind;			/* –½—ßŒêí•Ê(ƒƒ‚ƒŠŠi”[î•ñ)   */
-	char			name[MAXMN];	/* ƒjƒ‚ƒjƒbƒN–¼Ì               */
-	unsigned short	op1;			/* ƒIƒyƒ‰ƒ“ƒh‚Pí•Ê             */
-	unsigned short	op2;			/* ƒIƒyƒ‰ƒ“ƒh‚Qí•Ê             */
-	unsigned short	op3;			/* ƒIƒyƒ‰ƒ“ƒh‚Rí•Ê             */
-	unsigned short	op4;			/* ƒIƒyƒ‰ƒ“ƒh‚Sí•Ê             */
+	unsigned char	code;			/* å‘½ä»¤ã‚³ãƒ¼ãƒ‰ç•ªå·               */
+	unsigned char	secop;			/* ã‚»ã‚«ãƒ³ãƒ‰å‘½ä»¤ã‚³ãƒ¼ãƒ‰ç•ªå·       */
+	unsigned char	byte;			/* å‘½ä»¤ãƒã‚¤ãƒˆæ•°                 */
+	unsigned char	kind;			/* å‘½ä»¤èªç¨®åˆ¥(ãƒ¡ãƒ¢ãƒªæ ¼ç´æƒ…å ±)   */
+	char			name[MAXMN];	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯åç§°               */
+	unsigned short	op1;			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ï¼‘ç¨®åˆ¥             */
+	unsigned short	op2;			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ï¼’ç¨®åˆ¥             */
+	unsigned short	op3;			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ï¼“ç¨®åˆ¥             */
+	unsigned short	op4;			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ï¼”ç¨®åˆ¥             */
 } FNC;
 
-/* –½—ß•ÏŠ·ƒe[ƒuƒ‹ */
-#define MAXOP		1061			/* “o˜^–½—ß”                   */
+/* å‘½ä»¤å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ« */
+#define MAXOP		1061			/* ç™»éŒ²å‘½ä»¤æ•°                   */
 struct fnc codetbl[MAXOP] = {
 /*	opcode	,second	,byte,	kind	,func	,op1		,op2		,op3	,op4	*/
 {	0x00	,0		,2	,REG_NU		,"ADC"	,REG		,R31		,0		,0		},
@@ -434,11 +434,11 @@ struct fnc codetbl[MAXOP] = {
 {	0x11	,0xa0	,3	,REG_IM7	,"LD"	,REG		,MR30		,IM7	,0		},
 {	0x11	,0xc0	,3	,REG_IM7	,"LD"	,REG		,MR00		,IM7	,0		},
 {	0x11	,0xe0	,4	,REG2_IM7	,"LD"	,REG		,MREG		,IM7	,0		},
-{	0x12	,0		,2	,REG_NU		,"STL"	,REG		,0			,0		,0		},/* LCDo—Í */
-{	0x12	,0x80	,3	,REG_NUJ	,"STL"	,REG		,IM7		,0		,0		},/* LCDo—Í */
-{	0x14	,0		,2	,REG_NU		,"PPO"	,REG		,0			,0		,0		},/* LCD§Œäƒ|[ƒg */
+{	0x12	,0		,2	,REG_NU		,"STL"	,REG		,0			,0		,0		},/* LCDå‡ºåŠ› */
+{	0x12	,0x80	,3	,REG_NUJ	,"STL"	,REG		,IM7		,0		,0		},/* LCDå‡ºåŠ› */
+{	0x14	,0		,2	,REG_NU		,"PPO"	,REG		,0			,0		,0		},/* LCDåˆ¶å¾¡ãƒãƒ¼ãƒˆ */
 {	0x14	,0x40	,2	,REG_NU		,"PFL"	,REG		,0			,0		,0		},
-{	0x14	,0x80	,3	,REG_NUJ	,"PPO"	,REG		,IM7		,0		,0		},/* LCD§Œäƒ|[ƒg */
+{	0x14	,0x80	,3	,REG_NUJ	,"PPO"	,REG		,IM7		,0		,0		},/* LCDåˆ¶å¾¡ãƒãƒ¼ãƒˆ */
 {	0x14	,0xc0	,3	,REG_NUJ	,"PFL"	,REG		,IM7		,0		,0		},
 {	0x16	,0		,2	,IR_REG		,"PST"	,PE			,REG		,0		,0		},
 {	0x16	,0x20	,2	,IR_REG		,"PST"	,PD			,REG		,0		,0		},
@@ -695,12 +695,12 @@ struct fnc codetbl[MAXOP] = {
 {	0x50	,0		,3	,IM8_REG	,"ST"	,IM8		,MR31		,0		,0		},
 {	0x50	,0x20	,3	,IM8_REG	,"ST"	,IM8		,MR30		,0		,0		},
 {	0x50	,0x40	,3	,IM8_REG	,"ST"	,IM8		,MR00		,0		,0		},
-{	0x52	,0		,2	,IM8_NU		,"STL"	,IM8		,0			,0		,0		},/* LCDo—Í */
-{	0x54	,0		,3	,NU_IM8		,"PPO"	,IM8		,0			,0		,0		},/* LCD§Œäƒ|[ƒg */
+{	0x52	,0		,2	,IM8_NU		,"STL"	,IM8		,0			,0		,0		},/* LCDå‡ºåŠ› */
+{	0x54	,0		,3	,NU_IM8		,"PPO"	,IM8		,0			,0		,0		},/* LCDåˆ¶å¾¡ãƒãƒ¼ãƒˆ */
 {	0x54	,0x40	,3	,NU_IM8		,"PFL"	,IM8		,0			,0		,0		},
-{	0x55	,0		,2	,IR_REG		,"POR"	,S0			,REG		,0		,0		},/* d—l•s–¾ */
-{	0x55	,0x20	,2	,IR_REG		,"POR"	,S1			,REG		,0		,0		},/* d—l•s–¾ */
-{	0x55	,0x40	,2	,IR_REG		,"POR"	,S2			,REG		,0		,0		},/* d—l•s–¾ */
+{	0x55	,0		,2	,IR_REG		,"POR"	,S0			,REG		,0		,0		},/* ä»•æ§˜ä¸æ˜ */
+{	0x55	,0x20	,2	,IR_REG		,"POR"	,S1			,REG		,0		,0		},/* ä»•æ§˜ä¸æ˜ */
+{	0x55	,0x40	,2	,IR_REG		,"POR"	,S2			,REG		,0		,0		},/* ä»•æ§˜ä¸æ˜ */
 {	0x56	,0		,3	,IR_IM8		,"PST"	,PE			,IM8		,0		,0		},
 {	0x56	,0x20	,3	,IR_IM8		,"PST"	,PD			,IM8		,0		,0		},
 {	0x56	,0x40	,3	,IR_IM8		,"PST"	,TS			,IM8		,0		,0		},
@@ -895,10 +895,10 @@ struct fnc codetbl[MAXOP] = {
 {	0x91	,0xa0	,3	,REG_IM7	,"LDW"	,REG		,MR30		,IM7	,0		},
 {	0x91	,0xc0	,3	,REG_IM7	,"LDW"	,REG		,MR00		,IM7	,0		},
 {	0x91	,0xe0	,4	,REG2_IM7	,"LDW"	,REG		,MREG		,IM7	,0		},
-{	0x92	,0		,2	,REG_NU		,"STLW"	,REG		,0			,0		,0		},/* LCDo—Í */
-{	0x92	,0x80	,3	,REG_NU		,"STLW"	,REG		,IM7		,0		,0		},/* LCDo—Í */
-{	0x94	,0		,2	,REG_NU		,"PPOW"	,REG		,0			,0		,0		},/* LCD§Œäƒ|[ƒg */
-{	0x94	,0x80	,3	,REG_NU		,"PPOW"	,REG		,IM7		,0		,0		},/* LCD§Œäƒ|[ƒg */
+{	0x92	,0		,2	,REG_NU		,"STLW"	,REG		,0			,0		,0		},/* LCDå‡ºåŠ› */
+{	0x92	,0x80	,3	,REG_NU		,"STLW"	,REG		,IM7		,0		,0		},/* LCDå‡ºåŠ› */
+{	0x94	,0		,2	,REG_NU		,"PPOW"	,REG		,0			,0		,0		},/* LCDåˆ¶å¾¡ãƒãƒ¼ãƒˆ */
+{	0x94	,0x80	,3	,REG_NU		,"PPOW"	,REG		,IM7		,0		,0		},/* LCDåˆ¶å¾¡ãƒãƒ¼ãƒˆ */
 {	0x96	,0		,2	,IR_REG		,"PRE"	,IX			,REG		,0		,0		},
 {	0x96	,0x20	,2	,IR_REG		,"PRE"	,IY			,REG		,0		,0		},
 {	0x96	,0x40	,2	,IR_REG		,"PRE"	,IZ			,REG		,0		,0		},
@@ -1225,8 +1225,8 @@ struct fnc codetbl[MAXOP] = {
 {	0xD0	,0x20	,4	,IM16_REG	,"STW"	,IM16		,MR30		,0		,0		},
 {	0xD0	,0x40	,4	,IM16_REG	,"STW"	,IM16		,MR00		,0		,0		},
 {	0xD1	,0		,4	,REG_IM16	,"LDW"	,REG		,IM16		,0		,0		},
-{	0xD2	,0		,3	,REG_IM3	,"STLM"	,REG		,IM3		,0		,0		},/* LCDo—Í */
-{	0xD4	,0		,3	,REG_IM3	,"PPOM"	,REG		,IM3		,0		,0		},/* LCD§Œäƒ|[ƒg */
+{	0xD2	,0		,3	,REG_IM3	,"STLM"	,REG		,IM3		,0		,0		},/* LCDå‡ºåŠ› */
+{	0xD4	,0		,3	,REG_IM3	,"PPOM"	,REG		,IM3		,0		,0		},/* LCDåˆ¶å¾¡ãƒãƒ¼ãƒˆ */
 {	0xD6	,0		,4	,IR_IM16	,"PRE"	,IX			,IM16		,0		,0		},
 {	0xD6	,0x20	,4	,IR_IM16	,"PRE"	,IY			,IM16		,0		,0		},
 {	0xD6	,0x40	,4	,IR_IM16	,"PRE"	,IZ			,IM16		,0		,0		},
@@ -1362,44 +1362,44 @@ struct fnc codetbl[MAXOP] = {
 };
 
 /*------------------------------------------------------------------*/
-/*  ƒGƒ‰[í•Ê’è‹`                                                  */
+/*  ã‚¨ãƒ©ãƒ¼ç¨®åˆ¥å®šç¾©                                                  */
 /*------------------------------------------------------------------*/
-#define		NORM		0			/* ³íI—¹                     */
-#define		INZERR		1			/* ‰Šú‰»ˆÙí                   */
-#define		EOFERR		2			/* ƒtƒ@ƒCƒ‹I—¹                 */
-#define		LOFLOW		5			/* ‚Ps‚Ì•¶š”‚ªƒI[ƒo[‚µ‚½   */
-#define		OPOFLOW		6			/* ƒIƒyƒ‰ƒ“ƒh•¶š”ƒI[ƒo[‚µ‚½ */
-#define		LBOFLOW		7			/* ‚Ps‚Ì•¶š”‚ªƒI[ƒo[‚µ‚½   */
-#define		NOORG		8			/* ORG–½—ß’è‹`‚ª‚È‚¢            */
-#define		NOENT		10			/* ƒIƒyƒ‰ƒ“ƒh‹Lq‚È‚µ           */
-#define		EQUNOLBL	11			/* EQU‚Éƒ‰ƒxƒ‹ƒGƒ“ƒgƒŠ‚È‚µ      */
-#define		ILLOPR		12			/* ƒIƒyƒ‰ƒ“ƒh‹Lqƒ~ƒX           */
-#define		ILLSTART	13			/* START•¶‚ª‚Q‚ÂˆÈã‚ ‚é        */
-#define		ILLCANMA	14			/* ƒJƒ“ƒ}‹Lq‚ª‚¨‚©‚µ‚¢         */
-#define		ILLDQUO		15			/* ÀŞÌŞÙº°Ã°¼®İ/Š‡ŒÊ ˆÙí       */
-#define		DUPLBL		16			/* ƒ‰ƒxƒ‹‹Lq‚ª‚Q‰ñˆÈã‚ ‚é     */
-#define		ILLLBL		17			/* ƒ‰ƒxƒ‹‚É—˜—p‚Å‚«‚È‚¢•¶š     */
-#define		LBLNOENT	20			/* ƒ‰ƒxƒ‹“o˜^‚È‚µ               */
-#define		LBNOALOC	21			/* ƒ‰ƒxƒ‹“o˜^‚È‚µ               */
-#define		UNDEFOPR	22			/* ŠY“––½—ß‚È‚µ/‹Lq•û–@‚Ìƒ~ƒX  */
-#define		OFLOW		23			/* ƒIƒyƒ‰ƒ“ƒh’l‚ª”ÍˆÍŠO         */
-#define		JOFLOW		24			/* ‘Š‘ÎƒWƒƒƒ“ƒv‚ª”ÍˆÍŠO         */
-#define		AOFLOW		25			/* o—Íƒoƒbƒtƒ@ƒI[ƒo[         */
-#define		ADOFLOW		26			/* ƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒXƒI[ƒo[   */
-#define		EOFLOW		27			/* ÀsƒAƒhƒŒƒX‚ªORG‚æ‚è¬‚³‚¢  */
-#define		CALERR		28			/* ŒvZˆÙí( 0 œZ“™ )‚ª”­¶   */
-#define		IFNEST		29			/* #if`#else`#endifƒlƒXƒgˆÙí */
-#define		INCNOFILE	30			/* #includeƒtƒ@ƒCƒ‹–¼‚È‚µ       */
-#define		INCERR		31			/* #includeƒlƒXƒgˆÙí           */
-#define		REGERR		32			/* ƒƒCƒ“ƒŒƒWƒXƒ^”Ô†ˆÙí       */
+#define		NORM		0			/* æ­£å¸¸çµ‚äº†                     */
+#define		INZERR		1			/* åˆæœŸåŒ–ç•°å¸¸                   */
+#define		EOFERR		2			/* ãƒ•ã‚¡ã‚¤ãƒ«çµ‚äº†                 */
+#define		LOFLOW		5			/* ï¼‘è¡Œã®æ–‡å­—æ•°ãŒã‚ªãƒ¼ãƒãƒ¼ã—ãŸ   */
+#define		OPOFLOW		6			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ–‡å­—æ•°ã‚ªãƒ¼ãƒãƒ¼ã—ãŸ */
+#define		LBOFLOW		7			/* ï¼‘è¡Œã®æ–‡å­—æ•°ãŒã‚ªãƒ¼ãƒãƒ¼ã—ãŸ   */
+#define		NOORG		8			/* ORGå‘½ä»¤å®šç¾©ãŒãªã„            */
+#define		NOENT		10			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰è¨˜è¿°ãªã—           */
+#define		EQUNOLBL	11			/* EQUã«ãƒ©ãƒ™ãƒ«ã‚¨ãƒ³ãƒˆãƒªãªã—      */
+#define		ILLOPR		12			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰è¨˜è¿°ãƒŸã‚¹           */
+#define		ILLSTART	13			/* STARTæ–‡ãŒï¼’ã¤ä»¥ä¸Šã‚ã‚‹        */
+#define		ILLCANMA	14			/* ã‚«ãƒ³ãƒè¨˜è¿°ãŒãŠã‹ã—ã„         */
+#define		ILLDQUO		15			/* ï¾€ï¾ï¾Œï¾ï¾™ï½ºï½°ï¾ƒï½°ï½¼ï½®ï¾/æ‹¬å¼§ ç•°å¸¸       */
+#define		DUPLBL		16			/* ãƒ©ãƒ™ãƒ«è¨˜è¿°ãŒï¼’å›ä»¥ä¸Šã‚ã‚‹     */
+#define		ILLLBL		17			/* ãƒ©ãƒ™ãƒ«ã«åˆ©ç”¨ã§ããªã„æ–‡å­—     */
+#define		LBLNOENT	20			/* ãƒ©ãƒ™ãƒ«ç™»éŒ²ãªã—               */
+#define		LBNOALOC	21			/* ãƒ©ãƒ™ãƒ«ç™»éŒ²ãªã—               */
+#define		UNDEFOPR	22			/* è©²å½“å‘½ä»¤ãªã—/è¨˜è¿°æ–¹æ³•ã®ãƒŸã‚¹  */
+#define		OFLOW		23			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰å€¤ãŒç¯„å›²å¤–         */
+#define		JOFLOW		24			/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ãŒç¯„å›²å¤–         */
+#define		AOFLOW		25			/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ¼ãƒãƒ¼         */
+#define		ADOFLOW		26			/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚ªãƒ¼ãƒãƒ¼   */
+#define		EOFLOW		27			/* å®Ÿè¡Œã‚¢ãƒ‰ãƒ¬ã‚¹ãŒORGã‚ˆã‚Šå°ã•ã„  */
+#define		CALERR		28			/* è¨ˆç®—ç•°å¸¸( 0 é™¤ç®—ç­‰ )ãŒç™ºç”Ÿ   */
+#define		IFNEST		29			/* #ifï½#elseï½#endifãƒã‚¹ãƒˆç•°å¸¸ */
+#define		INCNOFILE	30			/* #includeãƒ•ã‚¡ã‚¤ãƒ«åãªã—       */
+#define		INCERR		31			/* #includeãƒã‚¹ãƒˆç•°å¸¸           */
+#define		REGERR		32			/* ãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ç•°å¸¸       */
 
-/* ƒGƒ‰[ƒƒbƒZ[ƒW•ÏŠ·ƒe[ƒuƒ‹\‘¢ */
+/* ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ«æ§‹é€  */
 typedef struct err {
-	unsigned short code;			/* ƒR[ƒh”Ô†                   */
-	char	msg[32];				/* ƒGƒ‰[ƒƒbƒZ[ƒW(32•¶šˆÈ“à) */
+	unsigned short code;			/* ã‚³ãƒ¼ãƒ‰ç•ªå·                   */
+	char	msg[32];				/* ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸(32æ–‡å­—ä»¥å†…) */
 } ERR;
 
-/* ƒGƒ‰[ƒƒbƒZ[ƒW•ÏŠ·ƒe[ƒuƒ‹ */
+/* ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å¤‰æ›ãƒ†ãƒ¼ãƒ–ãƒ« */
 #define		MAXERR		26
 struct err errtbl[MAXERR] = {
 {	LOFLOW	    ,	"Line Length is Too Long"		},
@@ -1430,8 +1430,8 @@ struct err errtbl[MAXERR] = {
 {	0		    ,	"Unknown"						}
 };
 
-/* /SETƒIƒvƒVƒ‡ƒ“\‘¢‘Ì */
+/* /SETã‚ªãƒ—ã‚·ãƒ§ãƒ³æ§‹é€ ä½“ */
 typedef struct set {
-	char	ent[MAXNAME+2];			/* “o˜^ƒ‰ƒxƒ‹–¼Ì */
-	char	let[MAXNAME+2];			/* ‘ã“üƒ‰ƒxƒ‹–¼Ì */
+	char	ent[MAXNAME+2];			/* ç™»éŒ²ãƒ©ãƒ™ãƒ«åç§° */
+	char	let[MAXNAME+2];			/* ä»£å…¥ãƒ©ãƒ™ãƒ«åç§° */
 } SETOPT;

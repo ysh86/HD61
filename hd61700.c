@@ -2,103 +2,103 @@
 /*                                                                      */
 /*  NAME : HD61700 CROSS ASSEMBLER SOURCE CODE                          */
 /*  FILE : hd61700.c                                                    */
-/*  Copyright (c) ‚ ‚¨ 'BLUE' 2003-2004                                 */
+/*  Copyright (c) ã‚ãŠ 'BLUE' 2003-2004                                 */
 /*                                                                      */
 /*  REVISION HISTORY:                                                   */
-/*  Rev : 0.01  2003.01.06  Å‰‚Ìƒo[ƒWƒ‡ƒ“                            */
-/*                          Žæ‚è‚ ‚¦‚¸“à‘ ƒAƒZƒ“ƒuƒ‰ŒÝŠ·‚Å“®ì          */
-/*  Rev : 0.02  2003.01.07  ƒƒ‚ƒŠ—˜—pŒø—¦‚ð‰ü‘PBƒAƒZƒ“ƒuƒ‹‰Â”\‚È      */
-/*                          s”‚ðÅ‘å4096s‚©‚ç–³§ŒÀ‚É‚µ‚½            */
-/*  Rev : 0.03  2003.01.09  –¢’è‹`ƒIƒyƒ‰ƒ“ƒhŽw’è‚ð‰Â”\‚Æ‚µ‚½            */
-/*  Rev : 0.04  2003.01.16  –¢’è‹`–½—ß‚ð‚³‚ç‚É’Ç‰Á                      */
-/*                          o—ÍŒ`Ž®‚ðpbf/bas‚©‚ç‘I‘ð‚Å‚«‚é—l‚É‚µ‚½     */
-/*  Rev : 0.05  2003.01.17  ƒ‰ƒxƒ‹Žw’è‰ü—Ç(ƒƒ‚ƒŠƒCƒ“ƒfƒbƒNƒX—˜—p‰Â)    */
-/*  Rev : 0.05a 2003.01.21  ƒGƒ‰[ƒƒbƒZ[ƒWC³                        */
-/*  Rev : 0.06  2003.01.22  ƒoƒbƒtƒ@ãŒÀ‚ð64KBƒtƒ‹‚Ü‚Å‘Î‰ž‚Æ‚·‚é        */
-/*  Rev : 0.07  2003.02.03  AI-1000/FX-870P/VX-4ƒAƒZƒ“ƒuƒ‰‚É€‹’        */
-/*                          Eƒ‰ƒxƒ‹‰‰ŽZ(—Dæ‡ˆÊ‚È‚µ)ƒTƒ|[ƒg          */
-/*                            —˜—p‰Â”\‚È‰‰ŽZŽq(+-/*&|)                  */
-/*                          Eƒ‰ƒxƒ‹Œ…Žw’è(.U .D)ABit”½“](.N)ƒTƒ|[ƒg  */
-/*                          EƒIƒyƒ‰ƒ“ƒh‚É•¶Žš—ñ‚ðŽw’è‰Â”\‚Æ‚µ‚½        */
-/*                          Eƒ}ƒ‹ƒ`ƒoƒCƒgŒnƒjƒ‚ƒjƒbƒN‚ðXXW¨XXM‚É•ÏX  */
-/*                          EƒIƒyƒR[ƒh0x0`0xf¤0x80`0x8f‚É‘Î‚µ‚ÄA   */
-/*                            JumpŠg’£‚ðƒCƒl[ƒuƒ‹‚Æ‚µ‚½B              */
-/*                          Eã‹LJumpŠg’£Žž‚Ìƒ‰ƒxƒ‹Žw’è‚ðJR LABELŒ`Ž®  */
-/*                            ‚à—˜—p‰Â”\‚Æ‚µ‚½B(’Êí‚ÍLABEL‚Ì‚Ý‹Lq)   */
-/*                          EDW‹^Ž—–½—ß‚ðƒCƒl[ƒuƒ‹‚Æ‚µ‚½B            */
-/*                          Eã‹L•ÏX‚É”º‚¢/u ‚ð”pŽ~‚µAƒZƒJƒ“ƒhƒIƒy   */
-/*                            ƒŒ[ƒVƒ‡ƒ“Žw’è‚ðƒfƒBƒtƒHƒ‹ƒg‚Æ‚µ‚½B      */
-/*                            (/nƒIƒvƒVƒ‡ƒ“‚ÅPB-1000ŒÝŠ·“®ì)           */
-/*                          ELEVEL‹^Ž—–½—ßƒTƒ|[ƒg                     */
-/*  Rev : 0.08  2003.02.09  ƒ‰ƒxƒ‹‰‰ŽZˆ—‚ÌŒ©’¼‚µ                      */
-/*                          ‰‰ŽZŽq—Dæ‡ˆÊ‚âŠ‡ŒÊ‚ÌŽg—p‚ð‰Â”\‚Æ‚µ‚½      */
-/*                          ƒƒ‚ƒŠŒø—¦‰ü‘PBƒIƒyƒ‰ƒ“ƒhŒ…”§ŒÀ‚ðŠO‚µ‚½B*/
-/*                          –½—ßŒêƒTƒ|[ƒg’Ç‰Á(‚±‚ê‚ÅI—¹—\’è)          */
-/*                          ×‚©‚¢ƒoƒOC³                              */
-/*  Rev : 0.09  2003.02.16  #if`#else`#endifƒ}ƒNƒ‚ÌƒTƒ|[ƒgB        */
-/*                          Ž®‚Ì•]‰¿—p‚É[!]‰‰ŽZŽq‚ð’Ç‰ÁB               */
-/*                          ƒtƒ@ƒCƒ‹–¼‚ª8•¶ŽšˆÈã‚ÌŽžƒ[ƒjƒ“ƒO‚ð•\Ž¦B */
-/*                          ƒ‰ƒxƒ‹æ“ª•¶Žš‚ª”Žš‚Ìê‡¤ƒGƒ‰[‚Æ‚·‚é‚æ‚¤ */
-/*                          C³B                                      */
-/*  Rev : 0.10  2003.02.21  #INCLUDE,#LIST,#NOLIST,#EJECTƒTƒ|[ƒg       */
-/*                          EƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹‚ªˆµ‚¦‚é‚æ‚¤‚ÉC³    */
-/*                            (ƒlƒXƒg‚Í256ƒŒƒxƒ‹‚Ü‚Å)                   */
-/*                          EƒŠƒXƒgo—Í‚Ì‹–‰Â/‹ÖŽ~/‰üƒy[ƒW‚ðƒTƒ|[ƒg  */
-/*                          EQUéŒ¾‚É‚Ä•¶Žš—ñ‚ðˆµ‚¦‚é‚æ‚¤‚É‚µ‚½B       */
-/*                          –½—ßƒR[ƒh(0xDA,0xDB)‚É‘Î‚µ‚ÄJumpŠg’£‚ð‹–‰Â */
-/*                          ‚Æ‚µ‚½B(DIDM,DIUM,BYDM,BYUM,INVM,CMPM)     */
-/*                          2i”(&B)Žw’è‚ð’Ç‰ÁB                       */
-/*                          ƒGƒ‰[ƒ`ƒFƒbƒNˆ—C³                      */
-/*  Rev : 0.11  2003.02.22  EQU,LDWŽž‚Ì•¶Žš—ñŽw’è‚ÌƒGƒ“ƒfƒBƒAƒ“‚ð‹t‚É   */
-/*                          ‚µ‚½B                                      */
-/*  Rev : 0.12  2003.02.28  ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚ð“®“I‚ÉŠm•Û‚·‚é‚æ‚¤‚É‰ü—ÇB  */
-/*                          Å‘å“o˜^”§ŒÀ‚ðŠO‚µ‚½B                    */
-/*                          o—ÍƒƒbƒZ[ƒWC³B                        */
-/*                          Win32/DOS”Å‚Ìƒ\[ƒX‚ð“‡B                 */
-/*  Rev : 0.12a 2003.03.04  pbfƒtƒ@ƒCƒ‹o—Í‚ðC³B(DOS”Å‚Ì‚Ý”­¶)      */
-/*  Rev : 0.13  2003.03.04  –½—ßŒê’Ç‰ÁB                                */
-/*  Rev : 0.14  2003.03.05  —\–ñŒê§ŒÀ‚ðŠÉ˜aB                          */
-/*                          “à•”ƒŒƒWƒXƒ^–¼‚ðƒ‰ƒxƒ‹‚Æ‚µ‚Ä—˜—p‰Â‚Æ‚µ‚½B  */
-/*  Rev : 0.15  2003.03.07  ÅIƒAƒhƒŒƒXo—Í•”‚ðC³                    */
-/*                          •¶Žš—ñ‚Ìˆµ‚¢‚ðŠg’£‚µA‰‰ŽZ‚à‰Â”\‚Æ‚µ‚½B    */
-/*                          KCŒ`Ž®‚Ìƒjƒ‚ƒjƒbƒN‚É‘Î‰žB                  */
-/*  Rev : 0.16  2003.03.14  Š‡ŒÊŒŸoŽž‚Ì‰üsˆ—‚ðC³B                */
-/*                          ŠÖŒW(”äŠr)‰‰ŽZŽq‚É‘Î‰žB                    */
-/*                          ‰‰ŽZŽqŽí•Ê‚ð_“î‚É‚µ‚½B                    */
-/*  Rev : 0.17  2003.03.17  BYD/BYU’Ç‰ÁB                               */
-/*  Rev : 0.18  2003.03.25  ‚QƒpƒX–Ú‚Å’l‚ªŠm’è‚µ‚È‚¢ƒ‰ƒxƒ‹‚ª‚ ‚Á‚Ä‚à    */
-/*                          ƒGƒ‰[‚Æ‚È‚ç‚È‚¢ê‡‚ª‚ ‚Á‚½‚Ì‚ðC³B      */
-/*  Rev : 0.19  2003.04.06  JR }IM7Œ`Ž®‚ÌƒTƒ|[ƒgB                    */
-/*  Rev : 0.20  2003.04.22  ƒ\[ƒXƒtƒ@ƒCƒ‹‚Éo—Í—p‚ÌŠg’£Žq(lst/bas/pbf) */
-/*                          ‚ðŽw’è‚µ‚½ê‡‚Ì–â‘è‚ðC³B                */
-/*                          ƒGƒ‰[ˆ—Œ©’¼‚µBƒƒbƒZ[ƒW‘Ã“–«‚ðŒüã    */
-/*  Rev : 0.21  2003.04.25  PST TS,xx,GST TS,$‚ð’Ç‰ÁB                  */
-/*  Rev : 0.22  2003.04.26  –½—ßƒR[ƒh(0xD2`0xDB)‚É‘Î‚µJumpŠg’£‚ð‹ÖŽ~  */
+/*  Rev : 0.01  2003.01.06  æœ€åˆã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³                            */
+/*                          å–ã‚Šã‚ãˆãšå†…è”µã‚¢ã‚»ãƒ³ãƒ–ãƒ©äº’æ›ã§å‹•ä½œ          */
+/*  Rev : 0.02  2003.01.07  ãƒ¡ãƒ¢ãƒªåˆ©ç”¨åŠ¹çŽ‡ã‚’æ”¹å–„ã€‚ã‚¢ã‚»ãƒ³ãƒ–ãƒ«å¯èƒ½ãª      */
+/*                          è¡Œæ•°ã‚’æœ€å¤§4096è¡Œã‹ã‚‰ç„¡åˆ¶é™ã«ã—ãŸ            */
+/*  Rev : 0.03  2003.01.09  æœªå®šç¾©ã‚ªãƒšãƒ©ãƒ³ãƒ‰æŒ‡å®šã‚’å¯èƒ½ã¨ã—ãŸ            */
+/*  Rev : 0.04  2003.01.16  æœªå®šç¾©å‘½ä»¤ã‚’ã•ã‚‰ã«è¿½åŠ                       */
+/*                          å‡ºåŠ›å½¢å¼ã‚’pbf/basã‹ã‚‰é¸æŠžã§ãã‚‹æ§˜ã«ã—ãŸ     */
+/*  Rev : 0.05  2003.01.17  ãƒ©ãƒ™ãƒ«æŒ‡å®šæ”¹è‰¯(ãƒ¡ãƒ¢ãƒªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹åˆ©ç”¨å¯)    */
+/*  Rev : 0.05a 2003.01.21  ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ä¿®æ­£                        */
+/*  Rev : 0.06  2003.01.22  ãƒãƒƒãƒ•ã‚¡ä¸Šé™ã‚’64KBãƒ•ãƒ«ã¾ã§å¯¾å¿œã¨ã™ã‚‹        */
+/*  Rev : 0.07  2003.02.03  AI-1000/FX-870P/VX-4ã‚¢ã‚»ãƒ³ãƒ–ãƒ©ã«æº–æ‹         */
+/*                          ãƒ»ãƒ©ãƒ™ãƒ«æ¼”ç®—(å„ªå…ˆé †ä½ãªã—)ã‚µãƒãƒ¼ãƒˆ          */
+/*                            åˆ©ç”¨å¯èƒ½ãªæ¼”ç®—å­(+-/*&|)                  */
+/*                          ãƒ»ãƒ©ãƒ™ãƒ«æ¡æŒ‡å®š(.U .D)ã€Bitåè»¢(.N)ã‚µãƒãƒ¼ãƒˆ  */
+/*                          ãƒ»ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã«æ–‡å­—åˆ—ã‚’æŒ‡å®šå¯èƒ½ã¨ã—ãŸ        */
+/*                          ãƒ»ãƒžãƒ«ãƒãƒã‚¤ãƒˆç³»ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ã‚’XXWâ†’XXMã«å¤‰æ›´  */
+/*                          ãƒ»ã‚ªãƒšã‚³ãƒ¼ãƒ‰0x0ï½ž0xfï½¤0x80ï½ž0x8fã«å¯¾ã—ã¦ã€   */
+/*                            Jumpæ‹¡å¼µã‚’ã‚¤ãƒãƒ¼ãƒ–ãƒ«ã¨ã—ãŸã€‚              */
+/*                          ãƒ»ä¸Šè¨˜Jumpæ‹¡å¼µæ™‚ã®ãƒ©ãƒ™ãƒ«æŒ‡å®šã‚’JR LABELå½¢å¼  */
+/*                            ã‚‚åˆ©ç”¨å¯èƒ½ã¨ã—ãŸã€‚(é€šå¸¸ã¯LABELã®ã¿è¨˜è¿°)   */
+/*                          ãƒ»DWç–‘ä¼¼å‘½ä»¤ã‚’ã‚¤ãƒãƒ¼ãƒ–ãƒ«ã¨ã—ãŸã€‚            */
+/*                          ãƒ»ä¸Šè¨˜å¤‰æ›´ã«ä¼´ã„/u ã‚’å»ƒæ­¢ã—ã€ã‚»ã‚«ãƒ³ãƒ‰ã‚ªãƒš   */
+/*                            ãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³æŒ‡å®šã‚’ãƒ‡ã‚£ãƒ•ã‚©ãƒ«ãƒˆã¨ã—ãŸã€‚      */
+/*                            (/nã‚ªãƒ—ã‚·ãƒ§ãƒ³ã§PB-1000äº’æ›å‹•ä½œ)           */
+/*                          ãƒ»LEVELç–‘ä¼¼å‘½ä»¤ã‚µãƒãƒ¼ãƒˆ                     */
+/*  Rev : 0.08  2003.02.09  ãƒ©ãƒ™ãƒ«æ¼”ç®—å‡¦ç†ã®è¦‹ç›´ã—                      */
+/*                          æ¼”ç®—å­å„ªå…ˆé †ä½ã‚„æ‹¬å¼§ã®ä½¿ç”¨ã‚’å¯èƒ½ã¨ã—ãŸ      */
+/*                          ãƒ¡ãƒ¢ãƒªåŠ¹çŽ‡æ”¹å–„ã€‚ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ¡æ•°åˆ¶é™ã‚’å¤–ã—ãŸã€‚*/
+/*                          å‘½ä»¤èªžã‚µãƒãƒ¼ãƒˆè¿½åŠ (ã“ã‚Œã§çµ‚äº†äºˆå®š)          */
+/*                          ç´°ã‹ã„ãƒã‚°ä¿®æ­£                              */
+/*  Rev : 0.09  2003.02.16  #ifï½ž#elseï½ž#endifãƒžã‚¯ãƒ­ã®ã‚µãƒãƒ¼ãƒˆã€‚        */
+/*                          å¼ã®è©•ä¾¡ç”¨ã«[!]æ¼”ç®—å­ã‚’è¿½åŠ ã€‚               */
+/*                          ãƒ•ã‚¡ã‚¤ãƒ«åãŒ8æ–‡å­—ä»¥ä¸Šã®æ™‚ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚°ã‚’è¡¨ç¤ºã€‚ */
+/*                          ãƒ©ãƒ™ãƒ«å…ˆé ­æ–‡å­—ãŒæ•°å­—ã®å ´åˆï½¤ã‚¨ãƒ©ãƒ¼ã¨ã™ã‚‹ã‚ˆã† */
+/*                          ä¿®æ­£ã€‚                                      */
+/*  Rev : 0.10  2003.02.21  #INCLUDE,#LIST,#NOLIST,#EJECTã‚µãƒãƒ¼ãƒˆ       */
+/*                          ãƒ»ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«ãŒæ‰±ãˆã‚‹ã‚ˆã†ã«ä¿®æ­£    */
+/*                            (ãƒã‚¹ãƒˆã¯256ãƒ¬ãƒ™ãƒ«ã¾ã§)                   */
+/*                          ãƒ»ãƒªã‚¹ãƒˆå‡ºåŠ›ã®è¨±å¯/ç¦æ­¢/æ”¹ãƒšãƒ¼ã‚¸ã‚’ã‚µãƒãƒ¼ãƒˆ  */
+/*                          EQUå®£è¨€ã«ã¦æ–‡å­—åˆ—ã‚’æ‰±ãˆã‚‹ã‚ˆã†ã«ã—ãŸã€‚       */
+/*                          å‘½ä»¤ã‚³ãƒ¼ãƒ‰(0xDA,0xDB)ã«å¯¾ã—ã¦Jumpæ‹¡å¼µã‚’è¨±å¯ */
+/*                          ã¨ã—ãŸã€‚(DIDM,DIUM,BYDM,BYUM,INVM,CMPM)     */
+/*                          2é€²æ•°(&B)æŒ‡å®šã‚’è¿½åŠ ã€‚                       */
+/*                          ã‚¨ãƒ©ãƒ¼ãƒã‚§ãƒƒã‚¯å‡¦ç†ä¿®æ­£                      */
+/*  Rev : 0.11  2003.02.22  EQU,LDWæ™‚ã®æ–‡å­—åˆ—æŒ‡å®šã®ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ã‚’é€†ã«   */
+/*                          ã—ãŸã€‚                                      */
+/*  Rev : 0.12  2003.02.28  ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’å‹•çš„ã«ç¢ºä¿ã™ã‚‹ã‚ˆã†ã«æ”¹è‰¯ã€‚  */
+/*                          æœ€å¤§ç™»éŒ²æ•°åˆ¶é™ã‚’å¤–ã—ãŸã€‚                    */
+/*                          å‡ºåŠ›ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ä¿®æ­£ã€‚                        */
+/*                          Win32/DOSç‰ˆã®ã‚½ãƒ¼ã‚¹ã‚’çµ±åˆã€‚                 */
+/*  Rev : 0.12a 2003.03.04  pbfãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›ã‚’ä¿®æ­£ã€‚(DOSç‰ˆã®ã¿ç™ºç”Ÿ)      */
+/*  Rev : 0.13  2003.03.04  å‘½ä»¤èªžè¿½åŠ ã€‚                                */
+/*  Rev : 0.14  2003.03.05  äºˆç´„èªžåˆ¶é™ã‚’ç·©å’Œã€‚                          */
+/*                          å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿åã‚’ãƒ©ãƒ™ãƒ«ã¨ã—ã¦åˆ©ç”¨å¯ã¨ã—ãŸã€‚  */
+/*  Rev : 0.15  2003.03.07  æœ€çµ‚ã‚¢ãƒ‰ãƒ¬ã‚¹å‡ºåŠ›éƒ¨ã‚’ä¿®æ­£                    */
+/*                          æ–‡å­—åˆ—ã®æ‰±ã„ã‚’æ‹¡å¼µã—ã€æ¼”ç®—ã‚‚å¯èƒ½ã¨ã—ãŸã€‚    */
+/*                          KCå½¢å¼ã®ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ã«å¯¾å¿œã€‚                  */
+/*  Rev : 0.16  2003.03.14  æ‹¬å¼§æ¤œå‡ºæ™‚ã®æ”¹è¡Œå‡¦ç†ã‚’ä¿®æ­£ã€‚                */
+/*                          é–¢ä¿‚(æ¯”è¼ƒ)æ¼”ç®—å­ã«å¯¾å¿œã€‚                    */
+/*                          æ¼”ç®—å­ç¨®åˆ¥ã‚’æŸ”è»Ÿã«ã—ãŸã€‚                    */
+/*  Rev : 0.17  2003.03.17  BYD/BYUè¿½åŠ ã€‚                               */
+/*  Rev : 0.18  2003.03.25  ï¼’ãƒ‘ã‚¹ç›®ã§å€¤ãŒç¢ºå®šã—ãªã„ãƒ©ãƒ™ãƒ«ãŒã‚ã£ã¦ã‚‚    */
+/*                          ã‚¨ãƒ©ãƒ¼ã¨ãªã‚‰ãªã„å ´åˆãŒã‚ã£ãŸã®ã‚’ä¿®æ­£ã€‚      */
+/*  Rev : 0.19  2003.04.06  JR Â±IM7å½¢å¼ã®ã‚µãƒãƒ¼ãƒˆã€‚                    */
+/*  Rev : 0.20  2003.04.22  ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã«å‡ºåŠ›ç”¨ã®æ‹¡å¼µå­(lst/bas/pbf) */
+/*                          ã‚’æŒ‡å®šã—ãŸå ´åˆã®å•é¡Œã‚’ä¿®æ­£ã€‚                */
+/*                          ã‚¨ãƒ©ãƒ¼å‡¦ç†è¦‹ç›´ã—ã€‚ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸å¦¥å½“æ€§ã‚’å‘ä¸Š    */
+/*  Rev : 0.21  2003.04.25  PST TS,xx,GST TS,$ã‚’è¿½åŠ ã€‚                  */
+/*  Rev : 0.22  2003.04.26  å‘½ä»¤ã‚³ãƒ¼ãƒ‰(0xD2ï½ž0xDB)ã«å¯¾ã—Jumpæ‹¡å¼µã‚’ç¦æ­¢  */
 /*                          (DIDM,DIUM,BYDM,BYUM,INVM,CMPM)             */
-/*  Rev : 0.23  2003.05.15  /SETƒIƒvƒVƒ‡ƒ“‚ð’Ç‰Á                        */
-/*  Rev : 0.24  2003.05.25  CODE‚Ì–³‚¢ƒ\[ƒX‚É‘Î‰žB                    */
-/*                          ‘SŠpƒXƒy[ƒX‚ð–³Ž‹‚·‚é‚æ‚¤‚É‚µ‚½B          */
-/*  Rev : 0.25  2003.05.29  ƒIƒyƒ‰ƒ“ƒh•¶Žš—ñ‚Ì—\–ñ•¶Žš§ŒÀ‚ð‚È‚­‚µ‚½B  */
-/*  Rev : 0.26  2003.06.26  ƒVƒ“ƒOƒ‹ƒR[ƒe[ƒVƒ‡ƒ“Žw’è‚ðƒTƒ|[ƒg        */
-/*  Rev : 0.27  2003.06.29  #include•¶‚Åƒtƒ‹ƒpƒXŽw’è‚ð’Ç‰Á              */
-/*  Rev : 0.28  2003.07.25  ‘Š‘ÎƒWƒƒƒ“ƒv”ÍˆÍƒ`ƒFƒbƒNˆ—‚ðC³          */
-/*                          ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆ—‚Ì‰ü—ÇB                  */
-/*                          /SETƒIƒvƒVƒ‡ƒ“‚ð•s—v‚É‚µ‚½B                */
-/*                          ƒŠƒXƒgo—ÍŽž‚ÉTABŽw’è(/tab)‚ð’Ç‰ÁB         */
-/*  Rev : 0.29  2003.09.01  PBFo—ÍŽž‚ÉƒSƒ~‚ªŽc‚éê‡‚ª‚ ‚é‚Ì‚ðC³     */
-/*  Rev : 0.30  2003.09.10  STARTéŒ¾‚Ì‚ ‚éƒ\[ƒX‚ÍAŠg’£Žq‚ðEXE‚Åo—Í  */
-/*                          ‚·‚é‚æ‚¤‚ÉC³                              */
-/*  Rev : 0.31  2003.09.14  ƒR[ƒe[ƒVƒ‡ƒ““à‚ÌŠ‡ŒÊ"()"ˆ—‚ðC³        */
-/*                          ƒRƒ“ƒpƒCƒ‹Žž‚Éƒ[ƒjƒ“ƒO‚ªo‚Ä‚¢‚½‚Ì‚ðC³  */
-/*  Rev : 0.32  2004.01.16  "JR"ƒ^ƒO‚ÌŽw’è‚ªOPR2‚Å‚Å‚«‚È‚¢‚Ì‚ðC³      */
-/*  Rev : 0.33  2004.12.24  ƒVƒ“ƒ{ƒ‹ƒ‰ƒxƒ‹“o˜^(EQU)ˆ—‚ð‰ü—ÇB         */
-/*                          E1ƒpƒX–Ú‚É’l‚ªŠm’è‚µ‚Ä‚¢‚È‚¢ƒ‰ƒxƒ‹‚Å‚à—˜—p */
-/*                            ‰Â”\‚Æ‚µ‚½                                */
-/*                          EƒVƒ“ƒ{ƒ‹“o˜^Žž‚ÌƒGƒ‰[ƒƒbƒZ[ƒW‚ðC³    */
-/*                          ƒIƒyƒ‰ƒ“ƒh‰‰ŽZˆ—‚ð‰ü—Ç                    */
-/*                          E³•‰•\Œ»‚ðŽg‚¦‚é‚æ‚¤‚É‚µ‚½                */
-/*                          /qƒIƒvƒVƒ‡ƒ“’Ç‰Á                            */
-/*                          EƒNƒCƒbƒNƒ[ƒ_Œ`Ž®‚ðƒTƒ|[ƒg              */
+/*  Rev : 0.23  2003.05.15  /SETã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’è¿½åŠ                         */
+/*  Rev : 0.24  2003.05.25  CODEã®ç„¡ã„ã‚½ãƒ¼ã‚¹ã«å¯¾å¿œã€‚                    */
+/*                          å…¨è§’ã‚¹ãƒšãƒ¼ã‚¹ã‚’ç„¡è¦–ã™ã‚‹ã‚ˆã†ã«ã—ãŸã€‚          */
+/*  Rev : 0.25  2003.05.29  ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ–‡å­—åˆ—ã®äºˆç´„æ–‡å­—åˆ¶é™ã‚’ãªãã—ãŸã€‚  */
+/*  Rev : 0.26  2003.06.26  ã‚·ãƒ³ã‚°ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³æŒ‡å®šã‚’ã‚µãƒãƒ¼ãƒˆ        */
+/*  Rev : 0.27  2003.06.29  #includeæ–‡ã§ãƒ•ãƒ«ãƒ‘ã‚¹æŒ‡å®šã‚’è¿½åŠ               */
+/*  Rev : 0.28  2003.07.25  ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ç¯„å›²ãƒã‚§ãƒƒã‚¯å‡¦ç†ã‚’ä¿®æ­£          */
+/*                          ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å‡¦ç†ã®æ”¹è‰¯ã€‚                  */
+/*                          /SETã‚ªãƒ—ã‚·ãƒ§ãƒ³ã‚’ä¸è¦ã«ã—ãŸã€‚                */
+/*                          ãƒªã‚¹ãƒˆå‡ºåŠ›æ™‚ã«TABæŒ‡å®š(/tab)ã‚’è¿½åŠ ã€‚         */
+/*  Rev : 0.29  2003.09.01  PBFå‡ºåŠ›æ™‚ã«ã‚´ãƒŸãŒæ®‹ã‚‹å ´åˆãŒã‚ã‚‹ã®ã‚’ä¿®æ­£     */
+/*  Rev : 0.30  2003.09.10  STARTå®£è¨€ã®ã‚ã‚‹ã‚½ãƒ¼ã‚¹ã¯ã€æ‹¡å¼µå­ã‚’EXEã§å‡ºåŠ›  */
+/*                          ã™ã‚‹ã‚ˆã†ã«ä¿®æ­£                              */
+/*  Rev : 0.31  2003.09.14  ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å†…ã®æ‹¬å¼§"()"å‡¦ç†ã‚’ä¿®æ­£        */
+/*                          ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«æ™‚ã«ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚°ãŒå‡ºã¦ã„ãŸã®ã‚’ä¿®æ­£  */
+/*  Rev : 0.32  2004.01.16  "JR"ã‚¿ã‚°ã®æŒ‡å®šãŒOPR2ã§ã§ããªã„ã®ã‚’ä¿®æ­£      */
+/*  Rev : 0.33  2004.12.24  ã‚·ãƒ³ãƒœãƒ«ãƒ©ãƒ™ãƒ«ç™»éŒ²(EQU)å‡¦ç†ã‚’æ”¹è‰¯ã€‚         */
+/*                          ãƒ»1ãƒ‘ã‚¹ç›®ã«å€¤ãŒç¢ºå®šã—ã¦ã„ãªã„ãƒ©ãƒ™ãƒ«ã§ã‚‚åˆ©ç”¨ */
+/*                            å¯èƒ½ã¨ã—ãŸ                                */
+/*                          ãƒ»ã‚·ãƒ³ãƒœãƒ«ç™»éŒ²æ™‚ã®ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’ä¿®æ­£    */
+/*                          ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ¼”ç®—å‡¦ç†ã‚’æ”¹è‰¯                    */
+/*                          ãƒ»æ­£è² è¡¨ç¾ã‚’ä½¿ãˆã‚‹ã‚ˆã†ã«ã—ãŸ                */
+/*                          /qã‚ªãƒ—ã‚·ãƒ§ãƒ³è¿½åŠ                             */
+/*                          ãƒ»ã‚¯ã‚¤ãƒƒã‚¯ãƒ­ãƒ¼ãƒ€å½¢å¼ã‚’ã‚µãƒãƒ¼ãƒˆ              */
 /*                                                                      */
 /************************************************************************/
 #include<stdio.h>
@@ -107,64 +107,64 @@
 #include<fcntl.h>
 #include"hd61700.h"
 /*------------------------------------------------------------------*/
-/*  ’è”’è‹`                                                        */
+/*  å®šæ•°å®šç¾©                                                        */
 /*------------------------------------------------------------------*/
-#define SJIS_SPACE	1				/* 1:‘SŠpƒXƒy[ƒX‚ð–³Ž‹‚·‚é     */
-#define FORDOS  	0				/* 1:DOS—p‚ÉƒRƒ“ƒpƒCƒ‹‚·‚é      */
+#define SJIS_SPACE	1				/* 1:å…¨è§’ã‚¹ãƒšãƒ¼ã‚¹ã‚’ç„¡è¦–ã™ã‚‹     */
+#define FORDOS  	0				/* 1:DOSç”¨ã«ã‚³ãƒ³ãƒ‘ã‚¤ãƒ«ã™ã‚‹      */
 #if FORDOS
-char	name[]	="HD61700 ASSEMBLER FOR DOS ";	/* ƒAƒZƒ“ƒuƒ‰–¼Ì   */
+char	name[]	="HD61700 ASSEMBLER FOR DOS ";	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ©åç§°   */
 #else
-char	name[]	="HD61700 ASSEMBLER ";	/* ƒAƒZƒ“ƒuƒ‰–¼Ì           */
+char	name[]	="HD61700 ASSEMBLER ";	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ©åç§°           */
 #endif
 char	rev[]	="Rev 0.33";			/* Revision                 */
-/* —˜—p‰Â”\•¶Žš—ñ */
+/* åˆ©ç”¨å¯èƒ½æ–‡å­—åˆ— */
 char	LabelStr[]	= "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@_";
 char	DecStr[]	= "0123456789";
 char	HexStr[]	= "0123456789ABCDEFabcdef";
 /*------------------------------------------------------------------*/
-/*  •Ï”’è‹`                                                        */
+/*  å¤‰æ•°å®šç¾©                                                        */
 /*------------------------------------------------------------------*/
-char	SrcFile[MAXLINE];			/* ƒ\[ƒXƒtƒ@ƒCƒ‹–¼             */
-char	IncFile[MAXLINE];			/* ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹–¼       */
-char	LstFile[MAXLINE];			/* ƒŠƒXƒgƒtƒ@ƒCƒ‹–¼             */
-char	OutFile[MAXLINE];			/* o—Íƒtƒ@ƒCƒ‹–¼               */
-char	ExeFile[MAXLINE];			/* ŽÀsƒtƒ@ƒCƒ‹–¼               */
-FILE	*IncFD[MAXINC];				/* INCLUDEƒtƒ@ƒCƒ‹ƒfƒBƒXƒNƒŠƒvƒ^*/
-FILE	*SrcFD;						/* ƒ\[ƒXƒtƒ@ƒCƒ‹ƒfƒBƒXƒNƒŠƒvƒ^ */
-FILE	*LstFD;						/* ƒŠƒXƒgƒtƒ@ƒCƒ‹ƒfƒBƒXƒNƒŠƒvƒ^ */
-FILE	*OutFD;						/* o—Íƒtƒ@ƒCƒ‹ƒfƒBƒXƒNƒŠƒvƒ^   */
-unsigned short	pass;				/* ƒAƒZƒ“ƒuƒ‹ƒpƒX”(0A1)       */
-unsigned short	SetLabel;			/* /SET ƒIƒvƒVƒ‡ƒ““o˜^”        */
-SETOPT			SetTbl[MAXOPT];		/* /SETƒIƒvƒVƒ‡ƒ“\‘¢‘Ì         */
-unsigned short	UndefOpr;			/* 1:–¢ŒöŠJƒIƒvƒVƒ‡ƒ“‘I‘ð       */
-unsigned short	OutType;			/* 0:BASICA1:PBFŒ`Ž®           */
-unsigned short	pr;					/* ‰æ–Êo—Íƒtƒ‰ƒO               */
-unsigned short	Tab;				/* TABo—Íƒtƒ‰ƒO                */
-unsigned long 	StartAdr;			/* ƒAƒZƒ“ƒuƒ‹ŠJŽnƒAƒhƒŒƒX       */
-unsigned long 	ExecAdr;			/* ŽÀsŠJŽnƒAƒhƒŒƒX             */
-unsigned long 	AsmAdr;				/* ƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒX           */
-unsigned short	StartAdrFlag;		/* ƒAƒZƒ“ƒuƒ‹ŠJŽnƒAƒhƒŒƒXƒtƒ‰ƒO */
-unsigned short	ExecAdrFlag;		/* ŽÀsŠJŽnƒAƒhƒŒƒXƒtƒ‰ƒO       */
-unsigned short	LabelCnt;			/* ƒ‰ƒxƒ‹“o˜^”                 */
-LBL				* LabelTbl;			/* ƒ‰ƒxƒ‹“o˜^ƒe[ƒuƒ‹ƒ|ƒCƒ“ƒ^   */
-struct	outtbl	OutTbl;				/* \•¶‰ðÍŒ‹‰Êƒe[ƒuƒ‹         */
-unsigned char*	OutBuf;				/* –½—ßo—Íƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^     */
-char			calcwk[MAXLINE+2];	/* ƒ‰ƒxƒ‹‰‰ŽZƒoƒbƒtƒ@           */
-int				CalcPtr;			/* ‰‰ŽZƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^         */
-unsigned short	Ckind;				/* ‰‰ŽZ’†‚Ì–¼Ì‰ðŒˆƒtƒ‰ƒO       */
-int				IfLevel;			/* #if`#endif ƒŒƒxƒ‹           */
-unsigned char	AsmFlag;			/* ƒAƒZƒ“ƒuƒ‹‹ÖŽ~/‹–‰Â          */
-unsigned char	IfStk[IFLEVEL];		/* ƒAƒZƒ“ƒuƒ‹‹ÖŽ~/‹–‰ÂƒXƒ^ƒbƒN  */
-unsigned short	ListFlag;			/* ƒŠƒXƒgo—Íƒtƒ‰ƒO(0:o—Í)     */
-unsigned short	LineFeed;			/* #eject—v‹ƒtƒ‰ƒO(1:—v‹‚ ‚è) */
-unsigned short	IncLevel;			/* INCLUDEƒŒƒxƒ‹(ƒŒƒxƒ‹1‚Ü‚Å‰Â) */
-unsigned short	SrcLine;			/* ƒ\[ƒXƒŠƒXƒgs”Ô†           */
-unsigned short	IncLine[MAXINC];	/* ƒCƒ“ƒNƒ‹[ƒhƒŠƒXƒgs”Ô†     */
-char 			oprwk[MAXLEN+2];	/* ƒjƒ‚ƒjƒbƒN/ƒIƒyƒ‰ƒ“ƒh—pƒ[ƒN*/
-									/* ¦”r‘¼—˜—p‚É’ˆÓ‚·‚é‚±‚Æ     */
+char	SrcFile[MAXLINE];			/* ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å             */
+char	IncFile[MAXLINE];			/* ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«å       */
+char	LstFile[MAXLINE];			/* ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å             */
+char	OutFile[MAXLINE];			/* å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«å               */
+char	ExeFile[MAXLINE];			/* å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«å               */
+FILE	*IncFD[MAXINC];				/* INCLUDEãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿*/
+FILE	*SrcFD;						/* ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ */
+FILE	*LstFD;						/* ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ */
+FILE	*OutFD;						/* å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿   */
+unsigned short	pass;				/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ãƒ‘ã‚¹æ•°(0ã€1)       */
+unsigned short	SetLabel;			/* /SET ã‚ªãƒ—ã‚·ãƒ§ãƒ³ç™»éŒ²æ•°        */
+SETOPT			SetTbl[MAXOPT];		/* /SETã‚ªãƒ—ã‚·ãƒ§ãƒ³æ§‹é€ ä½“         */
+unsigned short	UndefOpr;			/* 1:æœªå…¬é–‹ã‚ªãƒ—ã‚·ãƒ§ãƒ³é¸æŠž       */
+unsigned short	OutType;			/* 0:BASICã€1:PBFå½¢å¼           */
+unsigned short	pr;					/* ç”»é¢å‡ºåŠ›ãƒ•ãƒ©ã‚°               */
+unsigned short	Tab;				/* TABå‡ºåŠ›ãƒ•ãƒ©ã‚°                */
+unsigned long 	StartAdr;			/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹       */
+unsigned long 	ExecAdr;			/* å®Ÿè¡Œé–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹             */
+unsigned long 	AsmAdr;				/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹           */
+unsigned short	StartAdrFlag;		/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ•ãƒ©ã‚° */
+unsigned short	ExecAdrFlag;		/* å®Ÿè¡Œé–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ãƒ•ãƒ©ã‚°       */
+unsigned short	LabelCnt;			/* ãƒ©ãƒ™ãƒ«ç™»éŒ²æ•°                 */
+LBL				* LabelTbl;			/* ãƒ©ãƒ™ãƒ«ç™»éŒ²ãƒ†ãƒ¼ãƒ–ãƒ«ãƒã‚¤ãƒ³ã‚¿   */
+struct	outtbl	OutTbl;				/* æ§‹æ–‡è§£æžçµæžœãƒ†ãƒ¼ãƒ–ãƒ«         */
+unsigned char*	OutBuf;				/* å‘½ä»¤å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿     */
+char			calcwk[MAXLINE+2];	/* ãƒ©ãƒ™ãƒ«æ¼”ç®—ãƒãƒƒãƒ•ã‚¡           */
+int				CalcPtr;			/* æ¼”ç®—ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿         */
+unsigned short	Ckind;				/* æ¼”ç®—ä¸­ã®åç§°è§£æ±ºãƒ•ãƒ©ã‚°       */
+int				IfLevel;			/* #ifï½ž#endif ãƒ¬ãƒ™ãƒ«           */
+unsigned char	AsmFlag;			/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ç¦æ­¢/è¨±å¯          */
+unsigned char	IfStk[IFLEVEL];		/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ç¦æ­¢/è¨±å¯ã‚¹ã‚¿ãƒƒã‚¯  */
+unsigned short	ListFlag;			/* ãƒªã‚¹ãƒˆå‡ºåŠ›ãƒ•ãƒ©ã‚°(0:å‡ºåŠ›)     */
+unsigned short	LineFeed;			/* #ejectè¦æ±‚ãƒ•ãƒ©ã‚°(1:è¦æ±‚ã‚ã‚Š) */
+unsigned short	IncLevel;			/* INCLUDEãƒ¬ãƒ™ãƒ«(ãƒ¬ãƒ™ãƒ«1ã¾ã§å¯) */
+unsigned short	SrcLine;			/* ã‚½ãƒ¼ã‚¹ãƒªã‚¹ãƒˆè¡Œç•ªå·           */
+unsigned short	IncLine[MAXINC];	/* ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒªã‚¹ãƒˆè¡Œç•ªå·     */
+char 			oprwk[MAXLEN+2];	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯/ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç”¨ãƒ¯ãƒ¼ã‚¯*/
+									/* â€»æŽ’ä»–åˆ©ç”¨ã«æ³¨æ„ã™ã‚‹ã“ã¨     */
 
 /*------------------------------------------------------------------*/
-/*  ƒvƒƒgƒ^ƒCƒvéŒ¾                                                */
+/*  ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—å®£è¨€                                                */
 /*------------------------------------------------------------------*/
 int main(int argc, char *argv[]);
 int AsmProcess( char * );
@@ -204,9 +204,9 @@ void ErrPut( int cnt , int err );
 /**********************************************************************/
 /*   main    : main routine                                           */
 /*                                                                    */
-/*   ˆ—    : ƒƒCƒ“ˆ—                                             */
-/*   “ü—Í    : ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ƒIƒvƒVƒ‡ƒ“                               */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ãƒ¡ã‚¤ãƒ³å‡¦ç†                                             */
+/*   å…¥åŠ›    : ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã‚ªãƒ—ã‚·ãƒ§ãƒ³                               */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int main(int argc, char *argv[])
@@ -214,91 +214,91 @@ int main(int argc, char *argv[])
 int	rc,i;
 char * ptr;
 
-	/* ‹N“®ƒo[ƒWƒ‡ƒ“‚Ì•\Ž¦ */
+	/* èµ·å‹•ãƒãƒ¼ã‚¸ãƒ§ãƒ³ã®è¡¨ç¤º */
 	printf( "%s%s\n",name,rev );
 
-	/* ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“‚Ìƒ`ƒFƒbƒN */
+	/* ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ã®ãƒã‚§ãƒƒã‚¯ */
 	if( argc > (MAXOPT*2) ){
 		printf("Invalid Parameters.\n");
 		exit(1);
 	}
 
-	/* ƒ\[ƒXƒtƒ@ƒCƒ‹Žw’è‚ ‚è */
+	/* ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«æŒ‡å®šã‚ã‚Š */
 	if ( !argv[1] ){
 		printf("Invalid Source File Name.\n");
 		exit (1);
 	}
-	/* ƒtƒ@ƒCƒ‹–¼Ìì¬ */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«åç§°ä½œæˆ */
 	sprintf( SrcFile , "%s" , argv[1] );
 
-	/* SETƒIƒvƒVƒ‡ƒ“‰Šú‰» */
+	/* SETã‚ªãƒ—ã‚·ãƒ§ãƒ³åˆæœŸåŒ– */
 	SetLabel = 0;
 	memset( oprwk , 0 , MAXLEN+2 );
 	memset( SetTbl , 0 , sizeof(SetTbl) );
 
-	/* ƒIƒvƒVƒ‡ƒ“‰Šú‰» */
+	/* ã‚ªãƒ—ã‚·ãƒ§ãƒ³åˆæœŸåŒ– */
 	pr = 0;
 	Tab = 0;
 	UndefOpr = 1;
 	OutType = 0;
-	/* ‹N“®ƒIƒvƒVƒ‡ƒ“Žæ“¾ */
+	/* èµ·å‹•ã‚ªãƒ—ã‚·ãƒ§ãƒ³å–å¾— */
 	i=2;
 	while( argv[i] ){
-		/* TABƒŠƒXƒgo—Í‘I‘ð */
+		/* TABãƒªã‚¹ãƒˆå‡ºåŠ›é¸æŠž */
 		if (!strcmp("/tab",argv[i])||!strcmp("/TAB",argv[i])){ Tab = 1;i++; continue; }
-		/* –¢ŒöŠJ–½—ßƒAƒZƒ“ƒuƒ‹‘I‘ð */
+		/* æœªå…¬é–‹å‘½ä»¤ã‚¢ã‚»ãƒ³ãƒ–ãƒ«é¸æŠž */
 		if (!strcmp("/n",argv[i])||!strcmp("/N",argv[i])){ UndefOpr = 0;i++; continue; }
-		/* PBFƒtƒ@ƒCƒ‹o—Í‘I‘ð */
+		/* PBFãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›é¸æŠž */
 		if (!strcmp("/p",argv[i])||!strcmp("/P",argv[i])){ OutType = 1;i++; continue; }
-		/* QLƒtƒ@ƒCƒ‹o—Í‘I‘ð */
+		/* QLãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ›é¸æŠž */
 		if (!strcmp("/q",argv[i])||!strcmp("/Q",argv[i])){ OutType = 2;i++; continue; }
-		/* SETƒIƒvƒVƒ‡ƒ“ */
+		/* SETã‚ªãƒ—ã‚·ãƒ§ãƒ³ */
 		if (!strcmp("/set",argv[i])||!strcmp("/SET",argv[i])){
-			/* ŽŸƒpƒ‰ƒ[ƒ^‚ ‚è */
+			/* æ¬¡ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ã‚ã‚Š */
 			if( !argv[++i] ){
-				/* ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆÙí */
+				/* ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç•°å¸¸ */
 				printf("Invalid /SET Parameters.\n");
 				exit(1);
 			}
 		}
 		/***********************/
-		/* ‘ã“ü•¶‚ð“o˜^‚·‚é    */
+		/* ä»£å…¥æ–‡ã‚’ç™»éŒ²ã™ã‚‹    */
 		/***********************/
-		/* ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“Žæ‚èo‚µ */
+		/* ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³å–ã‚Šå‡ºã— */
 		sprintf( oprwk , "%s" , argv[i] );
-		/* "="‚ðŒŸõ */
+		/* "="ã‚’æ¤œç´¢ */
 		if ((ptr = strrchr( oprwk , '=' ))){
 			if( ((int)(ptr - oprwk ) > MAXNAME )||( strlen(ptr) > (MAXNAME+1) ) ){
-				/* ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆÙí */
+				/* ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç•°å¸¸ */
 				printf("Invalid /SET name.\n");
 				exit(1);
 			}
-			/* “o˜^ƒ‰ƒxƒ‹–¼ÌŽæ“¾ */
+			/* ç™»éŒ²ãƒ©ãƒ™ãƒ«åç§°å–å¾— */
 			memcpy(SetTbl[SetLabel].ent,oprwk,(int)(ptr-oprwk));
-			/* ‘ã“ü•¶Žš—ñŽæ“¾ */
+			/* ä»£å…¥æ–‡å­—åˆ—å–å¾— */
 			sprintf(SetTbl[SetLabel].let,"%s", ptr+1 );
-			/* ¶•Ó=‰E•Ó‚Ü‚½‚ÍA“¯‚¶ƒVƒ“ƒ{ƒ‹“o˜^‚È‚çƒGƒ‰[I—¹‚Æ‚·‚é */
+			/* å·¦è¾º=å³è¾ºã¾ãŸã¯ã€åŒã˜ã‚·ãƒ³ãƒœãƒ«ç™»éŒ²ãªã‚‰ã‚¨ãƒ©ãƒ¼çµ‚äº†ã¨ã™ã‚‹ */
 			if (!strcmp(SetTbl[SetLabel].ent,SetTbl[SetLabel].let)||!CheckSetOpt( SetTbl[SetLabel].ent ) ){
-				/* ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆÙí */
+				/* ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç•°å¸¸ */
 				printf("Invalid /SET name.\n");
 				exit(1);
 			}
-			/* 16i•\‹L‚ð0x¨&H‚ÉC³ */
+			/* 16é€²è¡¨è¨˜ã‚’0xâ†’&Hã«ä¿®æ­£ */
 			if( !memcmp(SetTbl[SetLabel].let,"0x",2)||!memcmp(SetTbl[SetLabel].let,"0X",2) ){
 				SetTbl[SetLabel].let[0]='&';
 				SetTbl[SetLabel].let[1]='H';
 			}
-			/* SETƒVƒ“ƒ{ƒ‹”XV */
+			/* SETã‚·ãƒ³ãƒœãƒ«æ•°æ›´æ–° */
 			SetLabel++;
 			i++;
 			continue;
 		}
-		/* ƒRƒ}ƒ“ƒhƒ‰ƒCƒ“ˆÙí */
+		/* ã‚³ãƒžãƒ³ãƒ‰ãƒ©ã‚¤ãƒ³ç•°å¸¸ */
 		printf("Invalid Parameters.\n");
 		exit(1);
 	}
 
-	/* ƒAƒZƒ“ƒuƒ‹ˆ— */
+	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«å‡¦ç† */
 	rc = AsmProcess( SrcFile );
 
 	return(rc);
@@ -307,9 +307,9 @@ char * ptr;
 /**********************************************************************/
 /*   InitAsm : Initialize Assembler Process                           */
 /*                                                                    */
-/*   ˆ—    : ƒAƒZƒ“ƒuƒ‰ˆ—‰Šú‰»                                   */
-/*   “ü—Í    : ƒ\[ƒXƒtƒ@ƒCƒ‹–¼                                       */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ã‚¢ã‚»ãƒ³ãƒ–ãƒ©å‡¦ç†åˆæœŸåŒ–                                   */
+/*   å…¥åŠ›    : ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å                                       */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int InitAsm( char * File )
@@ -317,27 +317,27 @@ int InitAsm( char * File )
 char * fptr;
 char out[8];
 
-	/* o—Íƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^‰Šú‰» */
+	/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿åˆæœŸåŒ– */
 	OutBuf = 0;
-	/* ŠeŽíƒtƒ‰ƒO/ƒJƒEƒ“ƒ^‰Šú‰» */
+	/* å„ç¨®ãƒ•ãƒ©ã‚°/ã‚«ã‚¦ãƒ³ã‚¿åˆæœŸåŒ– */
 	ClearFlag();
-	/* LABELƒe[ƒuƒ‹‰Šú‰» */
+	/* LABELãƒ†ãƒ¼ãƒ–ãƒ«åˆæœŸåŒ– */
 	LabelCnt = 0;
 	LabelTbl = 0;
-	/* ƒtƒ@ƒCƒ‹–¼Ìì¬ */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«åç§°ä½œæˆ */
 	sprintf( LstFile , "%s" , File );
 	sprintf( OutFile , "%s" , File );
-	/* ŽÀsƒtƒ@ƒCƒ‹–¼ì¬ */
+	/* å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«åä½œæˆ */
 	if(fptr = strrchr(File,  0x5c ))
 		ChgCode( ExeFile , &fptr[1] );
 	else ChgCode( ExeFile , File );
 
-	/* Listƒtƒ@ƒCƒ‹–¼ì¬ */
+	/* Listãƒ•ã‚¡ã‚¤ãƒ«åä½œæˆ */
 	if ((fptr = strrchr(LstFile,  '.' )))
 		sprintf( fptr,".lst" );
 	else	strcat( LstFile, ".lst" ); 
 
-	/* o—Íƒtƒ@ƒCƒ‹–¼ì¬ */
+	/* å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«åä½œæˆ */
 	switch ( OutType ){
 	case 0:
 		sprintf( out ,".bas" );
@@ -353,18 +353,18 @@ char out[8];
 		sprintf( fptr,"%s", out );
 	else	strcat( OutFile, out );
 
-	/* “ü—Íƒtƒ@ƒCƒ‹–¼‚ªlst/bas/pbfŽw’è‚Ìê‡AƒGƒ‰[I—¹‚·‚é */
+	/* å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«åãŒlst/bas/pbfæŒ‡å®šã®å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 	if( !strcmp(OutFile,SrcFile) || !strcmp(LstFile,SrcFile) ){
 		printf("Invalid Source File Name.\n");
 		return INZERR;
 	}
-	/* ƒ\[ƒXƒtƒ@ƒCƒ‹OPEN */
+	/* ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«OPEN */
 	if ( ( SrcFD = fopen( SrcFile ,"rb" ) ) <= 0 ){
 		printf("Invalid Source File Name.\n");
 		return INZERR;
 	}
 	printf( "Input : %s \n", SrcFile );
-	/* ƒtƒ@ƒCƒ‹–¼‚ª‚W•¶ŽšˆÈã‚Ìê‡Aƒ[ƒjƒ“ƒO‚ð•\Ž¦ */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«åãŒï¼˜æ–‡å­—ä»¥ä¸Šã®å ´åˆã€ãƒ¯ãƒ¼ãƒ‹ãƒ³ã‚°ã‚’è¡¨ç¤º */
 	if ( (strrchr(ExeFile, '.' ) - ExeFile ) > 8 ){
 		printf("Warning! File Name Over 8 Chracters.\n");
 	}
@@ -374,14 +374,14 @@ char out[8];
 /**********************************************************************/
 /*   ClearFlag : Clear Flag Data                                      */
 /*                                                                    */
-/*   ˆ—    : ŠeŽíƒtƒ‰ƒO‰Šú‰»                                       */
-/*   “ü—Í    : ‚È‚µ                                                   */
-/*   o—Í    : ‚È‚µ                                                   */
+/*   å‡¦ç†    : å„ç¨®ãƒ•ãƒ©ã‚°åˆæœŸåŒ–                                       */
+/*   å…¥åŠ›    : ãªã—                                                   */
+/*   å‡ºåŠ›    : ãªã—                                                   */
 /*                                                                    */
 /**********************************************************************/
 void ClearFlag( void )
 {
-	/* ƒAƒZƒ“ƒuƒ‹ŠJŽnƒAƒhƒŒƒX‰Šú‰» */
+	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹åˆæœŸåŒ– */
 	SrcLine = 0;
 	ListFlag = 0;
 	LineFeed = 0;
@@ -391,13 +391,13 @@ void ClearFlag( void )
 	StartAdr = 0;
 	StartAdrFlag = 0;
 	ExecAdrFlag = 0;
-	/* ƒAƒZƒ“ƒuƒ‹‹–‰Â */
+	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«è¨±å¯ */
 	AsmFlag = 0;
-	/* #ifƒlƒXƒgƒŒƒxƒ‹‰Šú‰» */
+	/* #ifãƒã‚¹ãƒˆãƒ¬ãƒ™ãƒ«åˆæœŸåŒ– */
 	IfLevel = 0;
-	/* #if`#endifƒXƒ^ƒbƒN‰Šú‰» */
+	/* #ifï½ž#endifã‚¹ã‚¿ãƒƒã‚¯åˆæœŸåŒ– */
 	memset( IfStk , 0 , sizeof(IfStk) );
-	/* #includeî•ñ‰Šú‰» */
+	/* #includeæƒ…å ±åˆæœŸåŒ– */
 	memset( IncLine , 0 ,sizeof(IncLine));
 	memset( IncFD , 0 , sizeof(IncFD));
 
@@ -406,9 +406,9 @@ void ClearFlag( void )
 /**********************************************************************/
 /*   AsmProcess : Assembler Process Main Routine                      */
 /*                                                                    */
-/*   ˆ—    : ƒAƒZƒ“ƒuƒ‰ˆ—                                         */
-/*   “ü—Í    : ƒ\[ƒXƒtƒ@ƒCƒ‹–¼                                       */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ã‚¢ã‚»ãƒ³ãƒ–ãƒ©å‡¦ç†                                         */
+/*   å…¥åŠ›    : ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å                                       */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int AsmProcess( char * File )
@@ -417,150 +417,150 @@ char * fptr;
 char out[8];
 int rc,rc2,i,n;
 unsigned short sum,sts,line;
-unsigned short LineCnt;	/* s”Ô†ƒJƒEƒ“ƒ^ */
-unsigned long  OutCnt,cnt;	/* o—ÍƒoƒCƒg” */
-unsigned long  BuffSize;	/* o—Íƒoƒbƒtƒ@ƒTƒCƒY */
+unsigned short LineCnt;	/* è¡Œç•ªå·ã‚«ã‚¦ãƒ³ã‚¿ */
+unsigned long  OutCnt,cnt;	/* å‡ºåŠ›ãƒã‚¤ãƒˆæ•° */
+unsigned long  BuffSize;	/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚µã‚¤ã‚º */
 LBL *Label;
 LBL *Labelwk;
-	/* ‰ŠúÝ’è */
+	/* åˆæœŸè¨­å®š */
 	if( rc = InitAsm( File ) ) return rc;
 
-	/* SETƒIƒvƒVƒ‡ƒ“ŽÀs(Šm’è’l‚Ì‚ÝƒVƒ“ƒ{ƒ‹“o˜^‚·‚é) */
+	/* SETã‚ªãƒ—ã‚·ãƒ§ãƒ³å®Ÿè¡Œ(ç¢ºå®šå€¤ã®ã¿ã‚·ãƒ³ãƒœãƒ«ç™»éŒ²ã™ã‚‹) */
 	if ( SetLabel ){
-		/* ƒ‰ƒxƒ‹“o˜^ŽÀs */
+		/* ãƒ©ãƒ™ãƒ«ç™»éŒ²å®Ÿè¡Œ */
 		for ( i = 0 ; i < SetLabel ; i++ ){
-			/* ‘ã“ü’l‚ðŽæ“¾ */
+			/* ä»£å…¥å€¤ã‚’å–å¾— */
 			if( !( rc = GetData( SetTbl[i].let , &sts ) ) ){
-				/* ƒ‰ƒxƒ‹•¶Žš—ñƒ`ƒFƒbƒN */
+				/* ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 				if ( rc = CheckLabel( SetTbl[i].ent ) ){
-					/* ƒGƒ‰[•\Ž¦ */
+					/* ã‚¨ãƒ©ãƒ¼è¡¨ç¤º */
 					printf("Invalid /SET name.\n");
 					goto asm_end;
 				}
-				/* ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚É“o˜^‚·‚é */
+				/* ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã™ã‚‹ */
 				if(rc = SetLabelTbl( SetTbl[i].ent , sts )){
-					/* ƒGƒ‰[•\Ž¦ */
+					/* ã‚¨ãƒ©ãƒ¼è¡¨ç¤º */
 					printf("Invalid /SET name.\n");
 					goto asm_end;
 				}
 			}
-			/* ‘ã“ü’l‚Íƒ‰ƒxƒ‹‚Å‚ ‚é */
+			/* ä»£å…¥å€¤ã¯ãƒ©ãƒ™ãƒ«ã§ã‚ã‚‹ */
 			else{
-				/* ƒ‰ƒxƒ‹•¶Žš—ñƒ`ƒFƒbƒN */
+				/* ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 				if ( rc = CheckLabel(SetTbl[i].let) ){
-					/* ƒGƒ‰[•\Ž¦ */
+					/* ã‚¨ãƒ©ãƒ¼è¡¨ç¤º */
 					printf("Invalid /SET name.\n");
 					goto asm_end;
 				}
 			}
 		}
 	}
-	/* ƒŠƒXƒgƒtƒ@ƒCƒ‹OPEN */
+	/* ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«OPEN */
 	if ( ( LstFD = fopen( LstFile ,"w" ) ) <= 0 ){
 		printf("File Create Error.\n");
 		goto asm_end;
 	}
 
-	/* ‚PƒpƒX–Úƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚ðì¬‚·‚é */
+	/* ï¼‘ãƒ‘ã‚¹ç›®ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’ä½œæˆã™ã‚‹ */
 	LineCnt = 0;
 	pass = 0;
 	while( !rc ){
 		rc = AsmLine();
 		if ( rc && (rc != EOFERR) ) {
-			/* ƒGƒ‰[•\Ž¦ */
+			/* ã‚¨ãƒ©ãƒ¼è¡¨ç¤º */
 			ErrPut( LineCnt , rc );
 			goto asm_end;
 		}
-		/* s”Ô†XV */
+		/* è¡Œç•ªå·æ›´æ–° */
 		LineCnt = !IncLevel ? ++SrcLine : ++IncLine[IncLevel-1];
 	}
-	/* #if`#enfifƒlƒXƒgˆÙí”­¶ */
+	/* #ifï½ž#enfifãƒã‚¹ãƒˆç•°å¸¸ç™ºç”Ÿ */
 	if ( IfLevel ){
-		/* ƒGƒ‰[•\Ž¦ */
+		/* ã‚¨ãƒ©ãƒ¼è¡¨ç¤º */
 		ErrPut( LineCnt-1 , IFNEST );
 		goto asm_end;
 	}
-	/* ƒR[ƒh‚ÍÅ‘åƒoƒbƒtƒ@”ÍˆÍ“à‚ÉŽû‚Ü‚é */
+	/* ã‚³ãƒ¼ãƒ‰ã¯æœ€å¤§ãƒãƒƒãƒ•ã‚¡ç¯„å›²å†…ã«åŽã¾ã‚‹ */
 	if ( (BuffSize = (AsmAdr - StartAdr) ) > MAXOBJ ){
-		/* o—Íƒoƒbƒtƒ@ƒI[ƒo[ */
+		/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ¼ãƒãƒ¼ */
 		ErrPut( LineCnt-1 , AOFLOW );
 		goto asm_end;
 	}
-	/* ƒ\[ƒXƒtƒ@ƒCƒ‹æ“ª‚ÉƒV[ƒN‚·‚é */
+	/* ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å…ˆé ­ã«ã‚·ãƒ¼ã‚¯ã™ã‚‹ */
 	if( fseek(SrcFD , 0 , SEEK_SET )){
 		printf("Sorce File Seek Error.\n");
 		goto asm_end;
 	}
-	/* ‚PƒpƒX–ÚI—¹ */
+	/* ï¼‘ãƒ‘ã‚¹ç›®çµ‚äº† */
 	printf( " PASS 1 END \n" );
 
-	/* o—Íƒoƒbƒtƒ@‚ðŠm•Û‚·‚é(1Byte—]•ª‚ÉŽæ‚é) */
+	/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚’ç¢ºä¿ã™ã‚‹(1Byteä½™åˆ†ã«å–ã‚‹) */
 	if ( !( OutBuf = malloc( (unsigned short)(BuffSize+1) ) ) ){
 		printf("Output Buffer Not Allocated.\n");
 		goto asm_end;
 	}
-	/* o—Íƒoƒbƒtƒ@‰Šú‰» */
+	/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ– */
 	memset( OutBuf, 0 , (unsigned short)(BuffSize+1) );
-	/* s”Ô†AƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒX‚ð‰Šú‰»‚·‚é */
+	/* è¡Œç•ªå·ã€ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’åˆæœŸåŒ–ã™ã‚‹ */
 	ClearFlag();
 	LineCnt = 0;
 	OutCnt = 0;
 
-	/* ƒŠƒXƒgo—ÍŠJŽn */
+	/* ãƒªã‚¹ãƒˆå‡ºåŠ›é–‹å§‹ */
 	fprintf( LstFD , "%s%s - ",name,rev );
 	fprintf( LstFD ,"ASSEMBLE LIST OF [%s]\n", SrcFile );
 
-	/* ‚QƒpƒX–Úƒ‰ƒxƒ‹ƒAƒhƒŒƒX‚ð”½‰f‚µA–½—ßƒR[ƒh‚ðo—Í‚·‚é */
+	/* ï¼’ãƒ‘ã‚¹ç›®ãƒ©ãƒ™ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’åæ˜ ã—ã€å‘½ä»¤ã‚³ãƒ¼ãƒ‰ã‚’å‡ºåŠ›ã™ã‚‹ */
 	rc = 0; rc2 = 0;pass++;
 	while( !rc && !rc2 ){
 		rc = AsmLine();
 		if ( rc && (rc != EOFERR) ) {
-			/* ƒGƒ‰[•\Ž¦ */
+			/* ã‚¨ãƒ©ãƒ¼è¡¨ç¤º */
 			ErrPut( LineCnt , rc );
 			goto asm_end;
 		}
-		/* ƒAƒZƒ“ƒuƒ‹‹–‰Âó‘Ô‚ÌŽž‚Ì‚ÝŽÀs‚·‚é */
+		/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«è¨±å¯çŠ¶æ…‹ã®æ™‚ã®ã¿å®Ÿè¡Œã™ã‚‹ */
 		if (!AsmFlag){
 			if ( rc2 = AsmCodeSet() ){
 				ErrPut( LineCnt , rc2 );
 				goto asm_end;
 			}
-			/* ƒR[ƒh‚Íƒoƒbƒtƒ@”ÍˆÍ“à‚ÉŽû‚Ü‚é */
+			/* ã‚³ãƒ¼ãƒ‰ã¯ãƒãƒƒãƒ•ã‚¡ç¯„å›²å†…ã«åŽã¾ã‚‹ */
 			if ( ( OutCnt + (unsigned long)OutTbl.byte ) > BuffSize ){
-				/* o—Íƒoƒbƒtƒ@ƒI[ƒo[ */
+				/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚ªãƒ¼ãƒãƒ¼ */
 				ErrPut( LineCnt , AOFLOW );
 				goto asm_end;
 			}
-			/* ƒŠƒXƒgƒtƒ@ƒCƒ‹o—Í */
+			/* ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ› */
 			PrintList( LineCnt );
-			/* ƒR[ƒho—Í */
-			/* ’Êí–½—ß^‹^Ž—–½—ßŽí•ÊŽæ‚èo‚µ */
+			/* ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
+			/* é€šå¸¸å‘½ä»¤ï¼ç–‘ä¼¼å‘½ä»¤ç¨®åˆ¥å–ã‚Šå‡ºã— */
 			ChgCode( oprwk , OutTbl.opr[0] );
 			sts = GetMnemonicKind( oprwk );
-			/* ORG/DS–½—ßˆÈŠO‚È‚çAƒf[ƒ^o—Í */
+			/* ORG/DSå‘½ä»¤ä»¥å¤–ãªã‚‰ã€ãƒ‡ãƒ¼ã‚¿å‡ºåŠ› */
 			if (OutTbl.byte&&( sts != OP_ORG )&&( sts != OP_DS )){
-				/* –½—ßƒR[ƒhŠi”[ */
+				/* å‘½ä»¤ã‚³ãƒ¼ãƒ‰æ ¼ç´ */
 				memcpy( &OutBuf[OutCnt] , OutTbl.code , OutTbl.byte );
 			}
-			/* o—ÍƒoƒCƒg”XV */
+			/* å‡ºåŠ›ãƒã‚¤ãƒˆæ•°æ›´æ–° */
 			OutCnt += OutTbl.byte;
 		}
 		else if (AsmFlag==1){
-			/* ƒŠƒXƒgƒtƒ@ƒCƒ‹o—Í */
+			/* ãƒªã‚¹ãƒˆãƒ•ã‚¡ã‚¤ãƒ«å‡ºåŠ› */
 			PrintList( LineCnt );
 			AsmFlag++;
 		}
-		/* s”Ô†XV */
+		/* è¡Œç•ªå·æ›´æ–° */
 		LineCnt = !IncLevel ? ++SrcLine : ++IncLine[IncLevel-1];
 	}
-	/* ƒAƒZƒ“ƒuƒ‹³íI—¹ */
+	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«æ­£å¸¸çµ‚äº† */
 	printf( " PASS 2 END\n" );
 	printf("ASSEMBLY COMPLETE, NO ERRORS FOUND\n");
 	fprintf(LstFD,"\nASSEMBLY COMPLETE, NO ERRORS FOUND\n");
 
-	/* ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚ðo—Í‚·‚é */
+	/* ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’å‡ºåŠ›ã™ã‚‹ */
 	if ( LabelCnt ){
-		/* ƒwƒbƒ_o—Í */
+		/* ãƒ˜ãƒƒãƒ€å‡ºåŠ› */
 		fprintf( LstFD ,"\n%s%s - ",name,rev );
 		fprintf( LstFD ,"MAP LIST OF [%s]\n", SrcFile );
 		fprintf( LstFD ," LABEL           : ADDRESS(hex)    LABEL           : ADDRESS(hex)\n" );
@@ -575,26 +575,26 @@ LBL *Labelwk;
 		}
 		if (i&1) fprintf( LstFD ,"\n");
 	}
-	/* ƒAƒZƒ“ƒuƒ‹î•ño—Í */
+	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«æƒ…å ±å‡ºåŠ› */
 	fprintf( LstFD ,"\n START ADDRESS   = %04Xh\n", StartAdr );
 	fprintf( LstFD ," END ADDRESS     = %04Xh\n", AsmAdr-1 );
 	fprintf( LstFD ," EXECUTE ADDRESS = %04Xh\n", ExecAdr );
 
-	/* o—Íƒtƒ@ƒCƒ‹ì¬ */
+	/* å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ */
 	if ( OutCnt ){
-		/* o—Í—pƒtƒ@ƒCƒ‹OPEN */
+		/* å‡ºåŠ›ç”¨ãƒ•ã‚¡ã‚¤ãƒ«OPEN */
 		if ( ( OutFD = fopen( OutFile ,"w" ) ) <= 0 ){
 			printf("File Create Error.\n");
 			goto asm_end;
 		}
-		/* ŽÀsƒtƒ@ƒCƒ‹–¼ì¬ */
+		/* å®Ÿè¡Œãƒ•ã‚¡ã‚¤ãƒ«åä½œæˆ */
 		if ( !ExecAdrFlag ) sprintf( out ,".BIN" );
 		else sprintf( out ,".EXE" );
 		if ((fptr = strrchr(ExeFile, '.' ))) sprintf( fptr ,"%s" ,out );
 		else strcat( ExeFile ,out );
-		/* ƒtƒ@ƒCƒ‹ì¬ */
+		/* ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ */
 		switch( OutType ){
-		/* basƒtƒ@ƒCƒ‹ì¬ */
+		/* basãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ */
 		case 0:
 			line = 999;
 #if FORDOS
@@ -603,22 +603,22 @@ LBL *Labelwk;
 			fprintf( OutFD ,"%d DATA %s,&H%X,&H%X,&H%X\n", line++,ExeFile,StartAdr,AsmAdr-1,ExecAdr );
 #endif
 			for ( cnt = 0 , n = 0 , sum = 0 ; cnt < OutCnt ; cnt ++ ){
-				/* s”Ô†o—Í */
+				/* è¡Œç•ªå·å‡ºåŠ› */
 				if (!n) fprintf( OutFD ,"%d DATA ", line++ );
 				fprintf( OutFD ,"%02X", OutBuf[cnt] );
 				sum += OutBuf[cnt];
 				n++;
-				/* ƒ`ƒFƒbƒNƒTƒ€/‰üso—Í */
+				/* ãƒã‚§ãƒƒã‚¯ã‚µãƒ /æ”¹è¡Œå‡ºåŠ› */
 				if ( n >= 8 ){
 					fprintf( OutFD ,",%02X\n", sum&0xff );
 					n = 0;
 					sum = 0;
 				}
 			}
-			/* ƒ`ƒFƒbƒNƒTƒ€o—Í */
+			/* ãƒã‚§ãƒƒã‚¯ã‚µãƒ å‡ºåŠ› */
 			if (n) fprintf( OutFD ,",%02X\n", sum&0xff );
 			break;
-		/* pbfƒtƒ@ƒCƒ‹ì¬—v‹‚ ‚è */
+		/* pbfãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆè¦æ±‚ã‚ã‚Š */
 		case 1:
 #if FORDOS
 			fprintf( OutFD ,"%s,%u,%u,%u\n", ExeFile,(unsigned short)StartAdr,(unsigned short)(AsmAdr-1),(unsigned short)ExecAdr );
@@ -629,17 +629,17 @@ LBL *Labelwk;
 				fprintf( OutFD ,"%02X", OutBuf[cnt] );
 				sum += OutBuf[cnt];
 				n++;
-				/* ƒ`ƒFƒbƒNƒTƒ€/‰üso—Í */
+				/* ãƒã‚§ãƒƒã‚¯ã‚µãƒ /æ”¹è¡Œå‡ºåŠ› */
 				if ( n >= 120 ){
 					fprintf( OutFD ,",%u\n", sum );
 					n = 0;
 					sum = 0;
 				}
 			}
-			/* EOFo—Í */
+			/* EOFå‡ºåŠ› */
 			if (n) fprintf( OutFD ,",%u\n", sum );
 			break;
-		/* ƒNƒCƒbƒNƒ[ƒ_ƒtƒ@ƒCƒ‹ì¬ */
+		/* ã‚¯ã‚¤ãƒƒã‚¯ãƒ­ãƒ¼ãƒ€ãƒ•ã‚¡ã‚¤ãƒ«ä½œæˆ */
 		case 2:
 			line = 1000;
 #if FORDOS
@@ -648,7 +648,7 @@ LBL *Labelwk;
 			fprintf( OutFD ,"%d DATA %u,%u,%u\n", line++,StartAdr,AsmAdr-1,ExecAdr );
 #endif
 			for ( cnt = 0 , n = 0 ; cnt < OutCnt ; cnt ++ ){
-				/* s”Ô†o—Í */
+				/* è¡Œç•ªå·å‡ºåŠ› */
 				if (!n) fprintf( OutFD ,"%d DATA ", line++ );
 				fprintf( OutFD ,"%02X", OutBuf[cnt] );
 				n++;
@@ -657,10 +657,10 @@ LBL *Labelwk;
 					n = 0;
 					continue;
 				}
-				/* ƒJƒ“ƒ}o—Í */
+				/* ã‚«ãƒ³ãƒžå‡ºåŠ› */
 				if ( !( n % 6 ) ) fprintf( OutFD ,"," );
 			}
-			/* Žc‚è‚ð0o—Í */
+			/* æ®‹ã‚Šã‚’0å‡ºåŠ› */
 			while( n && ( n < 24 ) ){
 				fprintf( OutFD ,"00" );
 				n++;
@@ -668,34 +668,34 @@ LBL *Labelwk;
 					fprintf( OutFD ,"\n" );
 					break;
 				}
-				/* ƒJƒ“ƒ}o—Í */
+				/* ã‚«ãƒ³ãƒžå‡ºåŠ› */
 				if ( !( n % 6 ) ) fprintf( OutFD ,"," );
 			}
 			break;
 		}
-		/* EOFo—Í */
+		/* EOFå‡ºåŠ› */
 		fprintf( OutFD ,"%c",0x1a);
-		/* o—Íƒtƒ@ƒCƒ‹ƒNƒ[ƒY */
+		/* å‡ºåŠ›ãƒ•ã‚¡ã‚¤ãƒ«ã‚¯ãƒ­ãƒ¼ã‚º */
 		fclose(OutFD);
 	}
 
 asm_end:
-	/* ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚ð‰ð•ú‚·‚é */
+	/* ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã‚’è§£æ”¾ã™ã‚‹ */
 	Label = LabelTbl;
 	while ( Label ){
 		Labelwk = Label->np;
 		free( Label );
 		Label = Labelwk;
 	}
-	/* o—Íƒoƒbƒtƒ@‚ð‰ð•ú‚·‚é */
+	/* å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ã‚’è§£æ”¾ã™ã‚‹ */
 	if ( OutBuf ) free( OutBuf );
-	/* INCLUDEƒtƒ@ƒCƒ‹ƒNƒ[ƒY */
+	/* INCLUDEãƒ•ã‚¡ã‚¤ãƒ«ã‚¯ãƒ­ãƒ¼ã‚º */
 	if ( IncLevel ){
 		for ( i = 0 ; i < IncLevel ;i++){
 			fclose( IncFD[i] );
 		}
 	}
-	/* ƒtƒ@ƒCƒ‹ƒNƒ[ƒY */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«ã‚¯ãƒ­ãƒ¼ã‚º */
 	fclose(SrcFD);
 	fclose(LstFD);
 
@@ -704,36 +704,36 @@ asm_end:
 /**********************************************************************/
 /*   AsmLine : Assembler Process ( one line )                         */
 /*                                                                    */
-/*   ˆ—    : ƒ\[ƒXs‚ð‚PsƒAƒZƒ“ƒuƒ‹‚µAŒ‹‰Ê‚ðOutTbl‚ÉŠi”[‚·‚é     */
-/*   “ü—Í    : ‚È‚µ                                                   */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ã‚½ãƒ¼ã‚¹è¡Œã‚’ï¼‘è¡Œã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã—ã€çµæžœã‚’OutTblã«æ ¼ç´ã™ã‚‹     */
+/*   å…¥åŠ›    : ãªã—                                                   */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int AsmLine( void )
 {
-FILE	*SourceFD;/* ƒ\[ƒXƒtƒ@ƒCƒ‹ƒfƒBƒXƒNƒŠƒvƒ^ */
-char Work[MAXLINE+2];/* sƒf[ƒ^Žæ“¾—pƒ[ƒN */
+FILE	*SourceFD;/* ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ãƒ‡ã‚£ã‚¹ã‚¯ãƒªãƒ—ã‚¿ */
+char Work[MAXLINE+2];/* è¡Œãƒ‡ãƒ¼ã‚¿å–å¾—ç”¨ãƒ¯ãƒ¼ã‚¯ */
 int  rc,i,n,cnt,len,opr,kc;
 unsigned short	op,opdat,sts;
 
-	/* ƒGƒ‰[ƒXƒe[ƒ^ƒX‰Šú‰» */
+	/* ã‚¨ãƒ©ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹åˆæœŸåŒ– */
 	rc = 0;
 
-	/* ƒR[ƒh•ÏŠ·ƒoƒbƒtƒ@‰Šú‰» */
+	/* ã‚³ãƒ¼ãƒ‰å¤‰æ›ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ– */
 	memset( &OutTbl.idx,0, sizeof(OUTTBL));
-	/* sƒ[ƒNƒoƒbƒtƒ@‰Šú‰» */
+	/* è¡Œãƒ¯ãƒ¼ã‚¯ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ– */
 	memset( Work , 0 , sizeof(Work) );
 
-	/* Œ»Ý‚ÌƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒX‚ð“o˜^‚·‚é */
+	/* ç¾åœ¨ã®ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç™»éŒ²ã™ã‚‹ */
 	OutTbl.adr = (unsigned short)AsmAdr;
 
-	/* ƒtƒ@ƒCƒ‹Ø‚è‘Ö‚¦ */
+	/* ãƒ•ã‚¡ã‚¤ãƒ«åˆ‡ã‚Šæ›¿ãˆ */
 	SourceFD = !IncLevel ? SrcFD : IncFD[IncLevel-1];
 
-	/* ƒ\[ƒXƒtƒ@ƒCƒ‹‚©‚ç‚PsŽæ‚èo‚· */
+	/* ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ï¼‘è¡Œå–ã‚Šå‡ºã™ */
 	rc = GetLine( SourceFD , Work );
 
-	/* ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹I—¹ */
+	/* ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«çµ‚äº† */
 	if ( rc == EOFERR && IncLevel ){
 		IncLevel--;
 		fclose( IncFD[IncLevel] );
@@ -741,161 +741,161 @@ unsigned short	op,opdat,sts;
 		return NORM;
 	}
 
-	/* ƒGƒ‰[‚©‹ó”’s‚Å‚ ‚éê‡AI—¹ */
+	/* ã‚¨ãƒ©ãƒ¼ã‹ç©ºç™½è¡Œã§ã‚ã‚‹å ´åˆã€çµ‚äº† */
 	if ( ( rc && ( rc!=EOFERR ) ) || !Work[0]) return rc;
 
-	/* ƒ‰ƒxƒ‹/ƒjƒ‚ƒjƒbƒN/ƒIƒyƒ‰ƒ“ƒh/ƒRƒƒ“ƒg‚É•ª‰ð */
+	/* ãƒ©ãƒ™ãƒ«/ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯/ã‚ªãƒšãƒ©ãƒ³ãƒ‰/ã‚³ãƒ¡ãƒ³ãƒˆã«åˆ†è§£ */
 	if( rc = GetParam( Work ) ) return rc;
 
 	/******************************************/
-	/* #if`#else`#endifƒ}ƒNƒˆ—           */
+	/* #ifï½ž#elseï½ž#endifãƒžã‚¯ãƒ­å‡¦ç†           */
 	/******************************************/
-	/* ƒjƒ‚ƒjƒbƒN“o˜^‚ ‚è */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç™»éŒ²ã‚ã‚Š */
 	if ( OutTbl.opr[0] ){
-		/* ‹^Ž—–½—ßŽí•Êƒ`ƒFƒbƒN */
+		/* ç–‘ä¼¼å‘½ä»¤ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ */
 		ChgCode( oprwk , OutTbl.opr[0] );
 		opr = GetMacKind( oprwk );
 		switch( opr ){
 		case OP_IF:
-			/* ƒ‰ƒxƒ‹‚©ƒIƒyƒ‰ƒ“ƒh2ƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ãƒ©ãƒ™ãƒ«ã‹ã‚ªãƒšãƒ©ãƒ³ãƒ‰2ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( OutTbl.label || OutTbl.opr[2] ) return ILLOPR;
-			/* ‘æ1ƒIƒyƒ‰ƒ“ƒh‚ªŽ®‚Å‚ ‚é */
+			/* ç¬¬1ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒå¼ã§ã‚ã‚‹ */
 			if( rc = GetCalcData( OutTbl.opr[1] , &op , &sts ) ) return rc;
-			/* –¼Ì‚ª–¢‰ðŒˆ‚Èê‡Aˆ—I—¹‚·‚é */
+			/* åç§°ãŒæœªè§£æ±ºãªå ´åˆã€å‡¦ç†çµ‚äº†ã™ã‚‹ */
 			if ( op == LBLNG ) return LBLNOENT;
-			/* Œ»ƒlƒXƒgƒŒƒxƒ‹‚ÌAsmFlag‚ð•Û‘¶‚·‚é */
+			/* ç¾ãƒã‚¹ãƒˆãƒ¬ãƒ™ãƒ«ã®AsmFlagã‚’ä¿å­˜ã™ã‚‹ */
 			IfStk[IfLevel] = AsmFlag;
-			/* ƒAƒZƒ“ƒuƒ‹‹–‰Âó‘Ô‚Å‚ ‚é */
+			/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«è¨±å¯çŠ¶æ…‹ã§ã‚ã‚‹ */
 			if (!AsmFlag){
-				/* ƒAƒZƒ“ƒuƒ‹‹ÖŽ~/‹–‰ÂƒZƒbƒg */
+				/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ç¦æ­¢/è¨±å¯ã‚»ãƒƒãƒˆ */
 				AsmFlag = (unsigned char)(sts ? 0 : (!AsmFlag ? 1 : 2 ));
 			}
-			/* #ifƒlƒXƒgƒŒƒxƒ‹+1 */
+			/* #ifãƒã‚¹ãƒˆãƒ¬ãƒ™ãƒ«+1 */
 			IfLevel++;
-			/* ƒlƒXƒgƒŒƒxƒ‹ƒI[ƒo[ */
+			/* ãƒã‚¹ãƒˆãƒ¬ãƒ™ãƒ«ã‚ªãƒ¼ãƒãƒ¼ */
 			if (IfLevel>=IFLEVEL) return IFNEST;
 			return NORM;
 		case OP_ELSE:
-			/* ƒ‰ƒxƒ‹‚©ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ãƒ©ãƒ™ãƒ«ã‹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( OutTbl.label || OutTbl.opr[1] ) return ILLOPR;
 			if ( !IfLevel ) return IFNEST;
-			/* ãˆÊƒlƒXƒg‚ÍƒAƒZƒ“ƒuƒ‹‹–‰Â */
+			/* ä¸Šä½ãƒã‚¹ãƒˆã¯ã‚¢ã‚»ãƒ³ãƒ–ãƒ«è¨±å¯ */
 			if ( !IfStk[IfLevel-1] ){
-				/* ƒAƒZƒ“ƒuƒ‹ó‘Ô”½“] */
+				/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«çŠ¶æ…‹åè»¢ */
 				AsmFlag = (unsigned char)(AsmFlag ? 0 : 1);
 			}
 			return NORM;
 		case OP_ENDIF:
-			/* ƒ‰ƒxƒ‹‚©ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ãƒ©ãƒ™ãƒ«ã‹ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( OutTbl.label || OutTbl.opr[1] ) return ILLOPR;
 			if ( !IfLevel ) return IFNEST;
-			/* #ifƒlƒXƒgƒŒƒxƒ‹-1 */
+			/* #ifãƒã‚¹ãƒˆãƒ¬ãƒ™ãƒ«-1 */
 			IfLevel--;
 			if ( IfLevel < 0 ) return IFNEST;
-			/* ƒAƒZƒ“ƒuƒ‹ÄŠJ */
+			/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«å†é–‹ */
 			AsmFlag = IfStk[IfLevel];
 			return NORM;
 		default:
 			break;
 		}
 	}
-	/* ƒAƒZƒ“ƒuƒ‹‹ÖŽ~‚È‚çˆ—I—¹ */
+	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ç¦æ­¢ãªã‚‰å‡¦ç†çµ‚äº† */
 	if ( AsmFlag ) return NORM;
 
 	/******************************************/
-	/* ƒVƒ“ƒ{ƒ‹ƒ‰ƒxƒ‹“o˜^ˆ—                 */
+	/* ã‚·ãƒ³ãƒœãƒ«ãƒ©ãƒ™ãƒ«ç™»éŒ²å‡¦ç†                 */
 	/******************************************/
-	/* ƒ‰ƒxƒ‹‚ ‚è */
+	/* ãƒ©ãƒ™ãƒ«ã‚ã‚Š */
 	if ( OutTbl.label ){
-		/* ‚PƒpƒX–Ú‚Å‚ ‚é */
+		/* ï¼‘ãƒ‘ã‚¹ç›®ã§ã‚ã‚‹ */
 		if (!pass){
-			/* ƒ‰ƒxƒ‹•¶Žš—ñƒ`ƒFƒbƒN */
+			/* ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 			if ( rc = CheckLabel(OutTbl.label) ) return rc;
-			/* EQU—v‹‚Å‚ ‚é */
+			/* EQUè¦æ±‚ã§ã‚ã‚‹ */
 			ChgCode( oprwk , OutTbl.opr[0] );
 			if (!strcmp( "EQU" , oprwk )){
-				/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ª³í‚Å‚ ‚é */
+				/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªãŒæ­£å¸¸ã§ã‚ã‚‹ */
 				if ( !OutTbl.opr[1] || OutTbl.opr[2] ) return ILLOPR;
-				/* ‘æ1ƒIƒyƒ‰ƒ“ƒh‚ª”’l‚Å‚ ‚é */
+				/* ç¬¬1ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒæ•°å€¤ã§ã‚ã‚‹ */
 				if( !(rc = GetCalcData( OutTbl.opr[1] , &op , &sts )) ){
-					/* –¼Ì‚ª–¢‰ðŒˆ‚Èê‡AƒVƒ“ƒ{ƒ‹“o˜^‚ð‚µ‚È‚¢ */
+					/* åç§°ãŒæœªè§£æ±ºãªå ´åˆã€ã‚·ãƒ³ãƒœãƒ«ç™»éŒ²ã‚’ã—ãªã„ */
 					if ( op == LBLNG ) return NORM;
-					/* SETƒIƒvƒVƒ‡ƒ“ŽÀs(Šm’è’l‚Ì‚ÝƒVƒ“ƒ{ƒ‹“o˜^‚·‚é) */
+					/* SETã‚ªãƒ—ã‚·ãƒ§ãƒ³å®Ÿè¡Œ(ç¢ºå®šå€¤ã®ã¿ã‚·ãƒ³ãƒœãƒ«ç™»éŒ²ã™ã‚‹) */
 					if ( SetLabel ){
-						/* ƒ‰ƒxƒ‹‚ÍA/SET–¼Ì‚Æˆê’v */
+						/* ãƒ©ãƒ™ãƒ«ã¯ã€/SETåç§°ã¨ä¸€è‡´ */
 						if ( (rc = CheckSetLbl( OutTbl.label, sts )) == 1 ) return NORM;
-						/* ƒ‰ƒxƒ‹“o˜^ƒGƒ‰[”­¶ */
+						/* ãƒ©ãƒ™ãƒ«ç™»éŒ²ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ */
 						if ( rc ) return rc;
 					}
-					/* ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚É“o˜^‚·‚é */
+					/* ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã™ã‚‹ */
 					rc = SetLabelTbl( OutTbl.label, sts );
 				}
-				/* sˆ—I—¹ */
+				/* è¡Œå‡¦ç†çµ‚äº† */
 				return rc;
 			}
-			/* EQUˆÈŠO‚Å‚ ‚é */
+			/* EQUä»¥å¤–ã§ã‚ã‚‹ */
 			else{
-				if ( !StartAdrFlag ) { rc = NOORG; return rc; }/* ORG‚È‚µ */
-				/* Œ»Ý‚ÌƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒX‚ðƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚É“o˜^‚·‚é */
+				if ( !StartAdrFlag ) { rc = NOORG; return rc; }/* ORGãªã— */
+				/* ç¾åœ¨ã®ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã™ã‚‹ */
 				if(rc = SetLabelTbl( OutTbl.label, (unsigned short)AsmAdr )) return rc;
 			}
 		}
-		/* ‚QƒpƒX–Ú‚Å‚ ‚é */
+		/* ï¼’ãƒ‘ã‚¹ç›®ã§ã‚ã‚‹ */
 		else{
-			/* EQU—v‹‚Å‚ ‚é */
+			/* EQUè¦æ±‚ã§ã‚ã‚‹ */
 			ChgCode( oprwk , OutTbl.opr[0] );
 			if (!strcmp( "EQU" , oprwk )){
-				/* Šù‚É“o˜^Ï‚Ý‚È‚ç”²‚¯‚é */
+				/* æ—¢ã«ç™»éŒ²æ¸ˆã¿ãªã‚‰æŠœã‘ã‚‹ */
 				if ( GetLabelAdr( OutTbl.label , &sts ) != LBLNOENT ) return NORM;
-				/* ‘æ1ƒIƒyƒ‰ƒ“ƒh‚ª”’l‚Å‚ ‚é */
+				/* ç¬¬1ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒæ•°å€¤ã§ã‚ã‚‹ */
 				if( !(rc = GetCalcData( OutTbl.opr[1] , &op , &sts )) ){
-					/* –¼Ì‚ª–¢‰ðŒˆ‚Èê‡Aˆ—I—¹‚·‚é */
+					/* åç§°ãŒæœªè§£æ±ºãªå ´åˆã€å‡¦ç†çµ‚äº†ã™ã‚‹ */
 					if ( op == LBLNG ) return LBLNOENT;
-					/* ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚É“o˜^‚·‚é */
+					/* ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã™ã‚‹ */
 					if ( (rc = SetLabelTbl( OutTbl.label, sts )) ) return ILLLBL;
 				}
-				/* sˆ—I—¹ */
+				/* è¡Œå‡¦ç†çµ‚äº† */
 				return rc;
 			}
 		}
 	}
 	/******************************************/
-	/* ‹^Ž—–½—ß/ˆê”Ê–½—ßˆ—                  */
+	/* ç–‘ä¼¼å‘½ä»¤/ä¸€èˆ¬å‘½ä»¤å‡¦ç†                  */
 	/******************************************/
-	/* ƒjƒ‚ƒjƒbƒN“o˜^‚ ‚è */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç™»éŒ²ã‚ã‚Š */
 	if ( OutTbl.opr[0] ){
-		/* ’Êí–½—ß^‹^Ž—–½—ßŽí•Êƒ`ƒFƒbƒN */
+		/* é€šå¸¸å‘½ä»¤ï¼ç–‘ä¼¼å‘½ä»¤ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ */
 		ChgCode( oprwk , OutTbl.opr[0] );
 		opr = GetMnemonicKind( oprwk );
 		switch( opr ){
 		case OP_EQU:
-			/* ƒ‰ƒxƒ‹‚È‚µEQUˆ—(ƒGƒ‰[I—¹) */
+			/* ãƒ©ãƒ™ãƒ«ãªã—EQUå‡¦ç†(ã‚¨ãƒ©ãƒ¼çµ‚äº†) */
 			if ( !pass ) rc = EQUNOLBL;
 			break;
 		case OP_ORG:
-			/* ORGˆ— */
-			/* ‘æ‚QƒIƒyƒ‰ƒ“ƒhˆÈ~‚É“o˜^‚ª‚ ‚éê‡AƒGƒ‰[I—¹‚·‚é */
+			/* ORGå‡¦ç† */
+			/* ç¬¬ï¼’ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã«ç™»éŒ²ãŒã‚ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 			if ( OutTbl.opr[2] ){
 				rc = ILLOPR;
 				break;
 			}
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( !OutTbl.opr[1] ) return ILLOPR;
-			/* ‘æ‚PƒIƒyƒ‰ƒ“ƒh‚ª”’l‚Å‚ ‚é */
+			/* ç¬¬ï¼‘ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒæ•°å€¤ã§ã‚ã‚‹ */
 			if( !(rc = GetCalcData( OutTbl.opr[1] , &op , &sts )) ){
-				/* –¼Ì‚ª–¢‰ðŒˆ‚Èê‡Aˆ—I—¹‚·‚é */
+				/* åç§°ãŒæœªè§£æ±ºãªå ´åˆã€å‡¦ç†çµ‚äº†ã™ã‚‹ */
 				if ( op == LBLNG ){ rc = LBLNOENT; break; }
 				if ( sts < (unsigned short)AsmAdr ){
 					rc = OFLOW;
 					break;
 				}
-				/* Œ»Ý‚ÌƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒX‚ðXV‚·‚é */
+				/* ç¾åœ¨ã®ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ›´æ–°ã™ã‚‹ */
 				if ( !StartAdrFlag ){
 					StartAdr = sts;
 					StartAdrFlag = 1;
 				}
 				else{
-					/* ‚Q‰ñ–ÚˆÈ~‚ÍAŽw’èƒoƒCƒg”•ª‚ðŠm•Û‚·‚é */
+					/* ï¼’å›žç›®ä»¥é™ã¯ã€æŒ‡å®šãƒã‚¤ãƒˆæ•°åˆ†ã‚’ç¢ºä¿ã™ã‚‹ */
 					OutTbl.byte = (unsigned char)( sts - (unsigned short)AsmAdr );
 				}
 				OutTbl.adr = sts;
@@ -903,48 +903,48 @@ unsigned short	op,opdat,sts;
 			}
 			break;
 		case OP_START:
-			/* STARTˆ— */
-			/* ‘æ‚QƒIƒyƒ‰ƒ“ƒhˆÈ~‚É“o˜^‚ª‚ ‚éê‡AƒGƒ‰[I—¹‚·‚é */
+			/* STARTå‡¦ç† */
+			/* ç¬¬ï¼’ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã«ç™»éŒ²ãŒã‚ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 			if ( OutTbl.opr[2] ){
 				rc = ILLOPR;
 				break;
 			}
-			/* Šù‚ÉExecAdrƒGƒ“ƒgƒŠ[‚ ‚è */
+			/* æ—¢ã«ExecAdrã‚¨ãƒ³ãƒˆãƒªãƒ¼ã‚ã‚Š */
 			if ( ExecAdrFlag ){
 				rc = ILLSTART;
 				break;
 			}
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( !OutTbl.opr[1] ) return ILLOPR;
-			/* ‘æ‚PƒIƒyƒ‰ƒ“ƒh‚ª”’l‚Å‚ ‚é */
+			/* ç¬¬ï¼‘ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒæ•°å€¤ã§ã‚ã‚‹ */
 			if( !(rc = GetCalcData( OutTbl.opr[1] , &op , &sts )) ){
-				/* –¼Ì‰ðŒˆ‚µ‚Ä‚¢‚éê‡AƒAƒhƒŒƒX‚ð“o˜^‚·‚é */
+				/* åç§°è§£æ±ºã—ã¦ã„ã‚‹å ´åˆã€ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç™»éŒ²ã™ã‚‹ */
 				if ( op == LBLOK ){
-					/* ƒAƒhƒŒƒX‚ð“o˜^‚·‚é */
+					/* ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç™»éŒ²ã™ã‚‹ */
 					ExecAdr = sts;
 					ExecAdrFlag = 1;
 				}
-				/* –¼Ì–¢‰ðŒˆ‚Å‚©‚Â2ƒpƒX–Ú‚È‚çƒGƒ‰[I—¹‚·‚é */
+				/* åç§°æœªè§£æ±ºã§ã‹ã¤2ãƒ‘ã‚¹ç›®ãªã‚‰ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 				else if (pass){
 					rc = LBLNOENT;
 				}
 			}
 			break;
 		case OP_DS:
-			/* DSˆ— */
-			if ( !StartAdrFlag ) { rc = NOORG; break; }/* ORG‚È‚µ */
-			/* ‘æ‚QƒIƒyƒ‰ƒ“ƒhˆÈ~‚É“o˜^‚ª‚ ‚éê‡AƒGƒ‰[I—¹‚·‚é */
+			/* DSå‡¦ç† */
+			if ( !StartAdrFlag ) { rc = NOORG; break; }/* ORGãªã— */
+			/* ç¬¬ï¼’ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã«ç™»éŒ²ãŒã‚ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 			if ( OutTbl.opr[2] ){
 				rc = ILLOPR;
 				break;
 			}
-			/* ‘æ‚PƒIƒyƒ‰ƒ“ƒh‚ª”’l‚Å‚ ‚é */
+			/* ç¬¬ï¼‘ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒæ•°å€¤ã§ã‚ã‚‹ */
 			if( !(rc = GetCalcData( OutTbl.opr[1] , &op , &sts )) ){
-				/* –¼Ì‚ª–¢‰ðŒˆ‚Èê‡Aˆ—I—¹‚·‚é */
+				/* åç§°ãŒæœªè§£æ±ºãªå ´åˆã€å‡¦ç†çµ‚äº†ã™ã‚‹ */
 				if ( op == LBLNG ){ rc = LBLNOENT; break; }
-				/* Žw’èƒoƒCƒg”•ª‚ðŠm•Û */
+				/* æŒ‡å®šãƒã‚¤ãƒˆæ•°åˆ†ã‚’ç¢ºä¿ */
 				OutTbl.byte = sts;
-				/* ƒAƒhƒŒƒX‚ðXV‚·‚é */
+				/* ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ›´æ–°ã™ã‚‹ */
 				if (( AsmAdr + sts ) <= MAXOBJ ) AsmAdr += sts;
 				else rc = ADOFLOW;
 				break;
@@ -952,9 +952,9 @@ unsigned short	op,opdat,sts;
 			rc = ILLOPR;
 			break;
 		case OP_DB:
-			/* DBˆ— */
-			if ( !StartAdrFlag ) { rc = NOORG; break; }/* ORG‚È‚µ */
-			/* ‘æ‚PƒIƒyƒ‰ƒ“ƒhˆÈ~‚É“o˜^‚ª‚È‚¢ê‡AƒGƒ‰[I—¹‚·‚é */
+			/* DBå‡¦ç† */
+			if ( !StartAdrFlag ) { rc = NOORG; break; }/* ORGãªã— */
+			/* ç¬¬ï¼‘ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã«ç™»éŒ²ãŒãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 			if ( !OutTbl.opr[1] ){
 				rc = ILLOPR;
 				break;
@@ -962,42 +962,42 @@ unsigned short	op,opdat,sts;
 			cnt = 0;
 			i = 0;
 			n = 0;
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ª‚ ‚éŒÀ‚è“o˜^‚·‚é */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªãŒã‚ã‚‹é™ã‚Šç™»éŒ²ã™ã‚‹ */
 			while( OutTbl.opr[cnt+1] ){
-				/* ‰‰ñˆÈŠO‚ÍAƒJƒ“ƒ}‚Ìƒ`ƒFƒbƒN‚ð‚·‚é */
+				/* åˆå›žä»¥å¤–ã¯ã€ã‚«ãƒ³ãƒžã®ãƒã‚§ãƒƒã‚¯ã‚’ã™ã‚‹ */
 				if ( cnt ){
-					/* æ“ª‚ªƒJƒ“ƒ}ˆÈŠO‚Å‚ ‚éê‡AƒGƒ‰[I—¹ */
+					/* å…ˆé ­ãŒã‚«ãƒ³ãƒžä»¥å¤–ã§ã‚ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 					if ( *OutTbl.opr[cnt+1] != ',' ){
 						rc = ILLCANMA;
 						break;
 					}
-					/* æ“ª•¶Žš‚ðƒXƒLƒbƒv */
+					/* å…ˆé ­æ–‡å­—ã‚’ã‚¹ã‚­ãƒƒãƒ— */
 					i = 1;
 				}
-				/* •¶Žš—ñ‚Å‚ ‚é */
+				/* æ–‡å­—åˆ—ã§ã‚ã‚‹ */
 				len = strlen( OutTbl.opr[cnt+1]+i );
-				/* æ“ª‚¨‚æ‚ÑÅI‚ÍƒR[ƒe[ƒVƒ‡ƒ“( = •¶Žš—ñƒGƒ“ƒgƒŠ)‚Å‚ ‚é */
+				/* å…ˆé ­ãŠã‚ˆã³æœ€çµ‚ã¯ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³( = æ–‡å­—åˆ—ã‚¨ãƒ³ãƒˆãƒª)ã§ã‚ã‚‹ */
 				if ( ((*(OutTbl.opr[cnt+1]+i) == 0x22 )&&(*(OutTbl.opr[cnt+1]+i+len-1) == 0x22 ))
 					||((*(OutTbl.opr[cnt+1]+i) == 0x27 )&&(*(OutTbl.opr[cnt+1]+i+len-1) == 0x27 )) ){
-					/* •¶Žš—ñ‚ª‚RˆÈ‰º‚È‚çƒIƒyƒ‰ƒ“ƒhˆÙí */
+					/* æ–‡å­—åˆ—ãŒï¼“ä»¥ä¸‹ãªã‚‰ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç•°å¸¸ */
 					if( len < 3 ) {
 						rc = ILLOPR;
 						break;
 					}
-					/* ƒR[ƒh“o˜^‚·‚é */
+					/* ã‚³ãƒ¼ãƒ‰ç™»éŒ²ã™ã‚‹ */
 					memcpy( &OutTbl.code[n] , OutTbl.opr[cnt+1]+i+1 , len-2 );
 					n += ( len - 2 );
 					rc = NORM;
 				}
 				else{
-					/* ŒvŽZŽ®‚Æ‚µ‚Äˆ—‚·‚é */
+					/* è¨ˆç®—å¼ã¨ã—ã¦å‡¦ç†ã™ã‚‹ */
 					if ( !(rc = GetCalcData( OutTbl.opr[cnt+1]+i , &op , &sts )) ) {
-						/* ”ÍˆÍŠO‚È‚çƒGƒ‰[ */
+						/* ç¯„å›²å¤–ãªã‚‰ã‚¨ãƒ©ãƒ¼ */
 						if ( sts >= 256 ){
 							rc = OFLOW;
 							break;
 						}
-						/* ƒR[ƒh“o˜^‚·‚é */
+						/* ã‚³ãƒ¼ãƒ‰ç™»éŒ²ã™ã‚‹ */
 						OutTbl.code[n++] = sts;
 					}
 					else break;
@@ -1005,14 +1005,14 @@ unsigned short	op,opdat,sts;
 				OutTbl.byte = (unsigned char)n;
 				cnt++;
 			}
-			/* ƒAƒhƒŒƒX‚ðXV‚·‚é */
+			/* ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ›´æ–°ã™ã‚‹ */
 			if (( AsmAdr + n ) <= MAXOBJ ) AsmAdr += n;
 			else rc = ADOFLOW;
 			break;
 		case OP_DW:
-			/* DWˆ— */
-			if ( !StartAdrFlag ) { rc = NOORG; break; }/* ORG‚È‚µ */
-			/* ‘æ‚PƒIƒyƒ‰ƒ“ƒhˆÈ~‚É“o˜^‚ª‚È‚¢ê‡AƒGƒ‰[I—¹‚·‚é */
+			/* DWå‡¦ç† */
+			if ( !StartAdrFlag ) { rc = NOORG; break; }/* ORGãªã— */
+			/* ç¬¬ï¼‘ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã«ç™»éŒ²ãŒãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 			if ( !OutTbl.opr[1] ){
 				rc = ILLOPR;
 				break;
@@ -1020,132 +1020,132 @@ unsigned short	op,opdat,sts;
 			cnt = 0;
 			i = 0;
 			n = 0;
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ª‚ ‚éŒÀ‚è“o˜^‚·‚é */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªãŒã‚ã‚‹é™ã‚Šç™»éŒ²ã™ã‚‹ */
 			while( OutTbl.opr[cnt+1] ){
-				/* ‰‰ñˆÈŠO‚ÍAƒJƒ“ƒ}‚Ìƒ`ƒFƒbƒN‚ð‚·‚é */
+				/* åˆå›žä»¥å¤–ã¯ã€ã‚«ãƒ³ãƒžã®ãƒã‚§ãƒƒã‚¯ã‚’ã™ã‚‹ */
 				if ( cnt ){
-					/* æ“ª‚ªƒJƒ“ƒ}ˆÈŠO‚Å‚ ‚éê‡AƒGƒ‰[I—¹ */
+					/* å…ˆé ­ãŒã‚«ãƒ³ãƒžä»¥å¤–ã§ã‚ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 					if ( *OutTbl.opr[cnt+1] != ',' ){
 						rc = ILLCANMA;
 						break;
 					}
-					/* æ“ª•¶Žš‚ðƒXƒLƒbƒv */
+					/* å…ˆé ­æ–‡å­—ã‚’ã‚¹ã‚­ãƒƒãƒ— */
 					i = 1;
 				}
-				/* ŒvŽZŽ®‚Æ‚µ‚Äˆ—‚·‚é */
+				/* è¨ˆç®—å¼ã¨ã—ã¦å‡¦ç†ã™ã‚‹ */
 				if ( rc = GetCalcData( OutTbl.opr[cnt+1]+i , &op , &sts ) ) break;
-				/* ƒ[ƒh’PˆÊ‚ÅƒR[ƒh“o˜^‚·‚é */
+				/* ãƒ¯ãƒ¼ãƒ‰å˜ä½ã§ã‚³ãƒ¼ãƒ‰ç™»éŒ²ã™ã‚‹ */
 				OutTbl.code[n++] = (unsigned char)(sts & 0xff);
 				OutTbl.code[n++] = (unsigned char)((sts>>8) & 0xff);
 				OutTbl.byte = (unsigned char)n;
 				cnt++;
 			}
-			/* ƒAƒhƒŒƒX‚ðXV‚·‚é */
+			/* ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ›´æ–°ã™ã‚‹ */
 			if (( AsmAdr + n ) <= MAXOBJ ) AsmAdr += n;
 			else rc = ADOFLOW;
 			break;
 		case OP_LEVEL:
-			/* ‘æ‚QƒIƒyƒ‰ƒ“ƒhˆÈ~‚É“o˜^‚ª‚ ‚éê‡AƒGƒ‰[I—¹‚·‚é */
+			/* ç¬¬ï¼’ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã«ç™»éŒ²ãŒã‚ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 			if ( OutTbl.opr[2] ){
 				rc = ILLOPR;
 				break;
 			}
-			/* ‘æ‚PƒIƒyƒ‰ƒ“ƒh‚ª”’l‚Å‚ ‚é */
+			/* ç¬¬ï¼‘ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒæ•°å€¤ã§ã‚ã‚‹ */
 			if ( !(rc = GetCalcData( OutTbl.opr[1] ,&op ,&sts )) ){
-				/* –¼Ì‚ª–¢‰ðŒˆ‚Èê‡Aˆ—I—¹‚·‚é */
+				/* åç§°ãŒæœªè§£æ±ºãªå ´åˆã€å‡¦ç†çµ‚äº†ã™ã‚‹ */
 				if ( op == LBLNG ){ rc = LBLNOENT; break; }
-				/* PB-1000ŒÝŠ·ƒR[ƒhØ‚è‘Ö‚¦ */
+				/* PB-1000äº’æ›ã‚³ãƒ¼ãƒ‰åˆ‡ã‚Šæ›¿ãˆ */
 				UndefOpr = (unsigned short)( sts ? 1 : 0 );
 			}
 			break;
 		case OP_INCLUDE:
-			/* Šù‚ÉƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹OPEN’† */
+			/* æ—¢ã«ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«OPENä¸­ */
 			if ( IncLevel >= (MAXINC-1) ){ rc = INCERR; break; }
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( !OutTbl.opr[1] ){ rc = ILLOPR; break; }
 			if ( (len = strlen(OutTbl.opr[1])) < 3 ){ rc = INCNOFILE; break; }
-			/* æ“ª‚¨‚æ‚ÑÅI‚ÍŠ‡ŒÊ‚Å‚ ‚é */
+			/* å…ˆé ­ãŠã‚ˆã³æœ€çµ‚ã¯æ‹¬å¼§ã§ã‚ã‚‹ */
 			if ( ( OutTbl.opr[1][0] == '(' ) && ( OutTbl.opr[1][len-1] == ')' ) ){
-				/* ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹–¼Žæ‚èo‚µ */
+				/* ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«åå–ã‚Šå‡ºã— */
 				memset( IncFile , 0 , sizeof(IncFile) );
 				memcpy( IncFile , &OutTbl.opr[1][1] , len-2 );
-				/* ƒCƒ“ƒNƒ‹[ƒhƒtƒ@ƒCƒ‹OPEN */
+				/* ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ãƒ•ã‚¡ã‚¤ãƒ«OPEN */
 				if ( ( IncFD[IncLevel] = fopen( IncFile ,"rb" ) ) <= 0 ){ rc = INCNOFILE; break; }
-				/* s”Ô†ƒNƒŠƒA(‚±‚Ìˆ—I—¹Œã+1‚³‚ê‚é‚Ì‚Å-1‚ðƒZƒbƒg) */
+				/* è¡Œç•ªå·ã‚¯ãƒªã‚¢(ã“ã®å‡¦ç†çµ‚äº†å¾Œ+1ã•ã‚Œã‚‹ã®ã§-1ã‚’ã‚»ãƒƒãƒˆ) */
 				IncLine[IncLevel] = -1;
-				/* ƒCƒ“ƒNƒ‹[ƒhLEVELXV */
+				/* ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰LEVELæ›´æ–° */
 				IncLevel++;
 				rc = NORM;
 			}
 			break;
 		case OP_LIST:
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( OutTbl.opr[1] ) rc = ILLOPR;
 			ListFlag = 0;
 			break;
 		case OP_NOLIST:
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( OutTbl.opr[1] ) rc = ILLOPR;
-			/* ƒŠƒXƒgo—Í‹ÖŽ~ */
+			/* ãƒªã‚¹ãƒˆå‡ºåŠ›ç¦æ­¢ */
 			ListFlag = 1;
 			break;
 		case OP_EJECT:
-			/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 			if ( OutTbl.opr[1] ) rc = ILLOPR;
-			/* ƒŠƒXƒgLineFeed‘}“ü—v‹ƒZƒbƒg */
+			/* ãƒªã‚¹ãƒˆLineFeedæŒ¿å…¥è¦æ±‚ã‚»ãƒƒãƒˆ */
 			LineFeed = 1;
 			break;
 		default:
-			/* ˆê”Ê–½—ßˆ— */
-			/* ƒjƒ‚ƒjƒbƒN•¶Žš’·‚Í³í */
+			/* ä¸€èˆ¬å‘½ä»¤å‡¦ç† */
+			/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯æ–‡å­—é•·ã¯æ­£å¸¸ */
 			if ( strlen( OutTbl.opr[0] ) >= MAXMN ) { rc = UNDEFOPR ; break; }
-			/* ORG‚È‚µ */
+			/* ORGãªã— */
 			if ( !StartAdrFlag ) { rc = NOORG; break; }
-			/* ‘æ5ƒIƒyƒ‰ƒ“ƒhˆÈ~‚É“o˜^‚ª‚ ‚éê‡AƒGƒ‰[I—¹ */
+			/* ç¬¬5ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã«ç™»éŒ²ãŒã‚ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 			if ( OutTbl.opr[5] ){
 				rc = ILLOPR;
 				break;
 			}
-			/* ƒIƒyƒ‰ƒ“ƒh1`5‚ð‰ðÍ‚·‚é */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰1ï½ž5ã‚’è§£æžã™ã‚‹ */
 			for ( i = 1 ; i < 5 ; i++ ){
 				kc = 0;
-				/* ƒIƒyƒ‰ƒ“ƒh“o˜^‚È‚µ‚È‚çƒ‹[ƒv‚ð”²‚¯‚é */
+				/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç™»éŒ²ãªã—ãªã‚‰ãƒ«ãƒ¼ãƒ—ã‚’æŠœã‘ã‚‹ */
 				if (!OutTbl.opr[i]) break;
-				/* ‘æ‚QƒIƒyƒ‰ƒ“ƒhˆÈ~‚È‚çAæ“ªƒJƒ“ƒ} */
+				/* ç¬¬ï¼’ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ãªã‚‰ã€å…ˆé ­ï¼ã‚«ãƒ³ãƒž */
 				if ( ( i >= 2 ) && *OutTbl.opr[i] &&( *OutTbl.opr[i] != ',' ) ){
-					/* KC•ûŽ®‚Å‚Í–³‚¢‚©¤Š‡ŒÊ[(]ˆÈŠO‚Å‚ ‚é */
+					/* KCæ–¹å¼ã§ã¯ç„¡ã„ã‹ï½¤æ‹¬å¼§[(]ä»¥å¤–ã§ã‚ã‚‹ */
 					if( !OutTbl.kc || *OutTbl.opr[i] != '(' ){
 						rc = ILLCANMA;
 						break;
 					}
 					kc = 1;
 				}
-				/* ƒIƒyƒ‰ƒ“ƒhŽí•ÊŽæ“¾ */
+				/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥å–å¾— */
 				if ( rc = GetOprKind( i, OutTbl.opr[i]+( (i==1)||kc ? 0 : 1 ) , &op , &opdat ) ){
 					if ( rc == NOENT ) rc = 0;
 					break;
 				}
-				/* ƒAƒhƒŒƒX^”’l –¢‰ðŒˆ‚È‚çƒGƒ‰[I—¹(‚QƒpƒX–Ú) */
+				/* ã‚¢ãƒ‰ãƒ¬ã‚¹ï¼æ•°å€¤ æœªè§£æ±ºãªã‚‰ã‚¨ãƒ©ãƒ¼çµ‚äº†(ï¼’ãƒ‘ã‚¹ç›®) */
 				if ( pass && (( op & LBLMASK ) == LBLNG ) ){
 					rc = LBLNOENT;
 					break;
 				}
-				/* ƒIƒyƒ‰ƒ“ƒhŽí•Ê^ƒf[ƒ^‚ð•Û‘¶‚·‚é */
+				/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥ï¼ãƒ‡ãƒ¼ã‚¿ã‚’ä¿å­˜ã™ã‚‹ */
 				OutTbl.opkind[i-1] = op;
 				OutTbl.opdata[i-1] = opdat;
 			}
-			/* ƒIƒyƒ‰ƒ“ƒhŽí•Êƒ`ƒFƒbƒN‚É‚ÄƒGƒ‰[”­¶ */
+			/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ã«ã¦ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿ */
 			if (rc) break;
-			/* ƒZƒJƒ“ƒhƒIƒyƒŒ[ƒVƒ‡ƒ“Šg’£ƒIƒvƒVƒ‡ƒ“iCASIO–¢ŒöŠJj‘I‘ð */
+			/* ã‚»ã‚«ãƒ³ãƒ‰ã‚ªãƒšãƒ¬ãƒ¼ã‚·ãƒ§ãƒ³æ‹¡å¼µã‚ªãƒ—ã‚·ãƒ§ãƒ³ï¼ˆCASIOæœªå…¬é–‹ï¼‰é¸æŠž */
 			if( UndefOpr ){
-				/* ƒjƒ‚ƒjƒbƒN{‘æ‚P`‘æ‚SƒIƒyƒ‰ƒ“ƒh‚ÅŒŸõ(OP1/OP2‚Æ‚àR0,R30,R31—LŒø) */
+				/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ï¼‹ç¬¬ï¼‘ï½žç¬¬ï¼”ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã§æ¤œç´¢(OP1/OP2ã¨ã‚‚R0,R30,R31æœ‰åŠ¹) */
 				if (!SearchOpr( MASKOP2 , MASKOP2 , MASKOP , MASKOP )) break;
-				/* ƒjƒ‚ƒjƒbƒN{‘æ‚P`‘æ‚SƒIƒyƒ‰ƒ“ƒh‚ÅŒŸõ(OP2‚Ì‚ÝR0,R30,R31—LŒø) */
+				/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ï¼‹ç¬¬ï¼‘ï½žç¬¬ï¼”ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã§æ¤œç´¢(OP2ã®ã¿R0,R30,R31æœ‰åŠ¹) */
 				if (!SearchOpr( MASKOP , MASKOP2 , MASKOP , MASKOP )) break;
-				/* ƒjƒ‚ƒjƒbƒN{‘æ‚P`‘æ‚SƒIƒyƒ‰ƒ“ƒh‚ÅŒŸõ(OP1‚Ì‚ÝR0,R30,R31—LŒø) */
+				/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ï¼‹ç¬¬ï¼‘ï½žç¬¬ï¼”ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã§æ¤œç´¢(OP1ã®ã¿R0,R30,R31æœ‰åŠ¹) */
 				if (!SearchOpr( MASKOP2 , MASKOP , MASKOP , MASKOP )) break;
 			}
-			/* ƒjƒ‚ƒjƒbƒN{‘æ‚P`‘æ‚RƒIƒyƒ‰ƒ“ƒhŽí•Ê ‚É‚ÄŒŸõ(R0,R30,R31Žw’è‚È‚µ) */
+			/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ï¼‹ç¬¬ï¼‘ï½žç¬¬ï¼“ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥ ã«ã¦æ¤œç´¢(R0,R30,R31æŒ‡å®šãªã—) */
 			rc = SearchOpr( MASKOP , MASKOP , MASKOP , MASKOP );
 			break;
 		}
@@ -1156,30 +1156,30 @@ unsigned short	op,opdat,sts;
 /**********************************************************************/
 /*   SearchOpr : Search Operation Code                                */
 /*                                                                    */
-/*   ˆ—    : Žw’è‚³‚ê‚½ƒIƒyƒ‰ƒ“ƒhðŒ‚ÅOutBuf‚Ì–½—ß‚ðŒŸõ‚·‚é       */
-/*             ŒŸõŒ‹‰Ê‚ÍAOutBuf‚ÉŠi”[‚³‚ê‚é                         */
-/*   “ü—Í    : ƒIƒyƒ‰ƒ“ƒhŒŸõðŒ(op1,op2,op3,op4)                    */
-/*   o—Í    : ƒGƒ‰[î•ñi0:ŠY“––½—ß‚ ‚èA0ˆÈŠO:‚È‚µj               */
+/*   å‡¦ç†    : æŒ‡å®šã•ã‚ŒãŸã‚ªãƒšãƒ©ãƒ³ãƒ‰æ¡ä»¶ã§OutBufã®å‘½ä»¤ã‚’æ¤œç´¢ã™ã‚‹       */
+/*             æ¤œç´¢çµæžœã¯ã€OutBufã«æ ¼ç´ã•ã‚Œã‚‹                         */
+/*   å…¥åŠ›    : ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ¤œç´¢æ¡ä»¶(op1,op2,op3,op4)                    */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:è©²å½“å‘½ä»¤ã‚ã‚Šã€0ä»¥å¤–:ãªã—ï¼‰               */
 /*                                                                    */
 /**********************************************************************/
 int SearchOpr( unsigned short op1 ,unsigned short op2 ,unsigned short op3 ,unsigned short op4 )
 {
 unsigned short i;
 
-	/* ŒŸõ‘ÎÛƒjƒ‚ƒjƒbƒN‚ðHD61Œ`Ž®‚É•ÏŠ·‚·‚é */
+	/* æ¤œç´¢å¯¾è±¡ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ã‚’HD61å½¢å¼ã«å¤‰æ›ã™ã‚‹ */
 	if ( ChgKcName( oprwk , OutTbl.opr[0] ) ) return UNDEFOPR;
-	/* ƒjƒ‚ƒjƒbƒN{‘æ‚P`‘æ‚RƒIƒyƒ‰ƒ“ƒhŽí•Ê ‚É‚ÄŒŸõ */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ï¼‹ç¬¬ï¼‘ï½žç¬¬ï¼“ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç¨®åˆ¥ ã«ã¦æ¤œç´¢ */
 	for ( i = 0 ; i < MAXOP ; i++ ){
-		/* ŠY“––½—ß‚ ‚è */
+		/* è©²å½“å‘½ä»¤ã‚ã‚Š */
 		if ( !strcmp( codetbl[i].name , oprwk ) 
 			&& ((codetbl[i].op1&MASKOP2) == (OutTbl.opkind[0]&op1) )
 			&& ((codetbl[i].op2&MASKOP2) == (OutTbl.opkind[1]&op2) )
 			&& ((codetbl[i].op3&MASKOP)  == (OutTbl.opkind[2]&op3) )
 			&& ((codetbl[i].op4&MASKOP)  == (OutTbl.opkind[3]&op4) )){
-			/* ƒR[ƒhƒe[ƒuƒ‹‚ÌƒCƒ“ƒfƒbƒNƒX‚ðŠi”[ */
+			/* ã‚³ãƒ¼ãƒ‰ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æ ¼ç´ */
 			OutTbl.idx = i;
 			OutTbl.byte = codetbl[i].byte;
-			/* ƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒXXV */
+			/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹æ›´æ–° */
 			if (( AsmAdr + codetbl[i].byte ) <= MAXOBJ ){
 				AsmAdr += codetbl[i].byte;
 				return NORM;
@@ -1187,15 +1187,15 @@ unsigned short i;
 			else return ADOFLOW;
 		}
 	}
-	/* ŠY“––½—ß‚È‚µ */
+	/* è©²å½“å‘½ä»¤ãªã— */
 	return UNDEFOPR;
 }
 /**********************************************************************/
 /*   AsmCodeSet : Assembler Process ( 2 pass )                        */
 /*                                                                    */
-/*   ˆ—    : ‚Ps•ª‚ÌƒAƒZƒ“ƒuƒ‹Œ‹‰Ê‚ðƒR[ƒh‰»‚·‚éi‚QƒpƒX–Ú)        */
-/*   “ü—Í    : ‚È‚µ                                                   */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ï¼‘è¡Œåˆ†ã®ã‚¢ã‚»ãƒ³ãƒ–ãƒ«çµæžœã‚’ã‚³ãƒ¼ãƒ‰åŒ–ã™ã‚‹ï¼ˆï¼’ãƒ‘ã‚¹ç›®)        */
+/*   å…¥åŠ›    : ãªã—                                                   */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int AsmCodeSet( void )
@@ -1203,18 +1203,18 @@ int AsmCodeSet( void )
 int  rc,n;
 unsigned short op,opdat,sts,adr;
 
-	/* ƒGƒ‰[ƒXƒe[ƒ^ƒX‰Šú‰» */
+	/* ã‚¨ãƒ©ãƒ¼ã‚¹ãƒ†ãƒ¼ã‚¿ã‚¹åˆæœŸåŒ– */
 	rc = 0;
 
-	/* ƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒXXV */
+	/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹æ›´æ–° */
 	adr = OutTbl.adr;
 
 	/******************************************/
-	/* #if`#else`#endifƒ}ƒNƒˆ—           */
+	/* #ifï½ž#elseï½ž#endifãƒžã‚¯ãƒ­å‡¦ç†           */
 	/******************************************/
-	/* ƒjƒ‚ƒjƒbƒN“o˜^‚ ‚è */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç™»éŒ²ã‚ã‚Š */
 	if ( OutTbl.opr[0] ){
-		/* #if,#else,#endifƒ`ƒFƒbƒN */
+		/* #if,#else,#endifãƒã‚§ãƒƒã‚¯ */
 		ChgCode( oprwk , OutTbl.opr[0] );
 		sts = (unsigned short)GetMacKind( oprwk );
 		switch( sts ){
@@ -1227,11 +1227,11 @@ unsigned short op,opdat,sts,adr;
 		}
 	}
 	/******************************************/
-	/* ‹^Ž—–½—ß/ˆê”Ê–½—ßˆ—                  */
+	/* ç–‘ä¼¼å‘½ä»¤/ä¸€èˆ¬å‘½ä»¤å‡¦ç†                  */
 	/******************************************/
-	/* ƒjƒ‚ƒjƒbƒN“o˜^‚ ‚è */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç™»éŒ²ã‚ã‚Š */
 	if ( OutTbl.opr[0] ){
-		/* ’Êí–½—ß^‹^Ž—–½—ßŽí•Êƒ`ƒFƒbƒN */
+		/* é€šå¸¸å‘½ä»¤ï¼ç–‘ä¼¼å‘½ä»¤ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ */
 		ChgCode( oprwk , OutTbl.opr[0] );
 		sts = GetMnemonicKind( oprwk );
 		switch(sts){
@@ -1246,173 +1246,173 @@ unsigned short op,opdat,sts,adr;
 		case OP_EJECT:
 			break;
 		case OP_START:
-			/* STARTˆ— */
-			/* ŽÀsŠJŽnƒAƒhƒŒƒX‚ªæ“ªƒAƒhƒŒƒX‚æ‚è¬‚³‚¢ê‡‚ÍƒGƒ‰[I—¹ */
+			/* STARTå‡¦ç† */
+			/* å®Ÿè¡Œé–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹ãŒå…ˆé ­ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚ˆã‚Šå°ã•ã„å ´åˆã¯ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 			if ( ExecAdrFlag && ( StartAdr > ExecAdr ) ) return EOFLOW;
 			break;
 		default:
-			/* ˆê”Ê–½—ß“o˜^‚ ‚è */
+			/* ä¸€èˆ¬å‘½ä»¤ç™»éŒ²ã‚ã‚Š */
 			if ( OutTbl.byte ){
-				/* JR–½—ß—pƒIƒyƒ‰ƒ“ƒh”Ô†‰Šú‰» */
+				/* JRå‘½ä»¤ç”¨ã‚ªãƒšãƒ©ãƒ³ãƒ‰ç•ªå·åˆæœŸåŒ– */
 				n = 1;
-				/* –½—ßƒR[ƒho—Í */
+				/* å‘½ä»¤ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 				OutTbl.code[0] = codetbl[OutTbl.idx].code;
-				/* –½—ßŽÀ‘•Ží•Ê‚É‚Ä•ªŠò */
+				/* å‘½ä»¤å®Ÿè£…ç¨®åˆ¥ã«ã¦åˆ†å² */
 				switch( codetbl[OutTbl.idx].kind ){
-				case NU:	/* ƒIƒyƒ‰ƒ“ƒh‚È‚µ^1 byte –½—ß  */
+				case NU:	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãªã—ï¼1 byte å‘½ä»¤  */
 					break;
-				case IM8_NU:/* IM8        (‚QƒoƒCƒg–½—ßj   */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case IM8_NU:/* IM8        (ï¼’ãƒã‚¤ãƒˆå‘½ä»¤ï¼‰   */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if (OutTbl.opdata[1] >= IM8bit ){ rc = OFLOW ; break; }
-				case REG_NU:/* REG        (‚QƒoƒCƒg–½—ßj   */
-				case REG_NUJ:/* REG : IM7    (3ƒoƒCƒg–½—ßj   */
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+				case REG_NU:/* REG        (ï¼’ãƒã‚¤ãƒˆå‘½ä»¤ï¼‰   */
+				case REG_NUJ:/* REG : IM7    (3ãƒã‚¤ãƒˆå‘½ä»¤ï¼‰   */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[0];
-					/* JumpŠg’£‚ ‚è */
+					/* Jumpæ‹¡å¼µã‚ã‚Š */
 					if ( codetbl[OutTbl.idx].kind == REG_NUJ ){
-						/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXŒvŽZ */
+						/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®— */
 						if(rc = GetJumpData( OutTbl.opdata[1] , adr ,OutTbl.byte ,&op , &opdat )) break;
-						/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+						/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 						OutTbl.code[2] = (unsigned char)( op | opdat );
 					}
 					break;
-				case IR_REG:/* IREGFREG  (‚QƒoƒCƒg)        */
-				case IR_REGJ:/* IREGFREG :IM7 (3ƒoƒCƒg)     */
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+				case IR_REG:/* IREGï¼šREG  (ï¼’ãƒã‚¤ãƒˆ)        */
+				case IR_REGJ:/* IREGï¼šREG :IM7 (3ãƒã‚¤ãƒˆ)     */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[1];
-					/* JumpŠg’£‚ ‚è */
+					/* Jumpæ‹¡å¼µã‚ã‚Š */
 					if ( codetbl[OutTbl.idx].kind == IR_REGJ ){
-						/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXŒvŽZ */
+						/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®— */
 						if(rc = GetJumpData( OutTbl.opdata[2] , adr ,OutTbl.byte ,&op , &opdat )) break;
-						/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+						/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 						OutTbl.code[2] = (unsigned char)( op | opdat );
 					}
 					break;
-				case IR_IM8:/* IREGFIM8  (‚QƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case IR_IM8:/* IREGï¼šIM8  (ï¼’ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if (OutTbl.opdata[1] >= IM8bit ){ rc = OFLOW ; break; }
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop;
 					OutTbl.code[2] = (unsigned char)OutTbl.opdata[1];
 					break;
-				case REG_IM3:/* REG : IM3  (‚RƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case REG_IM3:/* REG : IM3  (ï¼“ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if ((OutTbl.opdata[1] <= 1 )||(OutTbl.opdata[1] > IM3bit )){ rc = OFLOW ; break; }
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop|(unsigned char)OutTbl.opdata[0];
 					OutTbl.code[2] = (unsigned char)((OutTbl.opdata[1]-1)<<5);
 					break;
-				case REG_I5I3:/* REG : IM5 : IM3  (‚RƒoƒCƒg)     */
-				case REG_I5I3J:/* REG : IM5 : IM3 : IM7 (4ƒoƒCƒg) */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case REG_I5I3:/* REG : IM5 : IM3  (ï¼“ãƒã‚¤ãƒˆ)     */
+				case REG_I5I3J:/* REG : IM5 : IM3 : IM7 (4ãƒã‚¤ãƒˆ) */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if ( OutTbl.opdata[1] > 31 ){ rc = OFLOW ; break; }
-				case REG2_IM3:/* REG : REG : IM3  (‚RƒoƒCƒg)     */
-				case REG2_IM3J:/* REG : REG : IM3 : IM7 (4ƒoƒCƒg) */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case REG2_IM3:/* REG : REG : IM3  (ï¼“ãƒã‚¤ãƒˆ)     */
+				case REG2_IM3J:/* REG : REG : IM3 : IM7 (4ãƒã‚¤ãƒˆ) */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if ((OutTbl.opdata[2] <= 1 )||(OutTbl.opdata[2] > IM3bit )){ rc = OFLOW ; break; }
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[0];
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					if (( codetbl[OutTbl.idx].kind == REG2_IM3 )||( codetbl[OutTbl.idx].kind == REG2_IM3J ) ){
 						opdat = (!OutTbl.opdata[1]||(OutTbl.opdata[1]==31)||(OutTbl.opdata[1]==30)) ? (unsigned short)0 : OutTbl.opdata[1];
 						OutTbl.code[2] = (unsigned char)opdat|(unsigned char)((OutTbl.opdata[2]-1)<<5);
 					}
 					else{
-						/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+						/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 						OutTbl.code[2] = (unsigned char)OutTbl.opdata[1]|(unsigned char)((OutTbl.opdata[2]-1)<<5);
 					}
-					/* JumpŠg’£‚ ‚è */
+					/* Jumpæ‹¡å¼µã‚ã‚Š */
 					if (( codetbl[OutTbl.idx].kind == REG2_IM3J )||( codetbl[OutTbl.idx].kind == REG_I5I3J )){
-						/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXŒvŽZ */
+						/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®— */
 						if(rc = GetJumpData( OutTbl.opdata[3] , adr ,OutTbl.byte ,&op , &opdat )) break;
-						/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+						/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 						OutTbl.code[3] = (unsigned char)( op | opdat );
 					}
 					break;
-				case REG_IM7:/* REG FIM7  (‚RƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+				case REG_IM7:/* REG ï¼šIM7  (ï¼“ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[0];
-					/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXŒvŽZ */
+					/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®— */
 					if(rc = GetJumpData( OutTbl.opdata[2] , adr ,OutTbl.byte ,&op , &opdat )) break;
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[2] = (unsigned char)( op | opdat );
 					break;
-				case REG2_IM7:	/* REG : REG FIM7  (‚SƒoƒCƒg)        */
-								/* REG : IM8 FIM7  (‚SƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case REG2_IM7:	/* REG : REG ï¼šIM7  (ï¼”ãƒã‚¤ãƒˆ)        */
+								/* REG : IM8 ï¼šIM7  (ï¼”ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if (OutTbl.opdata[1] >= IM8bit ){ rc = OFLOW ; break; }
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[0];
 					OutTbl.code[2] = (unsigned char)OutTbl.opdata[1];
-					/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXŒvŽZ */
+					/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®— */
 					if(rc = GetJumpData( OutTbl.opdata[2] , adr ,OutTbl.byte ,&op , &opdat )) break;
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[3] = (unsigned char)( op | opdat );
 					break;
-				case REG_REG:/* REG FREG  (‚RƒoƒCƒg)        */
-				case REG_IM8:/* REG FIM8  (‚RƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case REG_REG:/* REG ï¼šREG  (ï¼“ãƒã‚¤ãƒˆ)        */
+				case REG_IM8:/* REG ï¼šIM8  (ï¼“ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if (OutTbl.opdata[1] >= IM8bit ){ rc = OFLOW ; break; }
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[0];
 					OutTbl.code[2] = OutTbl.opdata[1];
 					break;
-				case NU_IM8:/* NU FIM8  (‚RƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case NU_IM8:/* NU ï¼šIM8  (ï¼“ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if (OutTbl.opdata[0] >= IM8bit ){ rc = OFLOW ; break; }
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop;
 					OutTbl.code[2] = OutTbl.opdata[0];
 					break;
-				case IM8_REG:/* IM8 FREG  (‚RƒoƒCƒg)        */
-				case MREG_REG:/* MREG FREG  (‚RƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒ`ƒFƒbƒN */
+				case IM8_REG:/* IM8 ï¼šREG  (ï¼“ãƒã‚¤ãƒˆ)        */
+				case MREG_REG:/* MREG ï¼šREG  (ï¼“ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚§ãƒƒã‚¯ */
 					if (OutTbl.opdata[0] >= IM8bit ){ rc = OFLOW ; break; }
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[1];
 					OutTbl.code[2] = OutTbl.opdata[0];
 					break;
-				case IM16_REG:/* IM16 : REG (‚SƒoƒCƒg) ƒIƒyƒR[ƒh0xD0ŒÀ’è       */
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+				case IM16_REG:/* IM16 : REG (ï¼”ãƒã‚¤ãƒˆ) ã‚ªãƒšã‚³ãƒ¼ãƒ‰0xD0é™å®š       */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop;
 					OutTbl.code[2] = (unsigned char)( OutTbl.opdata[0] & 0xff );
 					OutTbl.code[3] = (unsigned char)( OutTbl.opdata[0] >> 8 );
 					break;
-				case REG_IM16:/* REG FIM16 (‚SƒoƒCƒg) ƒIƒyƒR[ƒh0xD1ŒÀ’è       */
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+				case REG_IM16:/* REG ï¼šIM16 (ï¼”ãƒã‚¤ãƒˆ) ã‚ªãƒšã‚³ãƒ¼ãƒ‰0xD1é™å®š       */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)OutTbl.opdata[0];
 					OutTbl.code[2] = (unsigned char)( OutTbl.opdata[1] & 0xff );
 					OutTbl.code[3] = (unsigned char)( OutTbl.opdata[1] >> 8 );
 					break;
-				case IR_IM16:/* IREG FIM16 (‚SƒoƒCƒg)        */
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+				case IR_IM16:/* IREG ï¼šIM16 (ï¼”ãƒã‚¤ãƒˆ)        */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop;
 					OutTbl.code[2] = (unsigned char)( OutTbl.opdata[1] & 0xff );
 					OutTbl.code[3] = (unsigned char)( OutTbl.opdata[1] >> 8 );
 					break;
-				case IM7_NU:/* ”’l(7bit):‚È‚µ JR–½—ß       */
+				case IM7_NU:/* æ•°å€¤(7bit):ãªã— JRå‘½ä»¤       */
 					n = 0;
-				case F_IM7:	/* ƒtƒ‰ƒO:”’l(7bit) JR–½—ß     */
+				case F_IM7:	/* ãƒ•ãƒ©ã‚°:æ•°å€¤(7bit) JRå‘½ä»¤     */
 					if ( OutTbl.pm7 ){
 						if ( OutTbl.opdata[n] >= 128 ) { rc = JOFLOW ; break; }
-						/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXÝ’è(}IM7Œ`Ž®) */
+						/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨­å®š(Â±IM7å½¢å¼) */
 						op = (unsigned short)(( OutTbl.pm7 == 2 ) ? 0x80 : 0 );
 						opdat = OutTbl.opdata[n];
 					}
-					/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXŒvŽZ */
+					/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®— */
 					else if(rc = GetJumpData( OutTbl.opdata[n] , adr ,OutTbl.byte ,&op , &opdat )) break;
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = (unsigned char)( op | opdat );
 					break;
-				/* ƒtƒ‰ƒO:”’l(16bit)JP/CAL–½—ß */
+				/* ãƒ•ãƒ©ã‚°:æ•°å€¤(16bit)JP/CALå‘½ä»¤ */
 				case F_IM16:
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = (unsigned char)( OutTbl.opdata[1] & 0xff );
 					OutTbl.code[2] = (unsigned char)( OutTbl.opdata[1] >> 8 );
 					break;
-				/* ”’l(16bit):‚È‚µ JP/CAL–½—ß  */
+				/* æ•°å€¤(16bit):ãªã— JP/CALå‘½ä»¤  */
 				case IM16_NU:
-					/* ƒIƒyƒ‰ƒ“ƒhƒR[ƒho—Í */
+					/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 					OutTbl.code[1] = codetbl[OutTbl.idx].secop |(unsigned char)( OutTbl.opdata[0] & 0xff );
 					OutTbl.code[2] = (unsigned char)( OutTbl.opdata[0] >> 8 );
 					break;
@@ -1423,7 +1423,7 @@ unsigned short op,opdat,sts,adr;
 			}
 			break;
 		}
-		/* ƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒXXV */
+		/* ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹æ›´æ–° */
 		adr += OutTbl.byte;
 	}
 
@@ -1432,25 +1432,25 @@ unsigned short op,opdat,sts,adr;
 /**********************************************************************/
 /*   GetJumpData : Get Jump Address data                              */
 /*                                                                    */
-/*   ˆ—    : ‘Š‘ÎƒWƒƒƒ“ƒv”’lƒf[ƒ^‚ðŽæ“¾‚·‚é                       */
-/*   “ü—Í    : •¶Žš—ñƒ|ƒCƒ“ƒ^Aƒf[ƒ^ƒ|ƒCƒ“ƒ^                         */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—æ•°å€¤ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹                       */
+/*   å…¥åŠ›    : æ–‡å­—åˆ—ãƒã‚¤ãƒ³ã‚¿ã€ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ã‚¿                         */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int GetJumpData( unsigned short jadr , unsigned short adr  , unsigned short byte ,unsigned short *op ,unsigned short *opdat )
 {
-	/* ‘Š‘ÎƒWƒƒƒ“ƒvƒAƒhƒŒƒXŒvŽZ */
+	/* ç›¸å¯¾ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹è¨ˆç®— */
 	if ( jadr > adr ){
-		/* {ƒWƒƒƒ“ƒv */
+		/* ï¼‹ã‚¸ãƒ£ãƒ³ãƒ— */
 		*opdat = jadr - ( adr + ( byte - 1 ));
 		*op = 0;
 	}
 	else{
-		/* |ƒWƒƒƒ“ƒv */
+		/* ï¼ã‚¸ãƒ£ãƒ³ãƒ— */
 		*opdat = ( adr + ( byte - 1 ) ) - jadr;
 		*op = 0x80;
 	}
-	/* ƒWƒƒƒ“ƒvƒAƒhƒŒƒXƒI[ƒo[ */
+	/* ã‚¸ãƒ£ãƒ³ãƒ—ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚ªãƒ¼ãƒãƒ¼ */
 	if ( *opdat >= IM7bit ) return JOFLOW;
 
 	return NORM;
@@ -1458,27 +1458,27 @@ int GetJumpData( unsigned short jadr , unsigned short adr  , unsigned short byte
 /**********************************************************************/
 /*   GetLine : Get Source Line                                        */
 /*                                                                    */
-/*   ˆ—    : ƒ\[ƒXƒtƒ@ƒCƒ‹‚©‚ç‚Ps•ª‚Ì•¶Žš—ñ‚ðŽæ“¾‚·‚é             */
-/*   “ü—Í    : ƒ\[ƒXƒtƒ@ƒCƒ‹–¼                                       */
-/*   “ü—Í    : “ü—Íƒtƒ@ƒCƒ‹‚h‚cAo—Íƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^                 */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«ã‹ã‚‰ï¼‘è¡Œåˆ†ã®æ–‡å­—åˆ—ã‚’å–å¾—ã™ã‚‹             */
+/*   å…¥åŠ›    : ã‚½ãƒ¼ã‚¹ãƒ•ã‚¡ã‚¤ãƒ«å                                       */
+/*   å…¥åŠ›    : å…¥åŠ›ãƒ•ã‚¡ã‚¤ãƒ«ï¼©ï¼¤ã€å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿                 */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int GetLine( FILE *fd ,char *buff )
 {
 int	sts;
 int	i;
-	/* 1sI—¹‚Ü‚ÅŽæ‚èo‚· */
+	/* 1è¡Œçµ‚äº†ã¾ã§å–ã‚Šå‡ºã™ */
 	for( i = 0 ; i < MAXLINE ; i++ ){
-		/* 1•¶ŽšŽæ‚èo‚µ */
+		/* 1æ–‡å­—å–ã‚Šå‡ºã— */
 		sts = fgetc( fd );
 		switch ( sts ){
 		case '\r':
 			break;
-		/* ‚PsI‚í‚è */
+		/* ï¼‘è¡Œçµ‚ã‚ã‚Š */
 		case '\n':
 			return NORM;
-		/* ƒtƒ@ƒCƒ‹I—¹ */
+		/* ãƒ•ã‚¡ã‚¤ãƒ«çµ‚äº† */
 		case 0x1a:
 		case EOF:
 			return EOFERR;
@@ -1493,28 +1493,28 @@ int	i;
 /**********************************************************************/
 /*   GetParam : Get Parameter String                                  */
 /*                                                                    */
-/*   ˆ—    : Šeƒpƒ‰ƒ[ƒ^•¶Žš—ñ‚ðŽæ“¾‚·‚é                           */
-/*   “ü—Í    : sƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^                                     */
-/*   o—Í    : ƒGƒ‰[î•ñi0:‚ ‚èA0ˆÈŠO:ŠY“–•¶Žš—ñ‚È‚µj             */
+/*   å‡¦ç†    : å„ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ–‡å­—åˆ—ã‚’å–å¾—ã™ã‚‹                           */
+/*   å…¥åŠ›    : è¡Œãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿                                     */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:ã‚ã‚Šã€0ä»¥å¤–:è©²å½“æ–‡å­—åˆ—ãªã—ï¼‰             */
 /*                                                                    */
 /**********************************************************************/
 /* 
- ˆ—F—^‚¦‚ç‚ê‚½ƒ[ƒNƒoƒbƒtƒ@“à‚Ì•¶Žš—ñ‚ðƒpƒ‰ƒ[ƒ^–ˆ‚É•ª‰ð‚µ‚ÄOutTbl‚É“o˜^‚·‚éB
-       ˆ—ŠT—v‚ÍˆÈ‰º‚Ì’Ê‚èB
-      (1)sæ“ª‚É‚ ‚éƒ^ƒu^ƒXƒy[ƒX‚Ííœ‚·‚éB
-      (2)Å‰‚Ì•¶Žš—ñ‚ÉƒRƒƒ“[:]‚ðŒŸo‚·‚é‚Æƒ‰ƒxƒ‹‚Æ‚µ‚ÄŠi”[‚·‚éB
-      (3)ƒjƒ‚ƒjƒbƒN“o˜^’†‚É[&]¤[$]¤[(]¤ƒ^ƒu¤ƒXƒy[ƒX‚ðŒŸo‚·‚é‚Æ‰üs‚µ‚ÄƒIƒyƒ‰ƒ“ƒh‚Æ‚µ‚ÄŠi”[‚·‚éB
-      (4)•¶Žš—ñ‚Ìæ“ªˆÈŠO‚ÉƒJƒ“ƒ}[,]‚ðŒŸo‚·‚é‚Æ‰üsiƒCƒ“ƒfƒbƒNƒX‚ðXVj‚·‚éB
-      (5)•¶Žš—ñæ“ª‚à‚µ‚­‚ÍAŠ‡ŒÊ“à[( ` )]‚É‹Lq‚³‚ê‚½ƒ^ƒu^ƒXƒy[ƒX‚Í‹l‚ß‚ÄŠi”[‚·‚éB
-       iƒ^ƒu^ƒXƒy[ƒX‚ÍŠî–{“I‚ÉŠi”[‚µ‚È‚¢j
-        ‚½‚¾‚µA‘æ3ƒIƒyƒ‰ƒ“ƒhˆÈ~AJRƒ^ƒO‚ðŒŸo‚µ‚½ê‡‚Í¤ƒXƒy[ƒX‚ð1‚Â‚¾‚¯‘}“ü‚·‚éB
-      (6)ƒ_ƒuƒ‹ƒR[ƒe[ƒVƒ‡ƒ“["]‚ðŒŸo‚·‚é‚ÆAŽŸ‚É["]‚ª“oê‚·‚é‚©s––‚Ü‚Å‚»‚Ì‚Ü‚ÜŠi”[‚·‚éB
-      (7)ƒZƒ~ƒRƒƒ“[;]‚ðŒŸo‚·‚é‚ÆA‚»‚êˆÈ~As––‚Ü‚Å‚ðƒRƒƒ“ƒg‚Æ‚µ‚Ä“o˜^‚·‚éB
-        ‚½‚¾‚µƒ_ƒuƒ‹ƒR[ƒe[ƒVƒ‡ƒ“’†‚Í‚»‚Ì‚Ü‚Ü“o˜^‚·‚éB
-      (8)KC•ûŽ®‘Î‰ž‚ÅA•¶Žš—ñæ“ªˆÈŠO‚ÌŠ‡ŒÊ[(]‚ðŒŸoŽž‚É‘O‚Ì•¶Žš‚ª[!+-*^”|^%,($]ˆÈŠO‚Ìê‡A
-         ‰üs‚·‚éB‚±‚ÌŽžAKCƒtƒ‰ƒO‚ðON‚É‚·‚éB(ƒjƒ‚ƒjƒbƒN•ÏŠ·‚Ì‘Ã“–«‚ðƒ`ƒFƒbƒN‚·‚éˆ×j
-      (9)ƒVƒ“ƒOƒ‹ƒR[ƒe[ƒVƒ‡ƒ“[']‚ðŒŸo‚·‚é‚ÆAŽŸ‚É[']‚ª“oê‚·‚é‚©s––‚Ü‚Å‚»‚Ì‚Ü‚ÜŠi”[‚·‚éB
-         ƒ_ƒuƒ‹ƒR[ƒe[ƒVƒ‡ƒ“‚Æ‚Í”r‘¼“®ì‚·‚éB
+ å‡¦ç†ï¼šä¸Žãˆã‚‰ã‚ŒãŸãƒ¯ãƒ¼ã‚¯ãƒãƒƒãƒ•ã‚¡å†…ã®æ–‡å­—åˆ—ã‚’ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿æ¯Žã«åˆ†è§£ã—ã¦OutTblã«ç™»éŒ²ã™ã‚‹ã€‚
+       å‡¦ç†æ¦‚è¦ã¯ä»¥ä¸‹ã®é€šã‚Šã€‚
+      (1)è¡Œå…ˆé ­ã«ã‚ã‚‹ã‚¿ãƒ–ï¼ã‚¹ãƒšãƒ¼ã‚¹ã¯å‰Šé™¤ã™ã‚‹ã€‚
+      (2)æœ€åˆã®æ–‡å­—åˆ—ã«ã‚³ãƒ­ãƒ³[:]ã‚’æ¤œå‡ºã™ã‚‹ã¨ãƒ©ãƒ™ãƒ«ã¨ã—ã¦æ ¼ç´ã™ã‚‹ã€‚
+      (3)ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç™»éŒ²ä¸­ã«[&]ï½¤[$]ï½¤[(]ï½¤ã‚¿ãƒ–ï½¤ã‚¹ãƒšãƒ¼ã‚¹ã‚’æ¤œå‡ºã™ã‚‹ã¨æ”¹è¡Œã—ã¦ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã¨ã—ã¦æ ¼ç´ã™ã‚‹ã€‚
+      (4)æ–‡å­—åˆ—ã®å…ˆé ­ä»¥å¤–ã«ã‚«ãƒ³ãƒž[,]ã‚’æ¤œå‡ºã™ã‚‹ã¨æ”¹è¡Œï¼ˆã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã‚’æ›´æ–°ï¼‰ã™ã‚‹ã€‚
+      (5)æ–‡å­—åˆ—å…ˆé ­ã‚‚ã—ãã¯ã€æ‹¬å¼§å†…[( ï½ž )]ã«è¨˜è¿°ã•ã‚ŒãŸã‚¿ãƒ–ï¼ã‚¹ãƒšãƒ¼ã‚¹ã¯è©°ã‚ã¦æ ¼ç´ã™ã‚‹ã€‚
+       ï¼ˆã‚¿ãƒ–ï¼ã‚¹ãƒšãƒ¼ã‚¹ã¯åŸºæœ¬çš„ã«æ ¼ç´ã—ãªã„ï¼‰
+        ãŸã ã—ã€ç¬¬3ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã€JRã‚¿ã‚°ã‚’æ¤œå‡ºã—ãŸå ´åˆã¯ï½¤ã‚¹ãƒšãƒ¼ã‚¹ã‚’1ã¤ã ã‘æŒ¿å…¥ã™ã‚‹ã€‚
+      (6)ãƒ€ãƒ–ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³["]ã‚’æ¤œå‡ºã™ã‚‹ã¨ã€æ¬¡ã«["]ãŒç™»å ´ã™ã‚‹ã‹è¡Œæœ«ã¾ã§ãã®ã¾ã¾æ ¼ç´ã™ã‚‹ã€‚
+      (7)ã‚»ãƒŸã‚³ãƒ­ãƒ³[;]ã‚’æ¤œå‡ºã™ã‚‹ã¨ã€ãã‚Œä»¥é™ã€è¡Œæœ«ã¾ã§ã‚’ã‚³ãƒ¡ãƒ³ãƒˆã¨ã—ã¦ç™»éŒ²ã™ã‚‹ã€‚
+        ãŸã ã—ãƒ€ãƒ–ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ä¸­ã¯ãã®ã¾ã¾ç™»éŒ²ã™ã‚‹ã€‚
+      (8)KCæ–¹å¼å¯¾å¿œã§ã€æ–‡å­—åˆ—å…ˆé ­ä»¥å¤–ã®æ‹¬å¼§[(]ã‚’æ¤œå‡ºæ™‚ã«å‰ã®æ–‡å­—ãŒ[!+-*ï¼ï¼ƒ|^%,($]ä»¥å¤–ã®å ´åˆã€
+         æ”¹è¡Œã™ã‚‹ã€‚ã“ã®æ™‚ã€KCãƒ•ãƒ©ã‚°ã‚’ONã«ã™ã‚‹ã€‚(ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯å¤‰æ›ã®å¦¥å½“æ€§ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ç‚ºï¼‰
+      (9)ã‚·ãƒ³ã‚°ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³[']ã‚’æ¤œå‡ºã™ã‚‹ã¨ã€æ¬¡ã«[']ãŒç™»å ´ã™ã‚‹ã‹è¡Œæœ«ã¾ã§ãã®ã¾ã¾æ ¼ç´ã™ã‚‹ã€‚
+         ãƒ€ãƒ–ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ã¨ã¯æŽ’ä»–å‹•ä½œã™ã‚‹ã€‚
 */
 int GetParam( char *buff )
 {
@@ -1524,105 +1524,105 @@ int label;
 int kakko;
 int dq,sq;
 char *Opr;
-	/* ƒIƒyƒ‰ƒ“ƒhƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^‰Šú‰» */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿åˆæœŸåŒ– */
 	OutTbl.opr[0] = OutTbl.line;
 	Opr = OutTbl.line;
 
-	/* 1sI—¹‚Ü‚ÅŽæ‚èo‚· */
+	/* 1è¡Œçµ‚äº†ã¾ã§å–ã‚Šå‡ºã™ */
 	len = strlen( buff );
 	for(  j = 0 , n = 0 ,label = 0,kakko = 0 ,dq = 0,sq = 0 ; ( n < MAXOPR )&&( j <len ) ; buff++ ){
 		switch ( *buff & 0xff ){
 		case ';':
-			/* ƒRƒƒ“ƒgŒŸo */
-			/* ƒR[ƒeƒVƒ‡ƒ“Žž */
+			/* ã‚³ãƒ¡ãƒ³ãƒˆæ¤œå‡º */
+			/* ã‚³ãƒ¼ãƒ†ã‚·ãƒ§ãƒ³æ™‚ */
 			if ( dq || sq ){
-				/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 				Opr[j++] = *buff;
 				break;
 			}
-			/* ƒRƒƒ“ƒgƒ|ƒCƒ“ƒ^Ý’è */
+			/* ã‚³ãƒ¡ãƒ³ãƒˆãƒã‚¤ãƒ³ã‚¿è¨­å®š */
 			OutTbl.comment = Opr+j+1;
-			/* Žc‚è‚Ì•¶Žš—ñ‚ðƒRƒƒ“ƒg‚Æ‚µ‚ÄŠi”[ */
+			/* æ®‹ã‚Šã®æ–‡å­—åˆ—ã‚’ã‚³ãƒ¡ãƒ³ãƒˆã¨ã—ã¦æ ¼ç´ */
 			memcpy( OutTbl.comment , buff , strlen(buff));
-			/* ƒGƒ“ƒgƒŠ‚Ì‚È‚¢ƒIƒyƒ‰ƒ“ƒhƒ|ƒCƒ“ƒ^‚ÍNULL‚É‚·‚é */
+			/* ã‚¨ãƒ³ãƒˆãƒªã®ãªã„ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿ã¯NULLã«ã™ã‚‹ */
 			if (!j)	OutTbl.opr[n] = 0;
 			return NORM;
 		case '\n':
 		case 0x0:
-			/* ‰üsŒŸo‚ÅI—¹ */
-			/* Š‡ŒÊ‚¨‚æ‚ÑƒR[ƒe[ƒVƒ‡ƒ“ˆ—’†‚È‚çƒGƒ‰[ */
+			/* æ”¹è¡Œæ¤œå‡ºã§çµ‚äº† */
+			/* æ‹¬å¼§ãŠã‚ˆã³ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†ä¸­ãªã‚‰ã‚¨ãƒ©ãƒ¼ */
 			if ( kakko || dq || sq ){
 				return ILLDQUO;
 			}
-			/* ƒGƒ“ƒgƒŠ‚Ì‚È‚¢ƒIƒyƒ‰ƒ“ƒhƒ|ƒCƒ“ƒ^‚ÍNULL‚É‚·‚é */
+			/* ã‚¨ãƒ³ãƒˆãƒªã®ãªã„ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿ã¯NULLã«ã™ã‚‹ */
 			if (!j) OutTbl.opr[n] = 0;
 			return NORM;
 		case ':':
-			/* ƒR[ƒeƒVƒ‡ƒ“/Š‡ŒÊ“à */
+			/* ã‚³ãƒ¼ãƒ†ã‚·ãƒ§ãƒ³/æ‹¬å¼§å†… */
 			if ( dq || sq || kakko ){
-				/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 				Opr[j++]=*buff;
 				break;
 			}
-			/* ƒ‰ƒxƒ‹Žæ‚èo‚µ */
+			/* ãƒ©ãƒ™ãƒ«å–ã‚Šå‡ºã— */
 			if ( !label && !n ){
-				/* ƒ‰ƒxƒ‹‚ð“o˜^‚·‚é */
+				/* ãƒ©ãƒ™ãƒ«ã‚’ç™»éŒ²ã™ã‚‹ */
 				if ( j > MAXNAME ) return LBOFLOW;
 				OutTbl.label = Opr;
-				/* Ši”[ƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^‚ðXV‚·‚é */
+				/* æ ¼ç´ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿ã‚’æ›´æ–°ã™ã‚‹ */
 				Opr += j + 1;
 				OutTbl.opr[0] = Opr;
 				j = 0;
 				label++;
 				break;
 			}
-			/* ‚Qdƒ‰ƒxƒ‹‚ÍƒGƒ‰[I—¹ */
+			/* ï¼’é‡ãƒ©ãƒ™ãƒ«ã¯ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 			else if (!n) return ILLLBL;
 			return ILLOPR;
 		case ',':
-			/* s‚Ì“r’†‚ÅƒJƒ“ƒ}ŒŸo */
+			/* è¡Œã®é€”ä¸­ã§ã‚«ãƒ³ãƒžæ¤œå‡º */
 			if ( !dq && !sq && j ){
-				/* ‰üs‚·‚é */
+				/* æ”¹è¡Œã™ã‚‹ */
 				Opr += j + 1;
 				OutTbl.opr[++n] = Opr;
 				j = 0;
 			}
-			/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+			/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 			Opr[j++]=*buff;
 			break;
 		case ')':
-			/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+			/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 			Opr[j++]=*buff;
-			/* ƒR[ƒeƒVƒ‡ƒ“Žž */
+			/* ã‚³ãƒ¼ãƒ†ã‚·ãƒ§ãƒ³æ™‚ */
 			if ( dq || sq ) break;
-			/* ‚Æ‚¶Š‡ŒÊŒŸo */
+			/* ã¨ã˜æ‹¬å¼§æ¤œå‡º */
 			if ( kakko ){
 				kakko--;
 				break;
 			}
-			/* ƒGƒ‰[I—¹ */
+			/* ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 			else return ILLDQUO;
 #if SJIS_SPACE
 		case 0x81:
-			/* ‘SŠpƒXƒy[ƒX‚Å‚Í‚È‚¢ */
+			/* å…¨è§’ã‚¹ãƒšãƒ¼ã‚¹ã§ã¯ãªã„ */
 			if ( buff[1] != 0x40 ){
-				/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 				Opr[j++]=*buff;
 				break;
 			}
-			/* ƒR[ƒe[ƒVƒ‡ƒ““à‚Í“o˜^‚·‚é */
+			/* ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å†…ã¯ç™»éŒ²ã™ã‚‹ */
 			if ( dq||sq ){
-				/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 				Opr[j++]=*buff;
 				break;
 			}
-			/* ƒ|ƒCƒ“ƒ^XV */
+			/* ãƒã‚¤ãƒ³ã‚¿æ›´æ–° */
 			buff++;
-			/* •¶Žš—ñæ“ª‚©Š‡ŒÊ“à‚È‚ç“Ç‚Ý”ò‚Î‚· */
+			/* æ–‡å­—åˆ—å…ˆé ­ã‹æ‹¬å¼§å†…ãªã‚‰èª­ã¿é£›ã°ã™ */
 			if ( !j ) break;
-			/* ƒjƒ‚ƒjƒbƒN“o˜^’†‚È‚ç‚ÎA‰üs‚·‚é */
+			/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç™»éŒ²ä¸­ãªã‚‰ã°ã€æ”¹è¡Œã™ã‚‹ */
 			if ( !n ){
-				/* ‰üs‚·‚é */
+				/* æ”¹è¡Œã™ã‚‹ */
 				Opr += j + 1;
 				OutTbl.opr[++n] = Opr;
 				j = 0;
@@ -1631,87 +1631,87 @@ char *Opr;
 #endif
 		case 0x20:
 		case '\t':
-			/* ‘æ‚QƒIƒyƒ‰ƒ“ƒhˆÈ~‚Å‚©‚ÂAJRƒ^ƒO‚Å‚ ‚é */
+			/* ç¬¬ï¼’ã‚ªãƒšãƒ©ãƒ³ãƒ‰ä»¥é™ã§ã‹ã¤ã€JRã‚¿ã‚°ã§ã‚ã‚‹ */
 			if ( (n >= 2)&&( j == 3 )&&
 				( !strcmp( &Opr[0],",jr" )||!strcmp( &Opr[0],",JR" ) ) ){
-				/* ƒXƒy[ƒX‚Æ‚µ‚Ä“o˜^‚·‚é */
+				/* ã‚¹ãƒšãƒ¼ã‚¹ã¨ã—ã¦ç™»éŒ²ã™ã‚‹ */
 				Opr[j++] = 0x20;
 				break;
 			}
-			/* ƒR[ƒe[ƒVƒ‡ƒ““à‚Í“o˜^‚·‚é */
+			/* ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å†…ã¯ç™»éŒ²ã™ã‚‹ */
 			if ( dq || sq ){
-				/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 				Opr[j++]=*buff;
 				break;
 			}
-			/* •¶Žš—ñæ“ª‚©Š‡ŒÊ“à‚È‚ç“Ç‚Ý”ò‚Î‚· */
+			/* æ–‡å­—åˆ—å…ˆé ­ã‹æ‹¬å¼§å†…ãªã‚‰èª­ã¿é£›ã°ã™ */
 			if ( !j ) break;
-			/* ƒjƒ‚ƒjƒbƒN“o˜^’†‚È‚ç‚ÎA‰üs‚·‚é */
+			/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç™»éŒ²ä¸­ãªã‚‰ã°ã€æ”¹è¡Œã™ã‚‹ */
 			if ( !n ){
-				/* ‰üs‚·‚é */
+				/* æ”¹è¡Œã™ã‚‹ */
 				Opr += j + 1;
 				OutTbl.opr[++n] = Opr;
 				j = 0;
 			}
 			break;
-		/* ƒVƒ“ƒOƒ‹ƒR[ƒe[ƒVƒ‡ƒ“ƒ}[ƒNŒŸo */
+		/* ã‚·ãƒ³ã‚°ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ãƒžãƒ¼ã‚¯æ¤œå‡º */
 		case 0x27:
-			/* ƒ_ƒuƒ‹ƒR[ƒe[ƒVƒ‡ƒ“’†‚È‚çAƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+			/* ãƒ€ãƒ–ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ä¸­ãªã‚‰ã€ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 			if ( dq ){
 				Opr[j++]=*buff;
 				break;
 			}
-			/* ƒVƒ“ƒOƒ‹ƒR[ƒe[ƒVƒ‡ƒ“ƒ}[ƒN‰ŒŸo */
+			/* ã‚·ãƒ³ã‚°ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ãƒžãƒ¼ã‚¯åˆæ¤œå‡º */
 			if ( !sq ){
 				sq++;
-				/* æ“ªƒIƒyƒ‰ƒ“ƒh‚Å‚ ‚é */
+				/* å…ˆé ­ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã§ã‚ã‚‹ */
 				if ( j && !n ){
-					/* ‰üs‚·‚é */
+					/* æ”¹è¡Œã™ã‚‹ */
 					Opr += j + 1;
 					OutTbl.opr[++n] = Opr;
 					j = 0;
 				}
-				/* ƒpƒ‰ƒ[ƒ^“o˜^ */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ² */
 				Opr[j++]=*buff;
 			}
 			else{
 				sq--;
-				/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 				Opr[j++]=*buff;
 			}
 			break;
 		case 0x22:
-			/* ƒVƒ“ƒOƒ‹ƒR[ƒe[ƒVƒ‡ƒ“’†‚È‚çAƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+			/* ã‚·ãƒ³ã‚°ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ä¸­ãªã‚‰ã€ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 			if ( sq ){
 				Opr[j++]=*buff;
 				break;
 			}
-			/* ƒ_ƒuƒ‹ƒR[ƒe[ƒVƒ‡ƒ“ƒ}[ƒN‰ŒŸo */
+			/* ãƒ€ãƒ–ãƒ«ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ãƒžãƒ¼ã‚¯åˆæ¤œå‡º */
 			if ( !dq ){
 				dq++;
-				/* æ“ªƒIƒyƒ‰ƒ“ƒh‚Å‚ ‚é */
+				/* å…ˆé ­ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã§ã‚ã‚‹ */
 				if ( j && !n ){
-					/* ‰üs‚·‚é */
+					/* æ”¹è¡Œã™ã‚‹ */
 					Opr += j + 1;
 					OutTbl.opr[++n] = Opr;
 					j = 0;
 				}
-				/* ƒpƒ‰ƒ[ƒ^“o˜^ */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ² */
 				Opr[j++]=*buff;
 			}
 			else{
 				dq--;
-				/* ƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+				/* ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 				Opr[j++]=*buff;
 			}
 			break;
 		case '(':
-			/* Š‡ŒÊŒŸo */
+			/* æ‹¬å¼§æ¤œå‡º */
 			if ( !dq && !sq ) kakko++;
-			/* ‚P‚Â‘O‚Ì•¶Žš‚ª‰‰ŽZŽq‚¨‚æ‚ÑƒJƒ“ƒ}ˆÈŠO‚ÌŽžA‰üs‚·‚é(KC‘Î‰ž) */
+			/* ï¼‘ã¤å‰ã®æ–‡å­—ãŒæ¼”ç®—å­ãŠã‚ˆã³ã‚«ãƒ³ãƒžä»¥å¤–ã®æ™‚ã€æ”¹è¡Œã™ã‚‹(KCå¯¾å¿œ) */
 			if ( n && j && !dq && !sq ){
 				if ( !strchr( "!+-*/#|^%=<>,($&" , Opr[j-1] ) ){
-					/* KC•ûŽ®ƒtƒ‰ƒOƒZƒbƒg */
+					/* KCæ–¹å¼ãƒ•ãƒ©ã‚°ã‚»ãƒƒãƒˆ */
 					OutTbl.kc = 1;
 					Opr += j + 1;
 					OutTbl.opr[++n] = Opr;
@@ -1722,70 +1722,70 @@ char *Opr;
 		case '-':
 		case '&':
 		case '$':
-			/* ‚±‚ê‚ç‚Ì•¶Žš‚ªæ“ªƒIƒyƒ‰ƒ“ƒh‚ÅŒŸo‚³‚ê‚½ê‡A‰üs‚·‚é */
+			/* ã“ã‚Œã‚‰ã®æ–‡å­—ãŒå…ˆé ­ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã§æ¤œå‡ºã•ã‚ŒãŸå ´åˆã€æ”¹è¡Œã™ã‚‹ */
 			if ( !n && !dq && !sq && j){
 				Opr += j + 1;
 				OutTbl.opr[++n] = Opr;
 				j = 0;
 			}
 		default:
-			/* ã‹LˆÈŠO‚Ìê‡Aƒpƒ‰ƒ[ƒ^“o˜^‚·‚é */
+			/* ä¸Šè¨˜ä»¥å¤–ã®å ´åˆã€ãƒ‘ãƒ©ãƒ¡ãƒ¼ã‚¿ç™»éŒ²ã™ã‚‹ */
 			Opr[j++]=*buff;
 			break;
 		}
-		/* Å‘åƒIƒyƒ‰ƒ“ƒh’·‚ð‰z‚¦‚½ê‡Aˆ—I—¹ */
+		/* æœ€å¤§ã‚ªãƒšãƒ©ãƒ³ãƒ‰é•·ã‚’è¶ŠãˆãŸå ´åˆã€å‡¦ç†çµ‚äº† */
 		if ( j >= MAXLEN ) return OPOFLOW;
 	}
-	/* Š‡ŒÊ‚¨‚æ‚ÑƒR[ƒe[ƒVƒ‡ƒ“ˆ—’†‚È‚çƒGƒ‰[ */
+	/* æ‹¬å¼§ãŠã‚ˆã³ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³å‡¦ç†ä¸­ãªã‚‰ã‚¨ãƒ©ãƒ¼ */
 	if ( kakko || dq || sq ) return ILLDQUO;
 
-	/* ³íI—¹ */
+	/* æ­£å¸¸çµ‚äº† */
 	return NORM;
 }
 
 /**********************************************************************/
 /*   GetOprKind : Get Opecode kind                                    */
 /*                                                                    */
-/*   ˆ—    : —^‚¦‚ç‚ê‚½•¶Žš—ñ‚ðŠeŽíƒIƒyƒR[ƒh‚É•ª‰ð‚·‚é             */
-/*   “ü—Í    : “ü—Íƒ|ƒCƒ“ƒ^AƒIƒyƒR[ƒhŽí•Ê                           */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[j                     */
+/*   å‡¦ç†    : ä¸Žãˆã‚‰ã‚ŒãŸæ–‡å­—åˆ—ã‚’å„ç¨®ã‚ªãƒšã‚³ãƒ¼ãƒ‰ã«åˆ†è§£ã™ã‚‹             */
+/*   å…¥åŠ›    : å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿ã€ã‚ªãƒšã‚³ãƒ¼ãƒ‰ç¨®åˆ¥                           */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ï¼‰                     */
 /*                                                                    */
 /**********************************************************************/
 int GetOprKind( int num , char * buff , unsigned short * kind , unsigned short * data )
 {
 int rc;
 unsigned short op,sts;
-char mnwk[MAXMN];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
+char mnwk[MAXMN];	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯å¤‰æ›ç”¨ãƒ¯ãƒ¼ã‚¯ */
 
-	/* Ží•Êî•ñ‰Šú‰» */
+	/* ç¨®åˆ¥æƒ…å ±åˆæœŸåŒ– */
 	*kind = 0;
 	*data = 0;
-	/* —v‹•¶Žš—ñƒGƒ“ƒgƒŠ‚ª‚È‚¢ê‡AƒGƒ‰[I—¹ */
+	/* è¦æ±‚æ–‡å­—åˆ—ã‚¨ãƒ³ãƒˆãƒªãŒãªã„å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 	if ( !buff[0] ) return NOENT;
 
-	/* •¶ŽšƒR[ƒh•ÏŠ·(Null‚È‚çƒGƒ‰[I—¹) */
+	/* æ–‡å­—ã‚³ãƒ¼ãƒ‰å¤‰æ›(Nullãªã‚‰ã‚¨ãƒ©ãƒ¼çµ‚äº†) */
 	if(!( ChgCode( oprwk , buff ) ) ) return NOENT;
 
-	/* JRƒ^ƒO‚Å‚ ‚é */
+	/* JRã‚¿ã‚°ã§ã‚ã‚‹ */
 	if( !memcmp(oprwk,"JR ", 3 ) ){
-		/* ŒvŽZŽ®‚Æ‚µ‚Äˆ—‚·‚é */
+		/* è¨ˆç®—å¼ã¨ã—ã¦å‡¦ç†ã™ã‚‹ */
 		rc = GetCalcData( &buff[3] , kind , data );
 		return rc;
 	}
-	/* ƒIƒyƒ‰ƒ“ƒh1‚ÌŽž‚Ì‚Ýƒ`ƒFƒbƒN‚·‚é */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰1ã®æ™‚ã®ã¿ãƒã‚§ãƒƒã‚¯ã™ã‚‹ */
 	if ( num==1 ){
-		/* “à•”ƒŒƒWƒXƒ^Žw’è‚Å‚ ‚é */
+		/* å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®šã§ã‚ã‚‹ */
 		if ( !GetIRegKind( buff , &op ) ){
 			*kind = op;
 			return NORM;
 		}
-		/* ƒtƒ‰ƒOŽw’è‚Å‚ ‚é */
+		/* ãƒ•ãƒ©ã‚°æŒ‡å®šã§ã‚ã‚‹ */
 		if ( !GetFlagKind( buff , &op ) ){
 			*kind = op;
 			return NORM;
 		}
 	}
-	/* ƒƒCƒ“ƒŒƒWƒXƒ^Žw’è‚Å‚ ‚é */
+	/* ãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®šã§ã‚ã‚‹ */
 	if ( !( rc = GetReg( buff , &sts ) ) ){
 		*data = sts;
 		switch( sts ){
@@ -1796,29 +1796,29 @@ char mnwk[MAXMN];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
 		}
 		return NORM;
 	}
-	/* ƒIƒyƒ‰ƒ“ƒh‹Lq‚ªƒƒCƒ“ƒŒƒWƒXƒ^Žw’èˆÈŠO */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰è¨˜è¿°ãŒãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®šä»¥å¤– */
 	if ( rc != ILLOPR ) return rc;
-	/* ƒƒ‚ƒŠƒCƒ“ƒfƒbƒNƒXŽw’è‚Å‚ ‚é */
+	/* ãƒ¡ãƒ¢ãƒªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®šã§ã‚ã‚‹ */
 	if ( !( rc = GetIndexKind( buff , &op , &sts ) ) ){
 		*data = sts;
 		*kind = op;
 		return NORM;
 	}
-	/* ƒIƒyƒ‰ƒ“ƒh‹Lq‚ªƒCƒ“ƒfƒbƒNƒXŽw’èˆÈŠO */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰è¨˜è¿°ãŒã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®šä»¥å¤– */
 	if ( rc != ILLOPR ) return rc;
-	/* JR–½—ß‚Å‚ ‚é */
+	/* JRå‘½ä»¤ã§ã‚ã‚‹ */
 	ChgCode( mnwk , OutTbl.opr[0] );
 	if ( !strcmp( mnwk , "JR" ) ){
-		/* }IM7Œ`Ž®‚Å‚ ‚é */
+		/* Â±IM7å½¢å¼ã§ã‚ã‚‹ */
 		if( (buff[0]=='+')||(buff[0]=='-') ){
 			OutTbl.pm7 = 1;
 			if (buff[0]=='-')
 				OutTbl.pm7 = 2;
-			/* ƒ|ƒCƒ“ƒ^XV */
+			/* ãƒã‚¤ãƒ³ã‚¿æ›´æ–° */
 			buff++;
 		}
 	}
-	/* ŒvŽZŽ®‚Æ‚µ‚Äˆ—‚·‚é */
+	/* è¨ˆç®—å¼ã¨ã—ã¦å‡¦ç†ã™ã‚‹ */
 	if ( !( rc = GetCalcData( buff , kind , data ) ) ) return NORM;
 	return rc;
 }
@@ -1826,10 +1826,10 @@ char mnwk[MAXMN];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
 /**********************************************************************/
 /*   GetIndexKind : Get Memory Index Kind                             */
 /*                                                                    */
-/*   ˆ—    : ƒƒ‚ƒŠƒCƒ“ƒfƒbƒNƒXŽí•Ê‚ðŽæ“¾‚·‚é                       */
-/*   “ü—Í    : “ü—Íƒ|ƒCƒ“ƒ^AƒIƒyƒR[ƒhŽí•Ê                           */
-/*   o—Í    : ƒjƒ‚ƒjƒbƒNŽí•Ê(kind/opr)                               */
-/*           : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ãƒ¡ãƒ¢ãƒªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç¨®åˆ¥ã‚’å–å¾—ã™ã‚‹                       */
+/*   å…¥åŠ›    : å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿ã€ã‚ªãƒšã‚³ãƒ¼ãƒ‰ç¨®åˆ¥                           */
+/*   å‡ºåŠ›    : ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥(kind/opr)                               */
+/*           : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int GetIndexKind( char * buff , unsigned short * kind , unsigned short * data )
@@ -1838,12 +1838,12 @@ int	i,len,rc;
 unsigned short opr,sts,knd;
 char Indexwk[6];
 
-	/* ƒƒ‚ƒŠƒCƒ“ƒfƒbƒNƒXŽw’è‚Å‚ ‚é */
+	/* ãƒ¡ãƒ¢ãƒªã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹æŒ‡å®šã§ã‚ã‚‹ */
 	len = strlen( buff );
 	memcpy( oprwk , buff , len );
 	if ( ( oprwk[0] == '(' )&&( oprwk[len-1] == ')' ) ){
 		oprwk[len-1] = 0;
-		/* ƒƒCƒ“ƒŒƒWƒXƒ^‚É‚æ‚éƒCƒ“ƒfƒbƒNƒX‚Å‚ ‚é */
+		/* ãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ã«ã‚ˆã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã§ã‚ã‚‹ */
 		if ( !( rc = GetReg( &oprwk[1] , &sts ) ) ){
 			*data = sts;
 			switch(sts){
@@ -1854,17 +1854,17 @@ char Indexwk[6];
 			}
 			return NORM;
 		}
-		/* ƒIƒyƒ‰ƒ“ƒh‹Lq‚ªƒƒCƒ“ƒŒƒWƒXƒ^Žw’èˆÈŠO */
+		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰è¨˜è¿°ãŒãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®šä»¥å¤– */
 		if ( rc != ILLOPR ) return rc;
-		/* ƒCƒ“ƒfƒbƒNƒXŽí•Ê‚ðƒT[ƒ`‚·‚é */
+		/* ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ç¨®åˆ¥ã‚’ã‚µãƒ¼ãƒã™ã‚‹ */
 		memcpy( Indexwk , oprwk , 4 );
 		Indexwk[4] = 0;
-		/* ƒe[ƒuƒ‹ƒT[ƒ` */
+		/* ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µãƒ¼ãƒ */
 		for ( i = 0 ; i < MAXIDX ; i++ ){
-			/* IXAIZŽw’è‚Å‚ ‚é */
+			/* IXã€IZæŒ‡å®šã§ã‚ã‚‹ */
 			if (!strcmp( Indexwk , moprtbl[i].name )){
 				sts = moprtbl[i].code;
-				/* ƒƒCƒ“ƒŒƒWƒXƒ^‚É‚æ‚éƒCƒ“ƒfƒbƒNƒX‚Å‚ ‚é */
+				/* ãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿ã«ã‚ˆã‚‹ã‚¤ãƒ³ãƒ‡ãƒƒã‚¯ã‚¹ã§ã‚ã‚‹ */
 				if ( !( rc = GetReg( &oprwk[4] , &opr ) ) ){
 					*data = opr;
 					switch(opr){
@@ -1875,11 +1875,11 @@ char Indexwk[6];
 					}
 					return NORM;
 				}
-				/* ƒIƒyƒ‰ƒ“ƒh‹Lq‚ªƒƒCƒ“ƒŒƒWƒXƒ^Žw’èˆÈŠO */
+				/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰è¨˜è¿°ãŒãƒ¡ã‚¤ãƒ³ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®šä»¥å¤– */
 				if ( rc != ILLOPR ) return rc;
-				/* ŒvŽZŽ®‚Æ‚µ‚Äˆ—‚·‚é */
+				/* è¨ˆç®—å¼ã¨ã—ã¦å‡¦ç†ã™ã‚‹ */
 				if ( !( rc = GetCalcData( &oprwk[4] , &knd , &opr ) ) ){
-					/* ”ÍˆÍŠO‚Ì’l‚Å‚ ‚é */
+					/* ç¯„å›²å¤–ã®å€¤ã§ã‚ã‚‹ */
 					if ( opr > 255 ) return OFLOW;
 					*data = opr;
 					*kind = sts|knd;
@@ -1889,122 +1889,122 @@ char Indexwk[6];
 			}
 		}
 	}
-	/* ŠY“–‚È‚µ */
+	/* è©²å½“ãªã— */
 	return ILLOPR;
 }
 /**********************************************************************/
 /*   GetIRegKind : Get Internal Register Kind                         */
 /*                                                                    */
-/*   ˆ—    : “à•”ƒŒƒWƒXƒ^Ží•Ê‚ðŽæ“¾‚·‚é                             */
-/*   “ü—Í    : “ü—Íƒ|ƒCƒ“ƒ^AƒIƒyƒR[ƒhŽí•Ê                           */
-/*   o—Í    : ƒjƒ‚ƒjƒbƒNŽí•Ê(kind)                                   */
-/*           : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿ç¨®åˆ¥ã‚’å–å¾—ã™ã‚‹                             */
+/*   å…¥åŠ›    : å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿ã€ã‚ªãƒšã‚³ãƒ¼ãƒ‰ç¨®åˆ¥                           */
+/*   å‡ºåŠ›    : ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥(kind)                                   */
+/*           : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int GetIRegKind( char * buff , unsigned short * kind )
 {
 int	i;
-char mnwk[MAXMN];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
+char mnwk[MAXMN];	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯å¤‰æ›ç”¨ãƒ¯ãƒ¼ã‚¯ */
 	i = 0;
-	/* ƒjƒ‚ƒjƒbƒNŽí•Êƒ`ƒFƒbƒN */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ */
 	ChgCode( mnwk , OutTbl.opr[0] );
-	/* “à•”ƒŒƒWƒXƒ^—˜—p–½—ßƒe[ƒuƒ‹ƒT[ƒ` */
+	/* å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿åˆ©ç”¨å‘½ä»¤ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µãƒ¼ãƒ */
 	while( strcmp( mnwk , irtbl[i].name ) ){
-		/* ŠY“––½—ß‚Å‚Í–³‚¢ê‡Aˆ—I—¹ */
+		/* è©²å½“å‘½ä»¤ã§ã¯ç„¡ã„å ´åˆã€å‡¦ç†çµ‚äº† */
 		if ( ++i >= MAXIR ) return ILLOPR;
 	}
-	/* ƒIƒyƒ‰ƒ“ƒh’·‚Í³í‚Å‚ ‚é */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰é•·ã¯æ­£å¸¸ã§ã‚ã‚‹ */
 	if ( !strlen(buff) || strlen(buff)>MAXMN ) return ILLOPR;
-	/* ‘å•¶Žš‚É•ÏŠ·‚·‚é */
+	/* å¤§æ–‡å­—ã«å¤‰æ›ã™ã‚‹ */
 	ChgCode( mnwk , buff );
-	/* “à•”ƒŒƒWƒXƒ^ƒe[ƒuƒ‹ƒT[ƒ` */
+	/* å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µãƒ¼ãƒ */
 	for ( i = 0 ; i < MAXIREG ; i++ ){
 		if (!strcmp( mnwk , regtbl[i].name )){
-			/* “à•”ƒŒƒWƒXƒ^ƒR[ƒh‚ð•Ô‚· */
+			/* å†…éƒ¨ãƒ¬ã‚¸ã‚¹ã‚¿ã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™ */
 			*kind = regtbl[i].code;
 			return NORM;
 		}
 	}
-	/* ŠY“–‚È‚µ‚ð•Ô‚· */
+	/* è©²å½“ãªã—ã‚’è¿”ã™ */
 	return ILLOPR;
 }
 /**********************************************************************/
 /*   GetFlagKind : Get Flag Register Kind                             */
 /*                                                                    */
-/*   ˆ—    : ðŒƒtƒ‰ƒOŽí•Ê‚ðŽæ“¾‚·‚é                               */
-/*   “ü—Í    : “ü—Íƒ|ƒCƒ“ƒ^AƒIƒyƒR[ƒhŽí•Ê                           */
-/*   o—Í    : ƒjƒ‚ƒjƒbƒNŽí•Ê(kind)                                   */
-/*           : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : æ¡ä»¶ãƒ•ãƒ©ã‚°ç¨®åˆ¥ã‚’å–å¾—ã™ã‚‹                               */
+/*   å…¥åŠ›    : å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿ã€ã‚ªãƒšã‚³ãƒ¼ãƒ‰ç¨®åˆ¥                           */
+/*   å‡ºåŠ›    : ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥(kind)                                   */
+/*           : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int GetFlagKind( char * buff , unsigned short * kind )
 {
 int	i;
-char mnwk[MAXMN];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
+char mnwk[MAXMN];	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯å¤‰æ›ç”¨ãƒ¯ãƒ¼ã‚¯ */
 	i = 0;
-	/* ƒjƒ‚ƒjƒbƒNŽí•Êƒ`ƒFƒbƒN */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥ãƒã‚§ãƒƒã‚¯ */
 	ChgCode( mnwk , OutTbl.opr[0] );
-	/* ƒtƒ‰ƒO—˜—p–½—ßƒe[ƒuƒ‹ƒT[ƒ` */
+	/* ãƒ•ãƒ©ã‚°åˆ©ç”¨å‘½ä»¤ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µãƒ¼ãƒ */
 	while( strcmp( mnwk , fltbl[i].name ) ){
-		/* ŠY“––½—ß‚Å‚Í–³‚¢ê‡Aˆ—I—¹ */
+		/* è©²å½“å‘½ä»¤ã§ã¯ç„¡ã„å ´åˆã€å‡¦ç†çµ‚äº† */
 		if ( ++i >= MAXFL ) return ILLOPR;
 	}
-	/* ƒIƒyƒ‰ƒ“ƒh’·‚Í³í‚Å‚ ‚é */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰é•·ã¯æ­£å¸¸ã§ã‚ã‚‹ */
 	if ( !strlen(buff) || strlen(buff) > MAXMN ) return ILLOPR;
-	/* ‘å•¶Žš‚É•ÏŠ·‚·‚é */
+	/* å¤§æ–‡å­—ã«å¤‰æ›ã™ã‚‹ */
 	ChgCode( mnwk , buff );
-	/* ƒtƒ‰ƒOƒe[ƒuƒ‹ƒT[ƒ` */
+	/* ãƒ•ãƒ©ã‚°ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µãƒ¼ãƒ */
 	for ( i = 0 ; i < MAXFLAG ; i++ ){
 		if (!strcmp( mnwk , flagtbl[i].name )){
-			/* ƒtƒ‰ƒOƒR[ƒh‚ð•Ô‚· */
+			/* ãƒ•ãƒ©ã‚°ã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™ */
 			*kind = flagtbl[i].code;
 			return NORM;
 		}
 	}
-	/* ŠY“–‚È‚µ‚ð•Ô‚· */
+	/* è©²å½“ãªã—ã‚’è¿”ã™ */
 	return ILLOPR;
 }
 /**********************************************************************/
 /*   GetReg : Get Register Number                                     */
 /*                                                                    */
-/*   ˆ—    : —^‚¦‚ç‚ê‚½•¶Žš—ñ‚©‚çƒŒƒWƒXƒ^”Ô†‚ðŽæ“¾‚·‚é             */
-/*   “ü—Í    : “ü—Íƒ|ƒCƒ“ƒ^AƒIƒyƒR[ƒhŽí•Ê                           */
-/*   o—Í    : ƒŒƒWƒXƒ^”Ô†(data)                                     */
-/*           : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ä¸Žãˆã‚‰ã‚ŒãŸæ–‡å­—åˆ—ã‹ã‚‰ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·ã‚’å–å¾—ã™ã‚‹             */
+/*   å…¥åŠ›    : å…¥åŠ›ãƒã‚¤ãƒ³ã‚¿ã€ã‚ªãƒšã‚³ãƒ¼ãƒ‰ç¨®åˆ¥                           */
+/*   å‡ºåŠ›    : ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·(data)                                     */
+/*           : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int GetReg( char * buff , unsigned short * data )
 {
 unsigned short sts,kind;
 int rc;
-	/* ƒŒƒWƒXƒ^Žw’è‚Å‚ ‚é */
+	/* ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®šã§ã‚ã‚‹ */
 	if ( buff[0] == '$' ){
-		/* ƒŒƒWƒXƒ^”Ô†Žæ“¾ */
+		/* ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·å–å¾— */
 		if(!(rc = GetCalcData( &buff[1] , &kind , &sts ) )){
-			/* –¼Ì–¢‰ðŒˆ‚Ìê‡AƒGƒ‰[I—¹‚·‚é */
+			/* åç§°æœªè§£æ±ºã®å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº†ã™ã‚‹ */
 			if ( kind == LBLNG ) return LBLNOENT;
-			/* ƒŒƒWƒXƒ^”Ô†³í */
+			/* ãƒ¬ã‚¸ã‚¹ã‚¿ç•ªå·æ­£å¸¸ */
 			if ( sts <= 31 ){
 				*data = sts;
 				return NORM;
 			}
-			/* ƒGƒ‰[I—¹ */
+			/* ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 			*data = 0;
 			return REGERR;
 		}
 		else return rc;
 	}
-	/* ƒGƒ‰[I—¹ */
+	/* ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 	*data = 0;
-	/* ƒŒƒWƒXƒ^Žw’è‚Å‚Í‚È‚¢ */
+	/* ãƒ¬ã‚¸ã‚¹ã‚¿æŒ‡å®šã§ã¯ãªã„ */
 	return ILLOPR;
 }
 /**********************************************************************/
 /*   SetLabelTbl : Entry Label table                                  */
 /*                                                                    */
-/*   ˆ—    : ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚Éƒ‰ƒxƒ‹‚ÆƒAƒhƒŒƒX‚ð“o˜^‚·‚é             */
-/*   “ü—Í    : ƒ‰ƒxƒ‹ƒ|ƒCƒ“ƒ^A“o˜^ƒAƒhƒŒƒX’li0:ˆÈŠOj               */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ãƒ©ãƒ™ãƒ«ã¨ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ç™»éŒ²ã™ã‚‹             */
+/*   å…¥åŠ›    : ãƒ©ãƒ™ãƒ«ãƒã‚¤ãƒ³ã‚¿ã€ç™»éŒ²ã‚¢ãƒ‰ãƒ¬ã‚¹å€¤ï¼ˆ0:ä»¥å¤–ï¼‰               */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int SetLabelTbl( char * buff , unsigned short adr )
@@ -2012,37 +2012,37 @@ int SetLabelTbl( char * buff , unsigned short adr )
 LBL * Label;
 LBL * Labelwk;
 
-	/* æ“ªƒ‰ƒxƒ‹ƒ|ƒCƒ“ƒ^ƒZƒbƒg */
+	/* å…ˆé ­ãƒ©ãƒ™ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚»ãƒƒãƒˆ */
 	Label = LabelTbl;
 	while( Label ){
-		/* ŠY“–ƒ‰ƒxƒ‹–¼ŒŸõ */
+		/* è©²å½“ãƒ©ãƒ™ãƒ«åæ¤œç´¢ */
 		if (!strcmp( Label->name , buff )){
-			/* Šù‚É“¯‚¶–¼Ì‚ªŽg‚í‚ê‚Ä‚¢‚éê‡AƒGƒ‰[I—¹ */
+			/* æ—¢ã«åŒã˜åç§°ãŒä½¿ã‚ã‚Œã¦ã„ã‚‹å ´åˆã€ã‚¨ãƒ©ãƒ¼çµ‚äº† */
 			return DUPLBL;
 		}
-		/* ÅIƒ‰ƒxƒ‹ƒAƒhƒŒƒX“ž’B */
+		/* æœ€çµ‚ãƒ©ãƒ™ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹åˆ°é” */
 		if ( !Label->np ) break;
-		/* ƒ‰ƒxƒ‹ƒ|ƒCƒ“ƒ^XV */
+		/* ãƒ©ãƒ™ãƒ«ãƒã‚¤ãƒ³ã‚¿æ›´æ–° */
 		Label = Label->np;
 	}
-	/* ƒ‰ƒxƒ‹ƒe[ƒuƒ‹Šm•Û */
+	/* ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ç¢ºä¿ */
 	if ( Labelwk = malloc( sizeof(LBL)+strlen(buff) ) ){
 		memset( Labelwk , 0 , sizeof(LBL)+strlen(buff) );
 	}
 	else return LBNOALOC;
 
-	/* ‰‰ñ“o˜^‚È‚çæ“ªƒ|ƒCƒ“ƒ^‚É“o˜^‚·‚é */
+	/* åˆå›žç™»éŒ²ãªã‚‰å…ˆé ­ãƒã‚¤ãƒ³ã‚¿ã«ç™»éŒ²ã™ã‚‹ */
 	if ( !LabelTbl ) LabelTbl = Labelwk;
-	/* Šm•Û‚µ‚½ƒ|ƒCƒ“ƒ^‚ðŽŸƒ|ƒCƒ“ƒ^‚Æ‚µ‚Ä“o˜^‚·‚é */
+	/* ç¢ºä¿ã—ãŸãƒã‚¤ãƒ³ã‚¿ã‚’æ¬¡ãƒã‚¤ãƒ³ã‚¿ã¨ã—ã¦ç™»éŒ²ã™ã‚‹ */
 	else Label->np = Labelwk;
 
-	/* ƒ‰ƒxƒ‹ƒ|ƒCƒ“ƒ^XV */
+	/* ãƒ©ãƒ™ãƒ«ãƒã‚¤ãƒ³ã‚¿æ›´æ–° */
 	Label = Labelwk;
-	/* ƒ‰ƒxƒ‹–¼Ì‚ðƒe[ƒuƒ‹‚É“o˜^‚·‚é */
+	/* ãƒ©ãƒ™ãƒ«åç§°ã‚’ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã™ã‚‹ */
 	memcpy( Label->name , buff , strlen(buff) );
-	/* Œ»Ý‚ÌƒAƒZƒ“ƒuƒ‹ƒAƒhƒŒƒX‚ðƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚É“o˜^‚·‚é */
+	/* ç¾åœ¨ã®ã‚¢ã‚»ãƒ³ãƒ–ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã™ã‚‹ */
 	Label->adr = adr;
-	/* ƒ‰ƒxƒ‹“o˜^”XV */
+	/* ãƒ©ãƒ™ãƒ«ç™»éŒ²æ•°æ›´æ–° */
 	LabelCnt++;
 
 	return NORM;
@@ -2051,24 +2051,24 @@ LBL * Labelwk;
 /**********************************************************************/
 /*   GetLabelAdr : Get Label Address                                  */
 /*                                                                    */
-/*   ˆ—    : ƒ‰ƒxƒ‹–¼‚©‚çƒAƒhƒŒƒX‚ðŒŸõ‚·‚é                         */
-/*   “ü—Í    : ƒ‰ƒxƒ‹ƒ|ƒCƒ“ƒ^A“o˜^ƒAƒhƒŒƒX’l                         */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒ‰ƒxƒ‹–¼ƒGƒ“ƒgƒŠ‚È‚µj       */
+/*   å‡¦ç†    : ãƒ©ãƒ™ãƒ«åã‹ã‚‰ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’æ¤œç´¢ã™ã‚‹                         */
+/*   å…¥åŠ›    : ãƒ©ãƒ™ãƒ«ãƒã‚¤ãƒ³ã‚¿ã€ç™»éŒ²ã‚¢ãƒ‰ãƒ¬ã‚¹å€¤                         */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ãƒ©ãƒ™ãƒ«åã‚¨ãƒ³ãƒˆãƒªãªã—ï¼‰       */
 /*                                                                    */
 /**********************************************************************/
 int GetLabelAdr( char * buff , unsigned short * adr )
 {
 LBL * Label;
-	/* æ“ªƒ‰ƒxƒ‹ƒ|ƒCƒ“ƒ^ƒZƒbƒg */
+	/* å…ˆé ­ãƒ©ãƒ™ãƒ«ãƒã‚¤ãƒ³ã‚¿ã‚»ãƒƒãƒˆ */
 	Label = LabelTbl;
 	while( Label ){
-		/* ŠY“–ƒ‰ƒxƒ‹–¼ŒŸõ */
+		/* è©²å½“ãƒ©ãƒ™ãƒ«åæ¤œç´¢ */
 		if (!strcmp( Label->name , buff )){
-			/* ƒ‰ƒxƒ‹ƒAƒhƒŒƒX‚ð•Ô‚· */
+			/* ãƒ©ãƒ™ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’è¿”ã™ */
 			*adr = Label->adr;
 			return NORM;
 		}
-		/* ƒ‰ƒxƒ‹ƒ|ƒCƒ“ƒ^XV */
+		/* ãƒ©ãƒ™ãƒ«ãƒã‚¤ãƒ³ã‚¿æ›´æ–° */
 		Label = Label->np;
 	}
 	return LBLNOENT;
@@ -2077,100 +2077,100 @@ LBL * Label;
 /**********************************************************************/
 /*   GetMacKind : Get Macro Kind                                      */
 /*                                                                    */
-/*   ˆ—    : ƒ}ƒNƒŽí•Ê‚ðŒˆ’è‚·‚é                                   */
-/*   “ü—Í    : ƒIƒyƒ‰ƒ“ƒhƒ|ƒCƒ“ƒ^                                     */
-/*   o—Í    : ƒjƒ‚ƒjƒbƒNŽí•Ê                                         */
+/*   å‡¦ç†    : ãƒžã‚¯ãƒ­ç¨®åˆ¥ã‚’æ±ºå®šã™ã‚‹                                   */
+/*   å…¥åŠ›    : ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿                                     */
+/*   å‡ºåŠ›    : ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥                                         */
 /*                                                                    */
 /**********************************************************************/
 int GetMacKind( char * buff )
 {
 int	i;
-	/* ‹^Ž—–½—ßƒe[ƒuƒ‹ƒT[ƒ` */
+	/* ç–‘ä¼¼å‘½ä»¤ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µãƒ¼ãƒ */
 	for ( i = 0 ; i < MACDIR ; i++ ){
 		if (!strcmp( buff , MacTbl[i].name ))
-			/* ‹^Ž—–½—ßƒR[ƒh‚ð•Ô‚· */
+			/* ç–‘ä¼¼å‘½ä»¤ã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™ */
 			return MacTbl[i].code;
 	}
-	/* ŠY“–‚È‚µiˆê”Ê–½—ßj‚ð•Ô‚· */
+	/* è©²å½“ãªã—ï¼ˆä¸€èˆ¬å‘½ä»¤ï¼‰ã‚’è¿”ã™ */
 	return UNDEFOPR;
 }
 
 /**********************************************************************/
 /*   GetMnemonicKind : Get Mnemonic Kind                              */
 /*                                                                    */
-/*   ˆ—    : ƒjƒ‚ƒjƒbƒNŽí•Ê‚ðŒˆ’è‚·‚é                               */
-/*   “ü—Í    : ƒIƒyƒ‰ƒ“ƒhƒ|ƒCƒ“ƒ^                                     */
-/*   o—Í    : ƒjƒ‚ƒjƒbƒNŽí•Ê                                         */
+/*   å‡¦ç†    : ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥ã‚’æ±ºå®šã™ã‚‹                               */
+/*   å…¥åŠ›    : ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿                                     */
+/*   å‡ºåŠ›    : ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ç¨®åˆ¥                                         */
 /*                                                                    */
 /**********************************************************************/
 unsigned short GetMnemonicKind( char * buff )
 {
 int	i;
-	/* ‹^Ž—–½—ßƒe[ƒuƒ‹ƒT[ƒ` */
+	/* ç–‘ä¼¼å‘½ä»¤ãƒ†ãƒ¼ãƒ–ãƒ«ã‚µãƒ¼ãƒ */
 	for ( i = 0 ; i < MAXDIR ; i++ ){
 		if (!strcmp( buff , Directivetbl[i].name ))
-			/* ‹^Ž—–½—ßƒR[ƒh‚ð•Ô‚· */
+			/* ç–‘ä¼¼å‘½ä»¤ã‚³ãƒ¼ãƒ‰ã‚’è¿”ã™ */
 			return Directivetbl[i].code;
 	}
-	/* ŠY“–‚È‚µiˆê”Ê–½—ßj‚ð•Ô‚· */
+	/* è©²å½“ãªã—ï¼ˆä¸€èˆ¬å‘½ä»¤ï¼‰ã‚’è¿”ã™ */
 	return UNDEFOPR;
 }
 /**********************************************************************/
 /*   CheckLabel : Check Label String                                  */
 /*                                                                    */
-/*   ˆ—    : ƒ‰ƒxƒ‹•¶Žš—ñ‚ÌŒ’‘S«‚ðƒ`ƒFƒbƒN‚·‚é                     */
-/*   “ü—Í    : ƒIƒyƒ‰ƒ“ƒhƒ|ƒCƒ“ƒ^                                     */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—ã®å¥å…¨æ€§ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹                     */
+/*   å…¥åŠ›    : ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿                                     */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int CheckLabel( char * buff )
 {
 int	i,len;
 
-	/* ƒ‰ƒxƒ‹•¶Žš—ñ’·ƒ`ƒFƒbƒN */
+	/* ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—é•·ãƒã‚§ãƒƒã‚¯ */
 	len = strlen( buff );
 	if( !len  ) return ILLOPR;
 	if( len > MAXNAME ) return OPOFLOW;
-	/* æ“ª•¶Žš‚ª”Žš‚Å‚Í‚È‚¢ */
+	/* å…ˆé ­æ–‡å­—ãŒæ•°å­—ã§ã¯ãªã„ */
 	if( strchr( DecStr , buff[0] ) ) return ILLLBL;
-	/* ƒ‰ƒxƒ‹—˜—p•s‰Â•¶Žš‚ðŒŸõ‚·‚é */
+	/* ãƒ©ãƒ™ãƒ«åˆ©ç”¨ä¸å¯æ–‡å­—ã‚’æ¤œç´¢ã™ã‚‹ */
 	for( i = 0 ; i < len ; i++ ){
-		/* ƒ‰ƒxƒ‹•¶Žš—ñƒ`ƒFƒbƒN */
+		/* ãƒ©ãƒ™ãƒ«æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 		if( !strchr( LabelStr , buff[i] ) ) return ILLLBL;
 	}
-	/* ³íI—¹ */
+	/* æ­£å¸¸çµ‚äº† */
 	return NORM;
 }
 /**********************************************************************/
 /*   ChgCode : Change String code  (abc...->ABC...)                   */
 /*                                                                    */
-/*   ˆ—    : ƒAƒ‹ƒtƒ@ƒxƒbƒg¬•¶Žš‚ð‘å•¶Žš‚É•ÏŠ·‚·‚é                 */
-/*   “ü—Í    : ƒIƒyƒ‰ƒ“ƒhƒ|ƒCƒ“ƒ^Ao—Íƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^               */
-/*   o—Í    : •ÏŠ·•¶Žš—ñ’·                                           */
+/*   å‡¦ç†    : ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆå°æ–‡å­—ã‚’å¤§æ–‡å­—ã«å¤‰æ›ã™ã‚‹                 */
+/*   å…¥åŠ›    : ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿ã€å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿               */
+/*   å‡ºåŠ›    : å¤‰æ›æ–‡å­—åˆ—é•·                                           */
 /*                                                                    */
 /**********************************************************************/
 int ChgCode( char * dst , char * src )
 {
 int	i,len;
-	/* o—Íæ•¶Žš—ñƒNƒŠƒA */
+	/* å‡ºåŠ›å…ˆæ–‡å­—åˆ—ã‚¯ãƒªã‚¢ */
 	dst[0] = 0;
 	if (! src ) return 0;
-	/* ƒIƒyƒ‰ƒ“ƒh•¶Žš—ñ’·ƒ`ƒFƒbƒN */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ–‡å­—åˆ—é•·ãƒã‚§ãƒƒã‚¯ */
 	len = strlen( src );
 	if( !len || ( len > MAXLEN ) ) return 0;
-	/* •ÏŠ·ˆ— */
+	/* å¤‰æ›å‡¦ç† */
 	for( i = 0 ; i < len ; i++ ){
-		/* •¶Žš—ñƒ`ƒFƒbƒN */
+		/* æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 		if( (src[i] >= 'a')&&(src[i] <= 'z') ){
-			/* ƒAƒ‹ƒtƒ@ƒxƒbƒg¬•¶Žš‚È‚ç‘å•¶Žš‚É•ÏŠ· */
+			/* ã‚¢ãƒ«ãƒ•ã‚¡ãƒ™ãƒƒãƒˆå°æ–‡å­—ãªã‚‰å¤§æ–‡å­—ã«å¤‰æ› */
 			dst[i] = (char)(src[i] - 0x20);
 		}
 		else{
-			/* ‚»‚Ì‚Ü‚ÜƒRƒs[ */
+			/* ãã®ã¾ã¾ã‚³ãƒ”ãƒ¼ */
 			dst[i] = src[i];
 		}
 	}
-	/* ÅI‚ÉNull‘}“ü */
+	/* æœ€çµ‚ã«NullæŒ¿å…¥ */
 	dst[i] = 0;
 	return len;
 }
@@ -2178,30 +2178,30 @@ int	i,len;
 /**********************************************************************/
 /*   ChgKcName : Change KC Mnemonic Name  (KC->HD61)                  */
 /*                                                                    */
-/*   ˆ—    : KCŒ`Ž®‚Ìƒjƒ‚ƒjƒbƒN‚ðHD61Œ`Ž®‚É•ÏŠ·‚·‚é                 */
-/*   “ü—Í    : ƒIƒyƒ‰ƒ“ƒhƒ|ƒCƒ“ƒ^Ao—Íƒoƒbƒtƒ@ƒ|ƒCƒ“ƒ^               */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : KCå½¢å¼ã®ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ã‚’HD61å½¢å¼ã«å¤‰æ›ã™ã‚‹                 */
+/*   å…¥åŠ›    : ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãƒã‚¤ãƒ³ã‚¿ã€å‡ºåŠ›ãƒãƒƒãƒ•ã‚¡ãƒã‚¤ãƒ³ã‚¿               */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int ChgKcName( char * dst , char * src )
 {
 int len;
-char mnwk[MAXMN+1];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
-	/* ƒ[ƒNƒGƒŠƒA‰Šú‰» */
+char mnwk[MAXMN+1];	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯å¤‰æ›ç”¨ãƒ¯ãƒ¼ã‚¯ */
+	/* ãƒ¯ãƒ¼ã‚¯ã‚¨ãƒªã‚¢åˆæœŸåŒ– */
 	memset( mnwk , 0 , sizeof(mnwk) );
-	/* “ü—Íƒjƒ‚ƒjƒbƒN‚ ‚è */
+	/* å…¥åŠ›ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯ã‚ã‚Š */
 	if (!( len = ChgCode( mnwk , src ) )) return UNDEFOPR;
-	/* LDD/STDŒn—ñ–½—ß‚Å‚ ‚é */
+	/* LDD/STDç³»åˆ—å‘½ä»¤ã§ã‚ã‚‹ */
 	if ( !memcmp( mnwk , "LDM" , 3 )||!memcmp( mnwk , "STM" , 3 ) ){
-		/* 8ƒrƒbƒgA16ƒrƒbƒg–½—ß‚Å‚ ‚é(‘æ3ƒIƒyƒ‰ƒ“ƒh‚ª‚È‚¢) */
+		/* 8ãƒ“ãƒƒãƒˆã€16ãƒ“ãƒƒãƒˆå‘½ä»¤ã§ã‚ã‚‹(ç¬¬3ã‚ªãƒšãƒ©ãƒ³ãƒ‰ãŒãªã„) */
 		if(!OutTbl.opr[3]){
 			mnwk[2]='D';
 		}
-		/* ƒ}ƒ‹ƒ`ƒ[ƒh—v‹‚Å‚ ‚é */
+		/* ãƒžãƒ«ãƒãƒ¯ãƒ¼ãƒ‰è¦æ±‚ã§ã‚ã‚‹ */
 		else{
-			/* KCŒ`Ž®—v‹‚ ‚è */
+			/* KCå½¢å¼è¦æ±‚ã‚ã‚Š */
 			if( OutTbl.kc ){
-				/* STMW¤LDMW ‚Å‚ ‚é */
+				/* STMWï½¤LDMW ã§ã‚ã‚‹ */
 				if( mnwk[3] == 'W' ){
 					mnwk[2] = 'D';
 					mnwk[3] = 'M';
@@ -2211,9 +2211,9 @@ char mnwk[MAXMN+1];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
 		}
 	}
 	else{
-		/* KCŒ`Ž®—v‹‚ ‚è */
+		/* KCå½¢å¼è¦æ±‚ã‚ã‚Š */
 		if( OutTbl.kc ){
-			/* xxxxW ‚Å‚ ‚é */
+			/* xxxxW ã§ã‚ã‚‹ */
 			if( mnwk[len-1] == 'W' ){
 				mnwk[len-1] = 'M';
 			}
@@ -2227,42 +2227,42 @@ char mnwk[MAXMN+1];	/* ƒjƒ‚ƒjƒbƒN•ÏŠ·—pƒ[ƒN */
 /**********************************************************************/
 /*   GetCalcData : Get Calculate Data                                 */
 /*                                                                    */
-/*   ˆ—    : •¶Žš—ñ‚Æ‚µ‚Ä—^‚¦‚ç‚ê‚½Ž®‚ðŒvŽZ‚·‚é                     */
-/*   “ü—Í    : •¶Žš—ñæ“ªƒ|ƒCƒ“ƒ^A“o˜^ƒAƒhƒŒƒX’l                     */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[”­¶j                 */
-/*           : Ží•Ê(kind)  LBLOK(–¼Ì‰ðŒˆÏ‚Ý)¤LBLNG(–¼Ì–¢‰ðŒˆ)      */
-/*           : ŒvŽZ’l(adr) LBLOKŽž‚Ì‚Ý—LŒøB‚»‚êˆÈŠO‚Í•s³’l          */
+/*   å‡¦ç†    : æ–‡å­—åˆ—ã¨ã—ã¦ä¸Žãˆã‚‰ã‚ŒãŸå¼ã‚’è¨ˆç®—ã™ã‚‹                     */
+/*   å…¥åŠ›    : æ–‡å­—åˆ—å…ˆé ­ãƒã‚¤ãƒ³ã‚¿ã€ç™»éŒ²ã‚¢ãƒ‰ãƒ¬ã‚¹å€¤                     */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿï¼‰                 */
+/*           : ç¨®åˆ¥(kind)  LBLOK(åç§°è§£æ±ºæ¸ˆã¿)ï½¤LBLNG(åç§°æœªè§£æ±º)      */
+/*           : è¨ˆç®—å€¤(adr) LBLOKæ™‚ã®ã¿æœ‰åŠ¹ã€‚ãã‚Œä»¥å¤–ã¯ä¸æ­£å€¤          */
 /**********************************************************************/
 int GetCalcData( char * buff , unsigned short * kind ,unsigned short * adr )
 {
 int rc;
 unsigned short val;
 
-	/* ƒIƒyƒ‰ƒ“ƒhƒGƒ“ƒgƒŠ‚ ‚è */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰ã‚¨ãƒ³ãƒˆãƒªã‚ã‚Š */
 	if ( !buff ) return ILLOPR;
 
-	/* ŒvŽZ—p•¶Žš—ñ‚ ‚è */
+	/* è¨ˆç®—ç”¨æ–‡å­—åˆ—ã‚ã‚Š */
 	if ( !strlen(buff) ) return ILLOPR;
 
-	/* ŒvŽZƒoƒbƒtƒ@‰Šú‰» */
+	/* è¨ˆç®—ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ– */
 	CalcPtr = 0;
 	memset( calcwk , 0 , sizeof(calcwk) );
-	/* ³•‰Žw’è‚ ‚è */
+	/* æ­£è² æŒ‡å®šã‚ã‚Š */
 	if ( (buff[0]=='-') || (buff[0]=='+') )
 		sprintf( calcwk , "0%s" , buff );
 	else
 		sprintf( calcwk , "%s" , buff );
 
-	/* –¼Ì‰ðŒˆÏ‚ÝƒZƒbƒg */
+	/* åç§°è§£æ±ºæ¸ˆã¿ã‚»ãƒƒãƒˆ */
 	Ckind = LBLOK;
 
-	/* ”Ž®ŒvŽZ */
+	/* æ•°å¼è¨ˆç®— */
 	if ( rc = CalcVal( &val ) ) return rc;
 
-	/* 2ƒpƒX–Ú‚É–¢’è‹`ƒ‰ƒxƒ‹‚ ‚è */
+	/* 2ãƒ‘ã‚¹ç›®ã«æœªå®šç¾©ãƒ©ãƒ™ãƒ«ã‚ã‚Š */
 	if ( pass && (Ckind==LBLNG) ) return LBLNOENT;
 
-	/* ³íI—¹ */
+	/* æ­£å¸¸çµ‚äº† */
 	*adr = val;
 	*kind = Ckind;
 	return NORM;
@@ -2271,10 +2271,10 @@ unsigned short val;
 /**********************************************************************/
 /*   CalcVal : Calculate compare Logical                              */
 /*                                                                    */
-/*   ˆ—    : —^‚¦‚ç‚ê‚½•¶ŽšŽ®‚ð”äŠr‰‰ŽZ‚·‚é(—Dæ‡ˆÊÅ’á)           */
-/*   “ü—Í    : ”’lƒ|ƒCƒ“ƒ^                                           */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[j                     */
-/*           : ŒvŽZ’l(value)                                          */
+/*   å‡¦ç†    : ä¸Žãˆã‚‰ã‚ŒãŸæ–‡å­—å¼ã‚’æ¯”è¼ƒæ¼”ç®—ã™ã‚‹(å„ªå…ˆé †ä½æœ€ä½Ž)           */
+/*   å…¥åŠ›    : æ•°å€¤ãƒã‚¤ãƒ³ã‚¿                                           */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ï¼‰                     */
+/*           : è¨ˆç®—å€¤(value)                                          */
 /*                                                                    */
 /**********************************************************************/
 int CalcVal(unsigned short * value )
@@ -2282,11 +2282,11 @@ int CalcVal(unsigned short * value )
 int rc;
 unsigned short val,wval;
 
-	/* æ“ª”Ž®‚Ì’l‚ðŽæ“¾ */
+	/* å…ˆé ­æ•°å¼ã®å€¤ã‚’å–å¾— */
 	if( rc = CalcVal0( &val ) ) return rc;
 	while( 1 ){
 		switch( calcwk[CalcPtr] ){
-		/* = ˆ— */
+		/* = å‡¦ç† */
 		case '=':
 			CalcPtr ++;
 			if ( calcwk[CalcPtr] == '>' ){
@@ -2304,7 +2304,7 @@ unsigned short val,wval;
 			if ( rc = CalcVal0( &wval ) ) return rc;
 			val = (unsigned short)(val == wval);
 			break;
-		/* > ˆ— */
+		/* > å‡¦ç† */
 		case '>':
 			CalcPtr ++;
 			if ( calcwk[CalcPtr] == '=' ){
@@ -2322,7 +2322,7 @@ unsigned short val,wval;
 			if ( rc = CalcVal0( &wval ) ) return rc;
 			val = (unsigned short)(val > wval);
 			break;
-		/* < ˆ— */
+		/* < å‡¦ç† */
 		case '<':
 			CalcPtr ++;
 			if ( calcwk[CalcPtr] == '=' ){
@@ -2342,7 +2342,7 @@ unsigned short val,wval;
 			break;
 		case '(':
 			return CALERR;
-		/* ˆ—I—¹ */
+		/* å‡¦ç†çµ‚äº† */
 		default:
 			*value = val;
 			return NORM;
@@ -2353,10 +2353,10 @@ unsigned short val,wval;
 /**********************************************************************/
 /*   CalcVal0 : Calculate Logical                                     */
 /*                                                                    */
-/*   ˆ—    : —^‚¦‚ç‚ê‚½•¶ŽšŽ®‚ð˜_—‰‰ŽZ‚·‚é(—Dæ‡ˆÊ+1)             */
-/*   “ü—Í    : ”’lƒ|ƒCƒ“ƒ^                                           */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[j                     */
-/*           : ŒvŽZ’l(value)                                          */
+/*   å‡¦ç†    : ä¸Žãˆã‚‰ã‚ŒãŸæ–‡å­—å¼ã‚’è«–ç†æ¼”ç®—ã™ã‚‹(å„ªå…ˆé †ä½+1)             */
+/*   å…¥åŠ›    : æ•°å€¤ãƒã‚¤ãƒ³ã‚¿                                           */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ï¼‰                     */
+/*           : è¨ˆç®—å€¤(value)                                          */
 /*                                                                    */
 /**********************************************************************/
 int CalcVal0(unsigned short * value )
@@ -2364,40 +2364,40 @@ int CalcVal0(unsigned short * value )
 int rc;
 unsigned short val,wval;
 
-	/* æ“ª”Ž®‚Ì’l‚ðŽæ“¾ */
+	/* å…ˆé ­æ•°å¼ã®å€¤ã‚’å–å¾— */
 	if( rc = CalcVal1( &val ) ) return rc;
 	while( 1 ){
 		switch( calcwk[CalcPtr] ){
-		/* ANDˆ— */
+		/* ANDå‡¦ç† */
 		case '#':
 		case '&':
 			CalcPtr ++;
 			if ( rc = CalcVal1( &wval ) ) return rc;
 			val &= wval;
 			break;
-		/* ORˆ— */
+		/* ORå‡¦ç† */
 		case '|':
 			CalcPtr ++;
 			if ( rc = CalcVal1( &wval ) ) return rc;
 			val |= wval;
 			break;
-		/* XORˆ— */
+		/* XORå‡¦ç† */
 		case '^':
 			CalcPtr ++;
 			if ( rc = CalcVal1( &wval ) ) return rc;
 			val ^= wval;
 			break;
-		/* MODˆ— */
+		/* MODå‡¦ç† */
 		case '%':
 			CalcPtr ++;
 			if ( rc = CalcVal1( &wval ) ) return rc;
-			/* 0‚ÅœŽZ */
+			/* 0ã§é™¤ç®— */
 			if ( !wval ) return CALERR;
 			val %= wval;
 			break;
 		case '(':
 			return CALERR;
-		/* ˆ—I—¹ */
+		/* å‡¦ç†çµ‚äº† */
 		default:
 			*value = val;
 			return NORM;
@@ -2408,10 +2408,10 @@ unsigned short val,wval;
 /**********************************************************************/
 /*   CalcVal1 : Calculate Add/Sub.                                    */
 /*                                                                    */
-/*   ˆ—    : —^‚¦‚ç‚ê‚½•¶ŽšŽ®‚ð‰ÁŒ¸ŽZ‚·‚é(—Dæ‡ˆÊ+2)               */
-/*   “ü—Í    : ”’lƒ|ƒCƒ“ƒ^                                           */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[j                     */
-/*           : ŒvŽZ’l(value)                                          */
+/*   å‡¦ç†    : ä¸Žãˆã‚‰ã‚ŒãŸæ–‡å­—å¼ã‚’åŠ æ¸›ç®—ã™ã‚‹(å„ªå…ˆé †ä½+2)               */
+/*   å…¥åŠ›    : æ•°å€¤ãƒã‚¤ãƒ³ã‚¿                                           */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ï¼‰                     */
+/*           : è¨ˆç®—å€¤(value)                                          */
 /*                                                                    */
 /**********************************************************************/
 int CalcVal1(unsigned short * value )
@@ -2419,22 +2419,22 @@ int CalcVal1(unsigned short * value )
 int rc;
 unsigned short val,wval;
 
-	/* æ“ª”’lŽæ“¾ */
+	/* å…ˆé ­æ•°å€¤å–å¾— */
 	if( rc = CalcVal2( &val ) ) return rc;
 	while( 1 ) {
 		switch( calcwk[CalcPtr] ){
-		/* ‰ÁŽZˆ— */
+		/* åŠ ç®—å‡¦ç† */
 		case '+':
 			CalcPtr ++;
 			if ( rc = CalcVal2( &wval ) ) return rc;
 			val += wval;
 			break;
-		/* Œ¸ŽZˆ— */
+		/* æ¸›ç®—å‡¦ç† */
 		case '-':
 			CalcPtr ++;
 			if ( rc = CalcVal2( &wval ) ) return rc;
 			val -= wval;
-		/* ˆ—I—¹ */
+		/* å‡¦ç†çµ‚äº† */
 		default:
 			*value = val;
 			return NORM;
@@ -2445,10 +2445,10 @@ unsigned short val,wval;
 /**********************************************************************/
 /*   CalcVal2 : Calculate Multiple/Divide.                            */
 /*                                                                    */
-/*   ˆ—    : —^‚¦‚ç‚ê‚½•¶ŽšŽ®‚ðæœŽZ‚·‚é(—Dæ‡ˆÊ+3)               */
-/*   “ü—Í    : ”’lƒ|ƒCƒ“ƒ^                                           */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[j                     */
-/*           : ŒvŽZ’l(value)                                          */
+/*   å‡¦ç†    : ä¸Žãˆã‚‰ã‚ŒãŸæ–‡å­—å¼ã‚’ä¹—é™¤ç®—ã™ã‚‹(å„ªå…ˆé †ä½+3)               */
+/*   å…¥åŠ›    : æ•°å€¤ãƒã‚¤ãƒ³ã‚¿                                           */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ï¼‰                     */
+/*           : è¨ˆç®—å€¤(value)                                          */
 /*                                                                    */
 /**********************************************************************/
 int CalcVal2(unsigned short * value )
@@ -2456,24 +2456,24 @@ int CalcVal2(unsigned short * value )
 int rc;
 unsigned short val,wval;
 
-	/* æ“ª”’lŽæ“¾ */
+	/* å…ˆé ­æ•°å€¤å–å¾— */
 	if( rc = CalcVal3( &val ) ) return rc;
 	while( 1 ) {
 		switch( calcwk[CalcPtr] ){
-		/* æŽZˆ— */
+		/* ä¹—ç®—å‡¦ç† */
 		case '*':
 			CalcPtr ++;
 			if ( rc = CalcVal3( &wval ) ) return rc;
 			val *= wval;
 			break;
-		/* œŽZˆ— */
+		/* é™¤ç®—å‡¦ç† */
 		case '/':
 			CalcPtr ++;
 			if ( rc = CalcVal3( &wval ) ) return rc;
-			/* 0‚ÅœŽZ */
+			/* 0ã§é™¤ç®— */
 			if ( !wval ) return CALERR;
 			val /= wval;
-		/* ˆ—I—¹ */
+		/* å‡¦ç†çµ‚äº† */
 		default:
 			*value = val;
 			return NORM;
@@ -2484,10 +2484,10 @@ unsigned short val,wval;
 /**********************************************************************/
 /*   CalcVal3 : Calculate ()                                          */
 /*                                                                    */
-/*   ˆ—    : Š‡ŒÊ“à‚Ì‰‰ŽZ‚ðs‚¤(—Dæ‡ˆÊÅ‚)                       */
-/*   “ü—Í    : ”’lƒ|ƒCƒ“ƒ^                                           */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[j                     */
-/*           : ŒvŽZ’l(value)                                          */
+/*   å‡¦ç†    : æ‹¬å¼§å†…ã®æ¼”ç®—ã‚’è¡Œã†(å„ªå…ˆé †ä½æœ€é«˜)                       */
+/*   å…¥åŠ›    : æ•°å€¤ãƒã‚¤ãƒ³ã‚¿                                           */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ï¼‰                     */
+/*           : è¨ˆç®—å€¤(value)                                          */
 /*                                                                    */
 /**********************************************************************/
 int CalcVal3( unsigned short *value )
@@ -2497,42 +2497,42 @@ unsigned short val,flag;
 
 	flag = 0;
 
-	/* Ž®•]‰¿”½“]—v‹‚ ‚è */
+	/* å¼è©•ä¾¡åè»¢è¦æ±‚ã‚ã‚Š */
 	if( calcwk[CalcPtr] == '!' ){
 		CalcPtr++;
 		flag = 1;
 	}
-	/* Š‡ŒÊ“àˆ—‚Å‚ ‚é */
+	/* æ‹¬å¼§å†…å‡¦ç†ã§ã‚ã‚‹ */
 	if( calcwk[CalcPtr] == '(' ) {
 		CalcPtr++;
-		/* Š‡ŒÊ“à‚ÌŒvŽZ‚ÍÅ‚à—Dæ‡ˆÊ‚Ì’á‚¢‡‚És‚¤ */
+		/* æ‹¬å¼§å†…ã®è¨ˆç®—ã¯æœ€ã‚‚å„ªå…ˆé †ä½ã®ä½Žã„é †ã«è¡Œã† */
 		if( rc = CalcVal( &val ) ) return rc;
-		/* Š‡ŒÊ‚ª•Â‚¶‚Ä‚¢‚È‚¢B*/
+		/* æ‹¬å¼§ãŒé–‰ã˜ã¦ã„ãªã„ã€‚*/
 		if( calcwk[CalcPtr++] != ')' ) return ILLDQUO;
 	}
 	else{
-		/* ”’l‚Ü‚½‚Íƒ‰ƒxƒ‹‚Å‚ ‚é */
+		/* æ•°å€¤ã¾ãŸã¯ãƒ©ãƒ™ãƒ«ã§ã‚ã‚‹ */
 		if( rc = GetValue( &val ) ) return rc;
 	}
-	/* Œ…Žw’è‚É‚æ‚é’lC³ */
+	/* æ¡æŒ‡å®šã«ã‚ˆã‚‹å€¤ä¿®æ­£ */
 	if ( calcwk[CalcPtr] == '.'){
 		CalcPtr++;
 		switch( calcwk[CalcPtr] ){
-		/* ãˆÊŒ…Žw’è */
+		/* ä¸Šä½æ¡æŒ‡å®š */
 		case 'u':
 		case 'U':
 		case 'h':
 		case 'H':
 			val = (unsigned short)(val >> 8);
 			break;
-		/* ‰ºˆÊŒ…Žw’è */
+		/* ä¸‹ä½æ¡æŒ‡å®š */
 		case 'd':
 		case 'D':
 		case 'l':
 		case 'L':
 			val &= 0xff;
 			break;
-		/* ƒrƒbƒg”½“] */
+		/* ãƒ“ãƒƒãƒˆåè»¢ */
 		case 'n':
 		case 'N':
 			val = (unsigned short)(~val);
@@ -2542,7 +2542,7 @@ unsigned short val,flag;
 		}
 		CalcPtr++;
 	}
-	/* ŒvŽZ‚µ‚½”’l‚ð•Ô‚· */
+	/* è¨ˆç®—ã—ãŸæ•°å€¤ã‚’è¿”ã™ */
 	*value = (unsigned short)(!flag ? val : !val);
 	return NORM;
 }
@@ -2550,61 +2550,61 @@ unsigned short val,flag;
 /**********************************************************************/
 /*   GetValue : Get Data Value                                        */
 /*                                                                    */
-/*   ˆ—    : ƒ‰ƒxƒ‹‚Ü‚½‚Í”’l‚©‚çA’l‚ðŽæ‚èo‚·                     */
-/*   “ü—Í    : ”’lƒ|ƒCƒ“ƒ^                                           */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ƒGƒ‰[j                     */
-/*           : Žæ“¾’l(value)                                          */
-/*           : ƒ‰ƒxƒ‹–¼Ì‰ðŒˆƒtƒ‰ƒO(Ckind) (LBLNG:–¼Ì–¢‰ðŒˆ)         */
+/*   å‡¦ç†    : ãƒ©ãƒ™ãƒ«ã¾ãŸã¯æ•°å€¤ã‹ã‚‰ã€å€¤ã‚’å–ã‚Šå‡ºã™                     */
+/*   å…¥åŠ›    : æ•°å€¤ãƒã‚¤ãƒ³ã‚¿                                           */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ã‚¨ãƒ©ãƒ¼ï¼‰                     */
+/*           : å–å¾—å€¤(value)                                          */
+/*           : ãƒ©ãƒ™ãƒ«åç§°è§£æ±ºãƒ•ãƒ©ã‚°(Ckind) (LBLNG:åç§°æœªè§£æ±º)         */
 /*                                                                    */
 /**********************************************************************/
 int GetValue(unsigned short *value ) {
 unsigned short val;
 int		i,rc,quo;
-char	lblwk[MAXLINE+2];   /* ŒvŽZ’lŽæ“¾—pƒ‰ƒxƒ‹–¼ƒ[ƒN   */
+char	lblwk[MAXLINE+2];   /* è¨ˆç®—å€¤å–å¾—ç”¨ãƒ©ãƒ™ãƒ«åãƒ¯ãƒ¼ã‚¯   */
 char	QuoChar;
-	/* ƒf[ƒ^‰Šú‰» */
+	/* ãƒ‡ãƒ¼ã‚¿åˆæœŸåŒ– */
 	*value = 0;
-	/* ƒ‰ƒxƒ‹/”’lŽæ“¾—pƒoƒbƒtƒ@‰Šú‰» */
+	/* ãƒ©ãƒ™ãƒ«/æ•°å€¤å–å¾—ç”¨ãƒãƒƒãƒ•ã‚¡åˆæœŸåŒ– */
 	memset( lblwk , 0 , sizeof(lblwk) );
 
-	/* ‰‰ŽZŽqŒŸo‚Ü‚ÅŒJ‚è•Ô‚· */
+	/* æ¼”ç®—å­æ¤œå‡ºã¾ã§ç¹°ã‚Šè¿”ã™ */
 	i = 0;
 	quo = 0;
 	QuoChar = 0;
 	while ( 1 ){
-		/* •¶Žš—ñŒŸo */
+		/* æ–‡å­—åˆ—æ¤œå‡º */
 		if ( !quo ){
-			/* ƒR[ƒe[ƒVƒ‡ƒ“Ží•ÊiƒVƒ“ƒOƒ‹/ƒ_ƒuƒ‹)‚ðŽæ“¾ */
+			/* ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ç¨®åˆ¥ï¼ˆã‚·ãƒ³ã‚°ãƒ«/ãƒ€ãƒ–ãƒ«)ã‚’å–å¾— */
 			if ( ( calcwk[CalcPtr] == 0x22 )||( calcwk[CalcPtr] == 0x27 )){
 				QuoChar = calcwk[CalcPtr];
 				quo ++;
 			}
 		}
-		/* ƒR[ƒe[ƒVƒ‡ƒ“•Â‚¶‚½H */
+		/* ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³é–‰ã˜ãŸï¼Ÿ */
 		else if ( calcwk[CalcPtr] == QuoChar ) quo ++;
-		/* ‰‰ŽZŽq‚Ü‚½‚ÍNullŒŸo‚É‚ÄI—¹ */
+		/* æ¼”ç®—å­ã¾ãŸã¯Nullæ¤œå‡ºã«ã¦çµ‚äº† */
 		if ( !calcwk[CalcPtr] || (!quo && strchr( "+-*/#|^%().<>=" , calcwk[CalcPtr] )) ) break;
-		/* æ“ªˆÈŠO‚Ì&ŒŸo‚ÅI—¹ */
+		/* å…ˆé ­ä»¥å¤–ã®&æ¤œå‡ºã§çµ‚äº† */
 		if ( !quo && ( calcwk[CalcPtr] == '&' && i ) ) break;
-		/* •¶Žš—ñƒRƒs[ */
+		/* æ–‡å­—åˆ—ã‚³ãƒ”ãƒ¼ */
 		lblwk[i++] = calcwk[CalcPtr++];
-		/* ƒR[ƒe[ƒVƒ‡ƒ“‚ª•Â‚¶‚½‚çI—¹‚·‚é */
+		/* ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³ãŒé–‰ã˜ãŸã‚‰çµ‚äº†ã™ã‚‹ */
 		if ( quo == 2 ) break;
 	}
-	/* Žæ‚èo‚µ‚½•¶Žš—ñ‚Í”’l‚Å‚ ‚é */
+	/* å–ã‚Šå‡ºã—ãŸæ–‡å­—åˆ—ã¯æ•°å€¤ã§ã‚ã‚‹ */
 	if ( rc = GetData( lblwk , &val ) ){
-		/* ƒIƒyƒ‰ƒ“ƒh‹Lq‚ª”’lˆÈŠO */
+		/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰è¨˜è¿°ãŒæ•°å€¤ä»¥å¤– */
 		if (rc != ILLOPR ) return rc;
-		/* ƒ‰ƒxƒ‹‚Å‚ ‚é */
+		/* ãƒ©ãƒ™ãƒ«ã§ã‚ã‚‹ */
 		if ( rc = CheckLabel( lblwk ) ) return ILLOPR;
-		/* ƒ‰ƒxƒ‹ƒAƒhƒŒƒXŽæ‚èo‚µ */
+		/* ãƒ©ãƒ™ãƒ«ã‚¢ãƒ‰ãƒ¬ã‚¹å–ã‚Šå‡ºã— */
 		if ( GetLabelAdr ( lblwk , &val ) ){
-			/* ƒ‰ƒxƒ‹–¼Ì–¢‰ðŒˆ‚Æ‚·‚é */
+			/* ãƒ©ãƒ™ãƒ«åç§°æœªè§£æ±ºã¨ã™ã‚‹ */
 			Ckind = LBLNG;
 			val = 0;
 		}
 	}
-	/* ‹‚ß‚½’l‚ð•Ô‚· */
+	/* æ±‚ã‚ãŸå€¤ã‚’è¿”ã™ */
 	*value = val;
 	return NORM;
 }
@@ -2612,45 +2612,45 @@ char	QuoChar;
 /**********************************************************************/
 /*   GetData : Get Immediate Data                                     */
 /*                                                                    */
-/*   ˆ—    : •¶Žš—ñ‚©‚ç”’lƒf[ƒ^‚ðŽæ“¾‚·‚é                         */
-/*   “ü—Í    : •¶Žš—ñƒ|ƒCƒ“ƒ^Aƒf[ƒ^ƒ|ƒCƒ“ƒ^                         */
-/*   o—Í    : ’l(data)                                               */
-/*           : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : æ–‡å­—åˆ—ã‹ã‚‰æ•°å€¤ãƒ‡ãƒ¼ã‚¿ã‚’å–å¾—ã™ã‚‹                         */
+/*   å…¥åŠ›    : æ–‡å­—åˆ—ãƒã‚¤ãƒ³ã‚¿ã€ãƒ‡ãƒ¼ã‚¿ãƒã‚¤ãƒ³ã‚¿                         */
+/*   å‡ºåŠ›    : å€¤(data)                                               */
+/*           : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int GetData( char *buff , unsigned short * data )
 {
 int	i,len;
 unsigned long sts;
-	/* ƒIƒyƒ‰ƒ“ƒh•¶Žš—ñ’·ƒ`ƒFƒbƒN */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰æ–‡å­—åˆ—é•·ãƒã‚§ãƒƒã‚¯ */
 	len = strlen( buff );
 	if( !len  ) return ILLOPR;
 	if( len > MAXLEN ) return OPOFLOW;
 
-	/* æ“ª‚¨‚æ‚ÑÅI‚ÍƒR[ƒe[ƒVƒ‡ƒ“(=•¶Žš—ñƒGƒ“ƒgƒŠ)‚Å‚ ‚é */
+	/* å…ˆé ­ãŠã‚ˆã³æœ€çµ‚ã¯ã‚³ãƒ¼ãƒ†ãƒ¼ã‚·ãƒ§ãƒ³(=æ–‡å­—åˆ—ã‚¨ãƒ³ãƒˆãƒª)ã§ã‚ã‚‹ */
 	if ( (( buff[0] == 0x22 ) && ( buff[len-1] == 0x22 ))
 		|| (( buff[0] == 0x27 ) && ( buff[len-1] == 0x27 )) ){
-		/* •¶Žš—ñ’·‚ª‚R‚©‚S‚Å‚ ‚é */
+		/* æ–‡å­—åˆ—é•·ãŒï¼“ã‹ï¼”ã§ã‚ã‚‹ */
 		if( len == 3 ){
-			/* Ží•Ê‚ÍŽb’è‚Å16ƒrƒbƒg”’l‚Æ‚·‚é */
+			/* ç¨®åˆ¥ã¯æš«å®šã§16ãƒ“ãƒƒãƒˆæ•°å€¤ã¨ã™ã‚‹ */
 			*data = (unsigned short)(buff[1]&0xff);
 			return NORM;
 		}
 		else{
 			if( len == 4 ){
-				/* Ží•Ê‚ÍŽb’è‚Å16ƒrƒbƒg”’l‚Æ‚·‚é */
+				/* ç¨®åˆ¥ã¯æš«å®šã§16ãƒ“ãƒƒãƒˆæ•°å€¤ã¨ã™ã‚‹ */
 				*data = (unsigned short)( (buff[1]&0xff)|((buff[2]&0xff)<<8) );
 				return NORM;
 			}
 			else return ILLOPR;
 		}
 	}
-	/* ‚Qi”Žw’è‚Å‚ ‚é */
+	/* ï¼’é€²æ•°æŒ‡å®šã§ã‚ã‚‹ */
 	if ( (buff[0] == '&')&&((buff[1] == 'B')||(buff[1] == 'b')) ){
 		for( i = 2 , sts = 0; i < len ; i++ ){
-			/* 2i”Œ…ã‚° */
+			/* 2é€²æ•°æ¡ä¸Šã’ */
 			sts *= 2;
-			/* •¶Žš—ñƒ`ƒFƒbƒN */
+			/* æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 			switch ( buff[i] ){
 			case '1':
 				sts |= 0x1;
@@ -2660,47 +2660,47 @@ unsigned long sts;
 				return ILLOPR;
 			}
 		}
-		/* ”ÍˆÍƒI[ƒo[‚Å‚ ‚é */
+		/* ç¯„å›²ã‚ªãƒ¼ãƒãƒ¼ã§ã‚ã‚‹ */
 		if ( sts >= 65536 ) return OFLOW;
-		/* ³íI—¹ */
+		/* æ­£å¸¸çµ‚äº† */
 		*data = (unsigned short )sts;
 		return NORM;
 	}
-	/* ‚P‚Ui”Žw’è‚Å‚ ‚é */
+	/* ï¼‘ï¼–é€²æ•°æŒ‡å®šã§ã‚ã‚‹ */
 	if ( (buff[0] == '&')&&((buff[1] == 'H')||(buff[1] == 'h')) ){
 		for( i = 2 ; i < len ; i++ ){
-			/* •¶Žš—ñƒ`ƒFƒbƒN */
+			/* æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 			if( !strchr( HexStr , (int)buff[i] ) ){
 			 return ILLOPR;
 			 }
 		}
-		/* ‚P‚Ui”‚É•ÏŠ· */
+		/* ï¼‘ï¼–é€²æ•°ã«å¤‰æ› */
 #if FORDOS
 		if ( sscanf( &buff[2] , "%Lx" , &sts ) == EOF ) return ILLOPR;
 #else
 		if ( sscanf( &buff[2] , "%x" , &sts ) == EOF ) return ILLOPR;
 #endif
-		/* ”ÍˆÍƒI[ƒo[‚Å‚ ‚é */
+		/* ç¯„å›²ã‚ªãƒ¼ãƒãƒ¼ã§ã‚ã‚‹ */
 		if ( sts >= 65536 ) return OFLOW;
-		/* ³íI—¹ */
+		/* æ­£å¸¸çµ‚äº† */
 		*data = (unsigned short)sts;
 		return NORM;
 	}
-	/* ‚P‚Oi”ˆ— */
+	/* ï¼‘ï¼é€²æ•°å‡¦ç† */
 	for( i = 0 ; i < len ; i++ ){
-		/* •¶Žš—ñƒ`ƒFƒbƒN */
+		/* æ–‡å­—åˆ—ãƒã‚§ãƒƒã‚¯ */
 		if( !strchr( DecStr , (int)buff[i] ) ) return ILLOPR;
 	}
-	/* ‚P‚Oi”‚É•ÏŠ· */
+	/* ï¼‘ï¼é€²æ•°ã«å¤‰æ› */
 #if FORDOS
 	if ( sscanf( buff , "%Ld" , &sts ) == EOF ) return ILLOPR;
 #else
 	if ( sscanf( buff , "%d" , &sts ) == EOF ) return ILLOPR;
 #endif
-	/* ”ÍˆÍƒI[ƒo[‚Å‚ ‚é */
+	/* ç¯„å›²ã‚ªãƒ¼ãƒãƒ¼ã§ã‚ã‚‹ */
 	if ( sts >= 65536 ) return OFLOW;
 
-	/* ³íI—¹ */
+	/* æ­£å¸¸çµ‚äº† */
 	*data = (unsigned short )sts;
 	return NORM;
 }
@@ -2708,17 +2708,17 @@ unsigned long sts;
 /**********************************************************************/
 /*   CheckSetOpt : Check /SET Option Name                             */
 /*                                                                    */
-/*   ˆ—    : /SETƒIƒvƒVƒ‡ƒ“Žž‚Ì“o˜^ƒ`ƒFƒbƒNˆ—‚ðs‚¤               */
-/*   “ü—Í    : ‚È‚µ                                                   */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : /SETã‚ªãƒ—ã‚·ãƒ§ãƒ³æ™‚ã®ç™»éŒ²ãƒã‚§ãƒƒã‚¯å‡¦ç†ã‚’è¡Œã†               */
+/*   å…¥åŠ›    : ãªã—                                                   */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int CheckSetOpt( char * name )
 {
 int	i;
-	/* ƒ‰ƒxƒ‹“o˜^‚ðƒ`ƒFƒbƒN‚·‚é */
+	/* ãƒ©ãƒ™ãƒ«ç™»éŒ²ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ */
 	for ( i = 0 ; i < SetLabel ; i++ ){
-		/* “o˜^ƒ‰ƒxƒ‹‚Æˆê’v */
+		/* ç™»éŒ²ãƒ©ãƒ™ãƒ«ã¨ä¸€è‡´ */
 		if( !strcmp( SetTbl[i].ent , name ) ) return 0;
 	}
 	return 2;
@@ -2727,62 +2727,62 @@ int	i;
 /**********************************************************************/
 /*   CheckSetLbl : Check /SET Option Name                             */
 /*                                                                    */
-/*   ˆ—    : /SETƒIƒvƒVƒ‡ƒ“Žž‚Ì“o˜^ƒ`ƒFƒbƒNˆ—‚ðs‚¤               */
-/*   “ü—Í    : ‚È‚µ                                                   */
-/*   o—Í    : ƒGƒ‰[î•ñi0:³íA0ˆÈŠO:ˆÙíj                       */
+/*   å‡¦ç†    : /SETã‚ªãƒ—ã‚·ãƒ§ãƒ³æ™‚ã®ç™»éŒ²ãƒã‚§ãƒƒã‚¯å‡¦ç†ã‚’è¡Œã†               */
+/*   å…¥åŠ›    : ãªã—                                                   */
+/*   å‡ºåŠ›    : ã‚¨ãƒ©ãƒ¼æƒ…å ±ï¼ˆ0:æ­£å¸¸ã€0ä»¥å¤–:ç•°å¸¸ï¼‰                       */
 /*                                                                    */
 /**********************************************************************/
 int CheckSetLbl( char * name ,unsigned short sts )
 {
 int	i,ent,rc;
 	ent = 0;
-	/* ƒ‰ƒxƒ‹“o˜^‚ðƒ`ƒFƒbƒN‚·‚é */
+	/* ãƒ©ãƒ™ãƒ«ç™»éŒ²ã‚’ãƒã‚§ãƒƒã‚¯ã™ã‚‹ */
 	for ( i = 0 ; i < SetLabel ; i++ ){
-		/* “o˜^ƒ‰ƒxƒ‹‚Æˆê’v */
+		/* ç™»éŒ²ãƒ©ãƒ™ãƒ«ã¨ä¸€è‡´ */
 		if( !strcmp( SetTbl[i].ent , name ) ){
 			ent++;
 		}
-		/* ‘ã“üƒ‰ƒxƒ‹‚Æˆê’v */
+		/* ä»£å…¥ãƒ©ãƒ™ãƒ«ã¨ä¸€è‡´ */
 		if( !strcmp( SetTbl[i].let , name ) ){
-			/* ƒ‰ƒxƒ‹ƒe[ƒuƒ‹‚É“o˜^‚·‚é */
+			/* ãƒ©ãƒ™ãƒ«ãƒ†ãƒ¼ãƒ–ãƒ«ã«ç™»éŒ²ã™ã‚‹ */
 			if( rc = SetLabelTbl( SetTbl[i].ent , sts ) ) return rc;
 		}
 	}
-	/* “o˜^ƒ‰ƒxƒ‹‚Æˆê’v‚µ‚½ê‡Aƒ‰ƒxƒ‹“o˜^–³‚µ‚ð•Ô‚· */
+	/* ç™»éŒ²ãƒ©ãƒ™ãƒ«ã¨ä¸€è‡´ã—ãŸå ´åˆã€ãƒ©ãƒ™ãƒ«ç™»éŒ²ç„¡ã—ã‚’è¿”ã™ */
 	if ( ent ) return 1;
 
-	/* ŠY“–‚È‚µ */
+	/* è©²å½“ãªã— */
 	return NORM;
 }
 
 /**********************************************************************/
 /*   PrintList : Print List File                                      */
 /*                                                                    */
-/*   ˆ—    : OutTbl‚É]‚¢A‚Ps•ª‚ÌƒŠƒXƒg‚ðo—Í‚·‚é                 */
-/*   “ü—Í    : s”Ô†ƒJƒEƒ“ƒ^                                         */
-/*   o—Í    : ‚È‚µ                                                   */
+/*   å‡¦ç†    : OutTblã«å¾“ã„ã€ï¼‘è¡Œåˆ†ã®ãƒªã‚¹ãƒˆã‚’å‡ºåŠ›ã™ã‚‹                 */
+/*   å…¥åŠ›    : è¡Œç•ªå·ã‚«ã‚¦ãƒ³ã‚¿                                         */
+/*   å‡ºåŠ›    : ãªã—                                                   */
 /*                                                                    */
 /**********************************************************************/
 void PrintList( int count )
 {
 int	i,cnt,n,len;
 unsigned short sts;
-	/* ƒŠƒXƒgo—Í—v‹‚ª‚È‚¢ê‡Aˆ—I—¹ */
+	/* ãƒªã‚¹ãƒˆå‡ºåŠ›è¦æ±‚ãŒãªã„å ´åˆã€å‡¦ç†çµ‚äº† */
 	if ( ListFlag ) return;
 	len = 0;
-	/* s”Ô†o—Í */
+	/* è¡Œç•ªå·å‡ºåŠ› */
 	if (pr) printf( "%05d:%04X  " , count+1 , OutTbl.adr );
 	fprintf( LstFD ,"%05d:%04X  " , count+1 , OutTbl.adr );
 
-	/* ’Êí–½—ß^‹^Ž—–½—ßŽí•ÊŽæ‚èo‚µ */
+	/* é€šå¸¸å‘½ä»¤ï¼ç–‘ä¼¼å‘½ä»¤ç¨®åˆ¥å–ã‚Šå‡ºã— */
 	ChgCode( oprwk , OutTbl.opr[0] );
 	sts = GetMnemonicKind( oprwk );
-	/* ORG–½—ßˆÈŠO‚Í–½—ßŒêƒR[ƒho—Í */
+	/* ORGå‘½ä»¤ä»¥å¤–ã¯å‘½ä»¤èªžã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 	if (OutTbl.byte && ( sts != OP_ORG ) ){
-		/* ƒf[ƒ^‚ ‚è */
+		/* ãƒ‡ãƒ¼ã‚¿ã‚ã‚Š */
 		for ( cnt = 0 ; cnt < 4 ; cnt++ ){
 			if ( cnt < OutTbl.byte){
-				/* DS–½—ßŽž‚ÍA0‚ðo—Í‚·‚é */
+				/* DSå‘½ä»¤æ™‚ã¯ã€0ã‚’å‡ºåŠ›ã™ã‚‹ */
 				if ( sts == OP_DS ){
 					if (pr) printf( "00" );
 					fprintf( LstFD ,"00" );
@@ -2802,13 +2802,13 @@ unsigned short sts;
 		else fprintf( LstFD ,"%s", ( ( OutTbl.byte & 0x3 ) == 1) ? "\t\t" : "\t" );
 	}
 	else{
-		/* ƒf[ƒ^‚È‚µ */
+		/* ãƒ‡ãƒ¼ã‚¿ãªã— */
 		cnt = OutTbl.byte;
 		if (pr) printf( "          " );
 		if ( !Tab ) fprintf( LstFD ,"          " );
 		else fprintf( LstFD ,"\t\t" );
 	}
-	/* ƒ‰ƒxƒ‹ƒR[ƒho—Í */
+	/* ãƒ©ãƒ™ãƒ«ã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 	if ( OutTbl.label ){
 		sprintf( oprwk , "%s:" , OutTbl.label );
 		if (pr) printf("%-13s" , oprwk );
@@ -2821,13 +2821,13 @@ unsigned short sts;
 	}
 	else{
 		if ( OutTbl.opr[0] ){
-			/* ‹ó”’o—Í */
+			/* ç©ºç™½å‡ºåŠ› */
 			if (pr) printf( "             " );
 			if ( !Tab )	fprintf( LstFD ,"             " );
 			else fprintf( LstFD ,"\t" );
 		}
 	}
-	/* ƒjƒ‚ƒjƒbƒNo—Í */
+	/* ãƒ‹ãƒ¢ãƒ‹ãƒƒã‚¯å‡ºåŠ› */
 	if ( OutTbl.opr[0] ){
 		if (pr) printf( "%-08s" , OutTbl.opr[0] );
 		if (!Tab) fprintf( LstFD ,"%-08s" , OutTbl.opr[0] );
@@ -2838,7 +2838,7 @@ unsigned short sts;
 		}
 		len += 8;
 	}
-	/* ƒIƒyƒ‰ƒ“ƒho—Í */
+	/* ã‚ªãƒšãƒ©ãƒ³ãƒ‰å‡ºåŠ› */
 	i = 1;
 	while( OutTbl.opr[i] ){
 		if (pr) printf( "%s" , OutTbl.opr[i] );
@@ -2846,10 +2846,10 @@ unsigned short sts;
 		len += strlen(OutTbl.opr[i]);
 		i++;
 	}
-	/* ƒRƒƒ“ƒgo—Í */
+	/* ã‚³ãƒ¡ãƒ³ãƒˆå‡ºåŠ› */
 	if ( OutTbl.comment ){
 		if (pr) printf( "%s" , OutTbl.comment );
-		/* ‹ó”’o—Í */
+		/* ç©ºç™½å‡ºåŠ› */
 		if ( len ){
 			if (!Tab){
 				n = ( len > 30 ) ? 0 : ( 30 - len );
@@ -2862,18 +2862,18 @@ unsigned short sts;
 		}
 		fprintf( LstFD ,"%s" , OutTbl.comment );
 	}
-	/* ‰üs */
+	/* æ”¹è¡Œ */
 	if (pr) printf( "\n" );
 	fprintf( LstFD ,"\n" );
 
-	/* –½—ßŒêƒR[ƒho—Í */
+	/* å‘½ä»¤èªžã‚³ãƒ¼ãƒ‰å‡ºåŠ› */
 	while( OutTbl.byte && ( cnt < OutTbl.byte ) ){
 		if (pr) printf("            ");
 		fprintf(LstFD , "            ");
-		/* ƒf[ƒ^‚ ‚è */
+		/* ãƒ‡ãƒ¼ã‚¿ã‚ã‚Š */
 		for ( i = 0 ; i < 4 ; i++ , cnt++ ){
 			if ( cnt < OutTbl.byte){
-				/* DS–½—ßŽž‚ÍA0‚ðo—Í‚·‚é */
+				/* DSå‘½ä»¤æ™‚ã¯ã€0ã‚’å‡ºåŠ›ã™ã‚‹ */
 				if ( sts == OP_DS ){
 					if (pr) printf( "00" );
 					fprintf( LstFD ,"00" );
@@ -2888,20 +2888,20 @@ unsigned short sts;
 				if (!Tab) fprintf( LstFD ,"  " );
 			}
 		}
-		/* TABo—Í */
+		/* TABå‡ºåŠ› */
 		if ( Tab ) {
 			fprintf( LstFD ,"\t");
 			if ( ( OutTbl.byte & 0x3 ) == 1 ) fprintf( LstFD ,"\t");
 		}
-		/* ‰üs */
+		/* æ”¹è¡Œ */
 		if (pr) printf( "\n" );
 		fprintf( LstFD ,"\n" );
 	}
-	/* EJECT—v‹‚ ‚è */
+	/* EJECTè¦æ±‚ã‚ã‚Š */
 	if ( LineFeed ){
-		/* Line Feed(0xc)o—Í */
+		/* Line Feed(0xc)å‡ºåŠ› */
 		fprintf( LstFD ,"%c", 0xc );
-		/* ƒwƒbƒ_o—Í */
+		/* ãƒ˜ãƒƒãƒ€å‡ºåŠ› */
 		fprintf( LstFD , "%s%s - ",name,rev );
 		fprintf( LstFD ,"ASSEMBLE LIST OF [%s]\n", SrcFile );
 		LineFeed = 0;
@@ -2911,20 +2911,20 @@ unsigned short sts;
 /**********************************************************************/
 /*   ErrPut : Error Print                                             */
 /*                                                                    */
-/*   ˆ—    : ƒGƒ‰[ƒƒbƒZ[ƒW‚ðo—Í‚·‚é                             */
-/*   “ü—Í    : s”Ô†ƒJƒEƒ“ƒ^AƒGƒ‰[”Ô†                             */
-/*   o—Í    : ‚È‚µ                                                   */
+/*   å‡¦ç†    : ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºåŠ›ã™ã‚‹                             */
+/*   å…¥åŠ›    : è¡Œç•ªå·ã‚«ã‚¦ãƒ³ã‚¿ã€ã‚¨ãƒ©ãƒ¼ç•ªå·                             */
+/*   å‡ºåŠ›    : ãªã—                                                   */
 /*                                                                    */
 /**********************************************************************/
 void ErrPut( int cnt , int err )
 {
 int	i;
-	/* ƒGƒ‰[”­¶s‚Ìo—Í */
+	/* ã‚¨ãƒ©ãƒ¼ç™ºç”Ÿè¡Œã®å‡ºåŠ› */
 	pr = 1;
 	ListFlag = 0;
 	PrintList( cnt );
 
-	/* “ü—ÍƒR[ƒh‚ÉŠY“–‚·‚éƒGƒ‰[ƒƒbƒZ[ƒW‚ðo—Í */
+	/* å…¥åŠ›ã‚³ãƒ¼ãƒ‰ã«è©²å½“ã™ã‚‹ã‚¨ãƒ©ãƒ¼ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã‚’å‡ºåŠ› */
 	for ( i = 0 ; i < MAXERR-1 ; i++ ){
 		if ( errtbl[i].code==err )	break;
 	}
